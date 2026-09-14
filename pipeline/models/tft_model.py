@@ -101,8 +101,8 @@ class VariableSelectionNetwork(nn.Module):
         transformed_stack = torch.stack(transformed, dim=-2).contiguous() # (..., num_features, hidden_dim)
         
         # Weighted combination: sum_j v_j * transformed_j
-        weights_expanded = weights.unsqueeze(-1)
-        selected = torch.sum(transformed_stack * weights_expanded, dim=-2).contiguous()
+        weights_expanded = weights.unsqueeze(-1).contiguous()
+        selected = (transformed_stack * weights_expanded).sum(dim=-2).contiguous()
         return selected, weights
 
 
@@ -217,21 +217,26 @@ class TemporalFusionTransformer(nn.Module):
         past_embedded = []
         for i, proj in enumerate(self.past_projections):
             past_embedded.append(proj(past_x[..., i:i+1]))
-        past_stack = torch.stack(past_embedded, dim=-2) # (B, lookback, num_past, feat_dim)
-        past_selected, past_weights = self.past_vsn(past_stack, context=static_context.unsqueeze(1).expand(-1, self.lookback, -1))
+        past_stack = torch.stack(past_embedded, dim=-2).contiguous() # (B, lookback, num_past, feat_dim)
+        
+        # Use physical .repeat instead of virtual .expand so Metal allocates genuine memory buffers
+        context_past = static_context.unsqueeze(1).repeat(1, self.lookback, 1).contiguous()
+        past_selected, past_weights = self.past_vsn(past_stack, context=context_past)
 
         # Project future features
         future_embedded = []
         for i, proj in enumerate(self.future_projections):
             future_embedded.append(proj(future_x[..., i:i+1]))
-        future_stack = torch.stack(future_embedded, dim=-2) # (B, horizon, num_future, feat_dim)
-        future_selected, future_weights = self.future_vsn(future_stack, context=static_context.unsqueeze(1).expand(-1, self.horizon, -1))
+        future_stack = torch.stack(future_embedded, dim=-2).contiguous() # (B, horizon, num_future, feat_dim)
+        
+        context_future = static_context.unsqueeze(1).repeat(1, self.horizon, 1).contiguous()
+        future_selected, future_weights = self.future_vsn(future_stack, context=context_future)
 
         # Concatenate full timeline (lookback + horizon)
         temporal_sequence = torch.cat([past_selected, future_selected], dim=1).contiguous() # (B, lookback + horizon, d_model)
 
-        # Static enrichment
-        c_e = static_context.unsqueeze(1).expand(-1, self.lookback + self.horizon, -1).contiguous()
+        # Static enrichment with physically allocated context
+        c_e = static_context.unsqueeze(1).repeat(1, self.lookback + self.horizon, 1).contiguous()
         enriched = self.static_enrichment(temporal_sequence, context=c_e).contiguous()
 
         # Temporal LSTM pass
@@ -242,6 +247,7 @@ class TemporalFusionTransformer(nn.Module):
         # Self-attention pass
         attn_out, attn_weights = self.self_attn(lstm_gated, lstm_gated, lstm_gated)
         attn_gated = self.post_attn_gate((attn_out + lstm_gated).contiguous(), context=c_e).contiguous()
+
 
         # Slice horizon forecast steps
         forecast_representation = attn_gated[:, self.lookback:, :].contiguous() # (B, horizon, d_model)
