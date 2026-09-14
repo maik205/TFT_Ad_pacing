@@ -21,6 +21,15 @@ env/
 ENV/
 
 # LaTeX Intermediate Files
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
 paper/*.aux
 paper/*.bbl
 paper/*.blg
