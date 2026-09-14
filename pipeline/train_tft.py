@@ -178,6 +178,7 @@ def main():
     parser.add_argument("--checkpoint", type=str, default="data/tft_best_checkpoint.pt", help="Path to save/load model checkpoint")
     parser.add_argument("--eval-only", action="store_true", help="Skip training and evaluate using existing checkpoint")
     parser.add_argument("--device", type=str, default="auto", choices=["auto", "cuda", "mps", "cpu"], help="Hardware acceleration device")
+    parser.add_argument("--no-ar-skip", action="store_true", help="Disable autoregressive skip connection")
     args = parser.parse_args()
 
     logger.info("Initializing Programmatic Ad Spend Pacing Benchmark Experiment...")
@@ -233,7 +234,8 @@ def main():
         lookback=168,
         horizon=24,
         quantiles=[0.10, 0.50, 0.90],
-        dropout=0.1
+        dropout=0.1,
+        use_ar_skip=not args.no_ar_skip
     ).to(device)
 
     spend_mean = train_dataset.spend_mean

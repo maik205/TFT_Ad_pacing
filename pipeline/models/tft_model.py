@@ -165,13 +165,17 @@ class TemporalFusionTransformer(nn.Module):
         lookback: int = 168,
         horizon: int = 24,
         quantiles: List[float] = [0.10, 0.50, 0.90],
-        dropout: float = 0.1
+        dropout: float = 0.1,
+        use_ar_skip: bool = True,
+        ar_lags: int = 24
     ):
         super().__init__()
         self.lookback = lookback
         self.horizon = horizon
         self.quantiles = quantiles
         self.d_model = d_model
+        self.use_ar_skip = use_ar_skip
+        self.ar_lags = ar_lags
 
         # Linear projections for individual continuous features into feature_dim
         feat_embed_dim = 16
@@ -197,6 +201,10 @@ class TemporalFusionTransformer(nn.Module):
 
         # Output multi-quantile forecast head
         self.output_layer = nn.Linear(d_model, len(quantiles))
+
+        # Linear autoregressive skip connection from recent spend lags
+        if self.use_ar_skip:
+            self.ar_skip = nn.Linear(ar_lags, horizon)
 
     def forward(
         self,
@@ -254,6 +262,13 @@ class TemporalFusionTransformer(nn.Module):
         
         # Quantile outputs: (B, horizon, len(quantiles))
         quantile_preds = self.output_layer(forecast_representation)
+
+        # Autoregressive skip connection from recent spend lags
+        if self.use_ar_skip:
+            # past_x[..., 0] is normalized hourly_spend
+            recent_spend = past_x[..., -self.ar_lags:, 0].contiguous() # (B, ar_lags)
+            ar_base = self.ar_skip(recent_spend).unsqueeze(-1).contiguous() # (B, horizon, 1)
+            quantile_preds = quantile_preds + ar_base
 
         interpretability_dict = {
             'static_weights': static_weights,

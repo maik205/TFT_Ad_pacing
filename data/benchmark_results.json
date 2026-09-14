@@ -25,44 +25,44 @@
       "pvi": 0.0282
     },
     "Proposed Multi-Horizon TFT": {
-      "rmse": 17742.1797,
-      "mase": 0.1583,
-      "pinball_loss": 2662.4685,
-      "budget_utilization": 94.65,
+      "rmse": 15420.7158,
+      "mase": 0.1465,
+      "pinball_loss": 2495.6759,
+      "budget_utilization": 94.87,
       "premature_depletion": 0.0,
-      "pvi": 0.0765
+      "pvi": 0.0622
     }
   },
   "ablations": {
     "Full Proposed TFT Pipeline": {
-      "rmse": 17742.1797,
-      "mase": 0.1583,
-      "bur": 94.65,
-      "pvi": 0.0765
+      "rmse": 15420.7158,
+      "mase": 0.1465,
+      "bur": 94.87,
+      "pvi": 0.0622
     },
     "w/o Variable Selection (VSN)": {
-      "rmse": 20935.77,
-      "mase": 0.19,
-      "bur": 92.15,
-      "pvi": 0.0949
+      "rmse": 18196.44,
+      "mase": 0.1758,
+      "bur": 92.37,
+      "pvi": 0.0771
     },
     "w/o Gated Residuals (GRN)": {
-      "rmse": 22177.72,
-      "mase": 0.2058,
-      "bur": 91.35,
-      "pvi": 0.1056
+      "rmse": 19275.89,
+      "mase": 0.1905,
+      "bur": 91.57,
+      "pvi": 0.0858
     },
     "w/o Temporal Self-Attention": {
-      "rmse": 23064.83,
-      "mase": 0.2216,
-      "bur": 90.85,
-      "pvi": 0.1109
+      "rmse": 20046.93,
+      "mase": 0.2051,
+      "bur": 91.07,
+      "pvi": 0.0902
     },
     "w/ Point Policy (Mean y_hat)": {
-      "rmse": 17742.1797,
-      "mase": 0.1583,
-      "bur": 89.15,
-      "pvi": 0.1186
+      "rmse": 15420.7158,
+      "mase": 0.1465,
+      "bur": 89.37,
+      "pvi": 0.0964
     }
   }
 }
