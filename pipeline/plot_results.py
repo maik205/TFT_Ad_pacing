@@ -10,6 +10,7 @@ Generates high-resolution vector PDFs and PNGs:
 
 import os
 import json
+import shutil
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -234,6 +235,14 @@ def main():
     plot_spike_detection()
     plot_attention_cycles()
     print("All figures successfully rendered to 'plots/'!")
+
+    # Copy figures to paper/plots for LaTeX compilation
+    paper_plots_dir = os.path.join("paper", "plots")
+    os.makedirs(paper_plots_dir, exist_ok=True)
+    for fname in os.listdir(OUTPUT_DIR):
+        if fname.endswith(".pdf") or fname.endswith(".png"):
+            shutil.copy(os.path.join(OUTPUT_DIR, fname), os.path.join(paper_plots_dir, fname))
+    print(f"Synced figures to '{paper_plots_dir}' for paper compilation.")
 
 
 if __name__ == '__main__':

@@ -30,9 +30,10 @@ class SimulationResult:
 
 
 class PacingSimulationEngine:
-    def __init__(self, alpha_min: float = 0.05, horizon: int = 24):
+    def __init__(self, alpha_min: float = 0.05, horizon: int = 24, risk_hedging_ratio: float = 0.70):
         self.alpha_min = alpha_min
         self.horizon = horizon
+        self.risk_hedging_ratio = risk_hedging_ratio
 
     def simulate_linear_pacing(self, df_campaign: pd.DataFrame) -> SimulationResult:
         """Simulates Uniform Linear Pacing (ULP)."""
@@ -175,11 +176,13 @@ class PacingSimulationEngine:
         preds_q10: np.ndarray,
         preds_q50: np.ndarray,
         preds_q90: np.ndarray,
-        enable_spike_detection: bool = True
+        enable_spike_detection: bool = True,
+        policy_name: str = "Proposed Multi-Horizon TFT"
     ) -> SimulationResult:
         """
         Simulates Proposed Multi-Horizon TFT Pacing:
-        alpha_{t+1} = clip(alpha_t * (B - S_t) / sum(y_hat_90), alpha_min, 1.0)
+        alpha_{t+1} = clip(alpha_t * (B - S_t) / sum(y_hat_hedged), alpha_min, 1.0)
+        where y_hat_hedged = kappa * y_hat_90 + (1 - kappa) * y_hat_50 (kappa = risk_hedging_ratio)
         + Dual-Boundary Spike Detection Trigger
         """
         T = len(df_campaign)
@@ -189,6 +192,9 @@ class PacingSimulationEngine:
             B = float(df_campaign['total_budget'].iloc[0])
         nominal_velocity = B / T
         alpha = 1.0
+
+        # Calibrated risk-hedged demand for aggregate horizon pacing
+        pacing_preds = self.risk_hedging_ratio * preds_q90 + (1.0 - self.risk_hedging_ratio) * preds_q50
 
         alphas = []
         spends = []
@@ -222,34 +228,33 @@ class PacingSimulationEngine:
                     h_idx = min(t % self.horizon, preds_q90.shape[1] - 1)
 
                     # Sum remaining horizon steps in current window
-                    future_sum_90 = float(np.sum(preds_q90[w_idx, h_idx:]))
+                    future_sum = float(np.sum(pacing_preds[w_idx, h_idx:]))
                     # If window is ending, append from next window if available
                     rem_steps = self.horizon - (preds_q90.shape[1] - h_idx)
                     if rem_steps > 0 and w_idx + 1 < num_windows:
-                        future_sum_90 += float(np.sum(preds_q90[w_idx + 1, :rem_steps]))
+                        future_sum += float(np.sum(pacing_preds[w_idx + 1, :rem_steps]))
 
                     median_pred = float(preds_q50[w_idx, h_idx])
                     upper_pred = float(preds_q90[w_idx, h_idx])
                 else:
                     t_max = min(t + self.horizon, len(preds_q90))
-                    future_sum_90 = float(np.sum(preds_q90[t:t_max])) if t < len(preds_q90) else 0.0
+                    future_sum = float(np.sum(pacing_preds[t:t_max])) if t < len(pacing_preds) else 0.0
                     t_idx = min(t, len(preds_q90) - 1)
                     median_pred = float(preds_q50[t_idx])
                     upper_pred = float(preds_q90[t_idx])
 
                 # Fallback to nominal velocity if horizon sum is zero/empty
-                if future_sum_90 <= 0:
+                if future_sum <= 0:
                     rem_time = max(1, T - (t + 1))
-                    future_sum_90 = nominal_velocity * min(self.horizon, rem_time)
+                    future_sum = nominal_velocity * min(self.horizon, rem_time)
 
                 rem_budget = max(0.0, B - cum_spend)
 
+                # Proposed Calibrated Quantile Throttling Equation
+                if future_sum > 0:
+                    alpha = float(np.clip(alpha * (rem_budget / future_sum), self.alpha_min, 1.0))
 
-                # Proposed Quantile Throttling Equation
-                if future_sum_90 > 0:
-                    alpha = float(np.clip(alpha * (rem_budget / future_sum_90), self.alpha_min, 1.0))
-
-                # Dual-Boundary Spike Detection Condition
+                # Dual-Boundary Spike Detection Condition (strictly preserved on 90th percentile)
                 if enable_spike_detection and t > 0:
                     condition_a = (spend_t > upper_pred)
                     condition_b = ((spend_t - median_pred) > 1.5 * nominal_velocity)
@@ -269,7 +274,7 @@ class PacingSimulationEngine:
 
         return SimulationResult(
             campaign_id=str(df_campaign['campaign_id'].iloc[0]),
-            policy_name="Proposed Multi-Horizon TFT",
+            policy_name=policy_name,
             total_budget=B,
             total_spend=cum_spend,
             budget_utilization=round(cum_spend / B * 100.0, 2),

@@ -158,3 +158,72 @@ class LaggedLightGBM:
         for q, model in self.models.items():
             preds[q] = model.predict(X[self.feature_names])
         return preds
+
+    def predict_multi_step_recursive(
+        self,
+        history_spends: List[float],
+        future_df: pd.DataFrame,
+        horizon: int = 24
+    ) -> Dict[float, np.ndarray]:
+        """
+        Recursively forecasts horizon steps into the future without access to ground-truth future lags.
+        At each step tau in 1..horizon:
+          Uses true historical spend for lags >= tau,
+          and model's own prior median predictions for lags < tau.
+        """
+        lags = [1, 2, 3, 6, 12, 24, 48, 72, 168]
+        rolling_windows = [6, 24, 168]
+        
+        sim_spends = list(history_spends)
+        preds = {q: [] for q in self.quantiles}
+        
+        for tau in range(horizon):
+            row_dict = {}
+            if tau < len(future_df):
+                future_row = future_df.iloc[tau]
+                for col in [
+                    'hour_of_day', 'hour_sin', 'hour_cos',
+                    'day_of_week', 'day_sin', 'day_cos',
+                    'is_weekend', 'time_to_end', 'countdown_ratio',
+                    'win_rate', 'avg_cpm', 'nominal_velocity'
+                ]:
+                    if col in future_row:
+                        row_dict[col] = future_row[col]
+                    else:
+                        row_dict[col] = 0.0
+            else:
+                for col in [
+                    'hour_of_day', 'hour_sin', 'hour_cos',
+                    'day_of_week', 'day_sin', 'day_cos',
+                    'is_weekend', 'time_to_end', 'countdown_ratio',
+                    'win_rate', 'avg_cpm', 'nominal_velocity'
+                ]:
+                    row_dict[col] = 0.0
+
+            # Compute lags from simulated spend timeline
+            for lag in lags:
+                if len(sim_spends) >= lag:
+                    row_dict[f'spend_lag_{lag}'] = sim_spends[-lag]
+                else:
+                    row_dict[f'spend_lag_{lag}'] = 0.0
+
+            # Compute rolling window statistics
+            for w in rolling_windows:
+                w_slice = sim_spends[-w:] if len(sim_spends) >= w else sim_spends
+                row_dict[f'spend_roll_mean_{w}'] = float(np.mean(w_slice)) if len(w_slice) > 0 else 0.0
+                row_dict[f'spend_roll_std_{w}'] = float(np.std(w_slice)) if len(w_slice) > 1 else 0.0
+                row_dict[f'spend_roll_max_{w}'] = float(np.max(w_slice)) if len(w_slice) > 0 else 0.0
+
+            row_df = pd.DataFrame([row_dict])[self.feature_names]
+            
+            step_preds = {}
+            for q, model in self.models.items():
+                p_val = float(max(0.0, model.predict(row_df)[0]))
+                step_preds[q] = p_val
+                preds[q].append(p_val)
+            
+            # Feed predicted median forward into autoregressive timeline
+            sim_spends.append(step_preds[0.50])
+            
+        return {q: np.array(vals, dtype=np.float32) for q, vals in preds.items()}
+
