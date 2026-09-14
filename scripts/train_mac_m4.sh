@@ -34,6 +34,8 @@ fi
 # 4. Run TFT training and baseline simulations with MPS acceleration
 echo "[4/4] Starting TFT Training & Pacing Simulations on Apple Silicon GPU (MPS)..."
 export PYTHONPATH="."
+export PYTORCH_ENABLE_MPS_FALLBACK=1
+export PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.7
 python -m pipeline.train_tft
 
 # 5. Generate final publication plots from real out-of-sample prediction arrays

@@ -87,7 +87,7 @@ class VariableSelectionNetwork(nn.Module):
     def forward(self, x: torch.Tensor, context: torch.Tensor = None) -> Tuple[torch.Tensor, torch.Tensor]:
         # x shape: (batch_size, seq_len, num_features, feature_dim) or (batch_size, num_features, feature_dim)
         orig_shape = x.shape
-        flat_x = x.view(*orig_shape[:-2], self.num_features * self.feature_dim)
+        flat_x = x.contiguous().view(*orig_shape[:-2], self.num_features * self.feature_dim)
         
         # Compute weights via Softmax
         weights = F.softmax(self.weight_grn(flat_x, context), dim=-1) # (..., num_features)
@@ -95,14 +95,14 @@ class VariableSelectionNetwork(nn.Module):
         # Transform individual features
         transformed = []
         for i in range(self.num_features):
-            feat = x[..., i, :]
+            feat = x[..., i, :].contiguous()
             transformed.append(self.feature_grns[i](feat))
         
-        transformed_stack = torch.stack(transformed, dim=-2) # (..., num_features, hidden_dim)
+        transformed_stack = torch.stack(transformed, dim=-2).contiguous() # (..., num_features, hidden_dim)
         
         # Weighted combination: sum_j v_j * transformed_j
         weights_expanded = weights.unsqueeze(-1)
-        selected = torch.sum(transformed_stack * weights_expanded, dim=-2)
+        selected = torch.sum(transformed_stack * weights_expanded, dim=-2).contiguous()
         return selected, weights
 
 
@@ -128,20 +128,22 @@ class InterpretableMultiHeadAttention(nn.Module):
         B, T_q, _ = q.shape
         _, T_k, _ = k.shape
 
-        q_proj = self.q_proj(q).view(B, T_q, self.n_heads, self.d_head).transpose(1, 2)
-        k_proj = self.k_proj(k).view(B, T_k, self.n_heads, self.d_head).transpose(1, 2)
-        v_proj = self.v_proj(v).view(B, T_k, self.n_heads, self.d_head).transpose(1, 2)
+        q_proj = self.q_proj(q.contiguous()).contiguous().view(B, T_q, self.n_heads, self.d_head).transpose(1, 2).contiguous()
+        k_proj = self.k_proj(k.contiguous()).contiguous().view(B, T_k, self.n_heads, self.d_head).transpose(1, 2).contiguous()
+        v_proj = self.v_proj(v.contiguous()).contiguous().view(B, T_k, self.n_heads, self.d_head).transpose(1, 2).contiguous()
 
-        scores = torch.matmul(q_proj, k_proj.transpose(-2, -1)) / math.sqrt(self.d_head)
+        k_transposed = k_proj.transpose(-2, -1).contiguous()
+        scores = torch.matmul(q_proj, k_transposed) / math.sqrt(self.d_head)
         if mask is not None:
             scores = scores.masked_fill(mask == 0, -1e9)
 
-        attn_weights = F.softmax(scores, dim=-1)
+        attn_weights = F.softmax(scores, dim=-1).contiguous()
         attn_weights = self.dropout(attn_weights)
 
-        context = torch.matmul(attn_weights, v_proj) # (B, n_heads, T_q, d_head)
+        context = torch.matmul(attn_weights, v_proj).contiguous() # (B, n_heads, T_q, d_head)
         context = context.transpose(1, 2).contiguous().view(B, T_q, self.d_model)
-        output = self.out_proj(context)
+        output = self.out_proj(context).contiguous()
+
 
         # Average attention weights across heads for interpretability
         avg_attn = attn_weights.mean(dim=1) # (B, T_q, T_k)
@@ -226,22 +228,23 @@ class TemporalFusionTransformer(nn.Module):
         future_selected, future_weights = self.future_vsn(future_stack, context=static_context.unsqueeze(1).expand(-1, self.horizon, -1))
 
         # Concatenate full timeline (lookback + horizon)
-        temporal_sequence = torch.cat([past_selected, future_selected], dim=1) # (B, lookback + horizon, d_model)
+        temporal_sequence = torch.cat([past_selected, future_selected], dim=1).contiguous() # (B, lookback + horizon, d_model)
 
         # Static enrichment
-        c_e = static_context.unsqueeze(1).expand(-1, self.lookback + self.horizon, -1)
-        enriched = self.static_enrichment(temporal_sequence, context=c_e)
+        c_e = static_context.unsqueeze(1).expand(-1, self.lookback + self.horizon, -1).contiguous()
+        enriched = self.static_enrichment(temporal_sequence, context=c_e).contiguous()
 
         # Temporal LSTM pass
         lstm_out, _ = self.lstm(enriched)
-        lstm_gated = self.post_lstm_gate(lstm_out, context=c_e)
+        lstm_out = lstm_out.contiguous()
+        lstm_gated = self.post_lstm_gate(lstm_out, context=c_e).contiguous()
 
         # Self-attention pass
         attn_out, attn_weights = self.self_attn(lstm_gated, lstm_gated, lstm_gated)
-        attn_gated = self.post_attn_gate(attn_out + lstm_gated, context=c_e)
+        attn_gated = self.post_attn_gate((attn_out + lstm_gated).contiguous(), context=c_e).contiguous()
 
         # Slice horizon forecast steps
-        forecast_representation = attn_gated[:, self.lookback:, :] # (B, horizon, d_model)
+        forecast_representation = attn_gated[:, self.lookback:, :].contiguous() # (B, horizon, d_model)
         
         # Quantile outputs: (B, horizon, len(quantiles))
         quantile_preds = self.output_layer(forecast_representation)

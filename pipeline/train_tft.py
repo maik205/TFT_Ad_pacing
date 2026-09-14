@@ -56,8 +56,8 @@ class HourlyPacingDataset(Dataset):
             group = group.sort_values('time_idx').reset_index(drop=True)
             N = len(group)
             
-            # Step size for sequence generation
-            step = 1 if is_train else 24
+            # Step size for sequence generation: step=4 captures 6-hour circadian phases while reducing RAM by 4x
+            step = 4 if is_train else 24
             for start in range(0, N - lookback - horizon + 1, step):
                 end_lookback = start + lookback
                 end_horizon = end_lookback + horizon
@@ -166,9 +166,10 @@ def main():
     val_dataset = HourlyPacingDataset(val_df, lookback=168, horizon=24, is_train=False)
     test_dataset = HourlyPacingDataset(test_df, lookback=168, horizon=24, is_train=False)
 
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
-    test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+    # Batch size 32 is optimal for 16GB unified memory & Metal MPS buffers
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
+    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
     # Auto-detect compute hardware: Apple Silicon M4 (MPS), CUDA GPU, or CPU
     if torch.backends.mps.is_available():
@@ -269,10 +270,10 @@ def main():
             lgb_results.append(res_lgb)
 
         # 4. Proposed TFT Simulation
-        # Predict on campaign sequences
+        # Predict on campaign sequences in safe chunk batches of 32
         c_dataset = HourlyPacingDataset(c_test, lookback=168, horizon=24, is_train=False)
         if len(c_dataset) > 0:
-            c_loader = DataLoader(c_dataset, batch_size=len(c_dataset), shuffle=False)
+            c_loader = DataLoader(c_dataset, batch_size=32, shuffle=False)
             c_tft_out = eval_tft(model, c_loader, device, spend_mean, spend_std)
             res_tft = engine.simulate_tft_pacing(
                 c_test,
