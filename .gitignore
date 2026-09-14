@@ -1,0 +1,47 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large Dataset Files (Raw Bidding Logs)
+*.csv
+train.csv
+test.csv
+*.tar.gz
+*.zip
+*.7z
+
+# Processed intermediate data (can be regenerated or pulled from object store)
+data/*.csv
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# LaTeX Intermediate Files
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+
+# macOS / OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE & Editor Settings
+.vscode/
+.idea/
+*.swp
+*.swo
