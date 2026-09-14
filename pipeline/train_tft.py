@@ -315,22 +315,23 @@ def main():
                 "pvi": pid_econ['pacing_volatility_index']
             },
             "Lagged LightGBM": {
-                "rmse": 9.84,
-                "mase": 1.15,
-                "pinball_loss": 0.198,
+                "rmse": lgb_stat_metrics['rmse'],
+                "mase": lgb_stat_metrics['mase'],
+                "pinball_loss": lgb_stat_metrics['avg_pinball_loss'],
                 "budget_utilization": lgb_econ['budget_utilization_rate'],
                 "premature_depletion": lgb_econ['premature_depletion_rate'],
                 "pvi": lgb_econ['pacing_volatility_index']
             },
             "Proposed Multi-Horizon TFT": {
-                "rmse": 7.12,
-                "mase": 0.78,
-                "pinball_loss": 0.142,
-                "budget_utilization": 97.6,
-                "premature_depletion": 2.1,
-                "pvi": 0.114
+                "rmse": tft_stat_metrics['rmse'],
+                "mase": tft_stat_metrics['mase'],
+                "pinball_loss": tft_stat_metrics['avg_pinball_loss'],
+                "budget_utilization": tft_econ['budget_utilization_rate'],
+                "premature_depletion": tft_econ['premature_depletion_rate'],
+                "pvi": tft_econ['pacing_volatility_index']
             }
         },
+
         "ablations": {
             "Full Proposed TFT Pipeline": {"rmse": 7.12, "mase": 0.78, "bur": 97.6, "pvi": 0.114},
             "w/o Variable Selection (VSN)": {"rmse": 8.41, "mase": 0.94, "bur": 95.1, "pvi": 0.142},

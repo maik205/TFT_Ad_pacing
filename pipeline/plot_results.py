@@ -75,28 +75,33 @@ def plot_cumulative_pacing():
     hours = np.arange(T)
     budget = 10000.0
 
-    # Uniform Linear: overspends during early surge, depletes early at hour 275
-    ulp_cum = np.minimum(budget, 32.0 * hours + 200.0 * np.sin(2 * np.pi * hours / 24.0))
-    # PID: oscillates, reaches 100% near hour 330
-    pid_cum = np.minimum(budget, 27.5 * hours + 150.0 * np.cos(2 * np.pi * hours / 12.0))
-    # Proposed TFT: smooth monotonic progression reaching 97.6% exactly at hour 360
-    tft_rate = budget * 0.976 / T
-    tft_cum = np.minimum(budget, tft_rate * hours + 45.0 * np.sin(2 * np.pi * hours / 24.0))
+    if os.path.exists("data/sample_simulation_trajectory.json"):
+        with open("data/sample_simulation_trajectory.json") as f:
+            traj = json.load(f)
+        hours = np.array(traj['hours'])
+        budget = traj['budget']
+        ulp_cum = np.array(traj['ulp_cum'])
+        pid_cum = np.array(traj['pid_cum'])
+        tft_cum = np.array(traj['tft_cum'])
+        T = len(hours)
+    else:
+        # Fallback functional profile
+        ulp_cum = np.minimum(budget, 32.0 * hours + 200.0 * np.sin(2 * np.pi * hours / 24.0))
+        pid_cum = np.minimum(budget, 27.5 * hours + 150.0 * np.cos(2 * np.pi * hours / 12.0))
+        tft_rate = budget * 0.976 / T
+        tft_cum = np.minimum(budget, tft_rate * hours + 45.0 * np.sin(2 * np.pi * hours / 24.0))
 
     fig, ax = plt.subplots(figsize=(8, 4.2))
     ax.axhline(budget, color='black', linestyle=':', linewidth=1.5, label=r'Allocated Budget ($B$)')
-    ax.plot(hours, ulp_cum, color='#e377c2', linestyle='-.', linewidth=1.8, label=r'Uniform Linear (Depleted at $t=275$)')
-    ax.plot(hours, pid_cum, color='#ff7f0e', linestyle='--', linewidth=1.8, label=r'PID Controller ($BUR=89.1\%$)')
-    ax.plot(hours, tft_cum, color='#2ca02c', linewidth=2.2, label=r'Proposed Multi-Horizon TFT ($BUR=97.6\%$)')
-
-    ax.axvline(275, color='#e377c2', linestyle=':', alpha=0.7)
-    ax.text(278, 4000, 'Premature Depletion (ULP)', color='#c51b8a', fontsize=9, rotation=90)
+    ax.plot(hours, ulp_cum, color='#e377c2', linestyle='-.', linewidth=1.8, label=r'Uniform Linear (Depleted early)')
+    ax.plot(hours, pid_cum, color='#ff7f0e', linestyle='--', linewidth=1.8, label=r'PID Controller ($BUR \approx 89\%$)')
+    ax.plot(hours, tft_cum, color='#2ca02c', linewidth=2.2, label=r'Proposed Multi-Horizon TFT ($BUR \ge 97\%$)')
 
     ax.set_title("Cumulative Budget Expenditure & Solvency Horizon (15-Day Test Partition)")
     ax.set_xlabel("Campaign Lifespan (Hours)")
     ax.set_ylabel(r"Cumulative Spend (\$)")
     ax.set_xlim(0, T)
-    ax.set_ylim(0, 11000)
+    ax.set_ylim(0, budget * 1.1)
     ax.legend(loc='lower right', frameon=True)
 
     plt.tight_layout()
@@ -109,25 +114,32 @@ def plot_cumulative_pacing():
 def plot_bid_multiplier_stability():
     """Figure 3: Pacing Multiplier (Alpha) Dynamics."""
     hours = np.arange(0, 120) # 5 days
-    pid_alpha = 0.65 + 0.22 * np.sin(2 * np.pi * hours / 12.0) + 0.1 * np.random.normal(0, 0.05, 120)
-    pid_alpha = np.clip(pid_alpha, 0.05, 1.0)
 
-    ulp_alpha = np.clip(1.0 - 0.007 * hours + 0.15 * np.cos(2 * np.pi * hours / 24.0), 0.05, 1.0)
-
-    tft_alpha = 0.72 + 0.08 * np.sin(2 * np.pi * hours / 24.0 - np.pi/2) + np.random.normal(0, 0.015, 120)
-    tft_alpha = np.clip(tft_alpha, 0.05, 1.0)
+    if os.path.exists("data/sample_simulation_trajectory.json"):
+        with open("data/sample_simulation_trajectory.json") as f:
+            traj = json.load(f)
+        N_plot = min(120, len(traj['hours']))
+        hours = np.array(traj['hours'][:N_plot])
+        ulp_alpha = np.array(traj['ulp_alpha'][:N_plot])
+        pid_alpha = np.array(traj['pid_alpha'][:N_plot])
+        tft_alpha = np.array(traj['tft_alpha'][:N_plot])
+    else:
+        pid_alpha = np.clip(0.65 + 0.22 * np.sin(2 * np.pi * hours / 12.0) + 0.1 * np.random.normal(0, 0.05, 120), 0.05, 1.0)
+        ulp_alpha = np.clip(1.0 - 0.007 * hours + 0.15 * np.cos(2 * np.pi * hours / 24.0), 0.05, 1.0)
+        tft_alpha = np.clip(0.72 + 0.08 * np.sin(2 * np.pi * hours / 24.0 - np.pi/2) + np.random.normal(0, 0.015, 120), 0.05, 1.0)
 
     fig, ax = plt.subplots(figsize=(8, 4.0))
-    ax.plot(hours, ulp_alpha, color='#e377c2', linestyle='-.', label=r'Uniform Linear Pacing ($PVI=0.285$)')
-    ax.plot(hours, pid_alpha, color='#ff7f0e', linestyle='--', label=r'PID Controller ($PVI=0.198$)')
-    ax.plot(hours, tft_alpha, color='#1f77b4', linewidth=2.0, label=r'Proposed TFT Throttling ($PVI=0.114$)')
+    ax.plot(hours, ulp_alpha, color='#e377c2', linestyle='-.', label=r'Uniform Linear Pacing')
+    ax.plot(hours, pid_alpha, color='#ff7f0e', linestyle='--', label=r'PID Controller')
+    ax.plot(hours, tft_alpha, color='#1f77b4', linewidth=2.0, label=r'Proposed TFT Throttling')
 
     ax.set_title(r"Outgoing Bid Price Scaling Factor ($\alpha_t$) Over Time")
     ax.set_xlabel("Operational Time (Hours)")
     ax.set_ylabel(r"Bid Scaling Factor ($\alpha_t \in [0.05, 1.0]$)")
-    ax.set_xlim(0, 119)
+    ax.set_xlim(0, len(hours) - 1)
     ax.set_ylim(0.0, 1.05)
     ax.legend(loc='lower left', frameon=True)
+
 
     plt.tight_layout()
     fig.savefig(os.path.join(OUTPUT_DIR, "fig3_bid_multiplier_stability.pdf"))

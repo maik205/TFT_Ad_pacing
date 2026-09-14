@@ -205,17 +205,36 @@ class PacingSimulationEngine:
                 cum_spend += spend_t
 
                 # Forecasted 24h horizon trajectory
-                # preds_q90 is shaped (T, 24) or (T,)
+                # preds_q90 can be 2D (num_windows, 24) or 1D (T,)
                 if len(preds_q90.shape) == 2:
-                    future_sum_90 = float(np.sum(preds_q90[t, :min(self.horizon, T - t)]))
-                    median_pred = float(preds_q50[t, 0])
-                    upper_pred = float(preds_q90[t, 0])
+                    num_windows = preds_q90.shape[0]
+                    # Map hour t to active 24h forecast window
+                    w_idx = min(t // self.horizon, num_windows - 1)
+                    h_idx = min(t % self.horizon, preds_q90.shape[1] - 1)
+
+                    # Sum remaining horizon steps in current window
+                    future_sum_90 = float(np.sum(preds_q90[w_idx, h_idx:]))
+                    # If window is ending, append from next window if available
+                    rem_steps = self.horizon - (preds_q90.shape[1] - h_idx)
+                    if rem_steps > 0 and w_idx + 1 < num_windows:
+                        future_sum_90 += float(np.sum(preds_q90[w_idx + 1, :rem_steps]))
+
+                    median_pred = float(preds_q50[w_idx, h_idx])
+                    upper_pred = float(preds_q90[w_idx, h_idx])
                 else:
-                    future_sum_90 = float(np.sum(preds_q90[t:min(t + self.horizon, T)]))
-                    median_pred = float(preds_q50[t])
-                    upper_pred = float(preds_q90[t])
+                    t_max = min(t + self.horizon, len(preds_q90))
+                    future_sum_90 = float(np.sum(preds_q90[t:t_max])) if t < len(preds_q90) else 0.0
+                    t_idx = min(t, len(preds_q90) - 1)
+                    median_pred = float(preds_q50[t_idx])
+                    upper_pred = float(preds_q90[t_idx])
+
+                # Fallback to nominal velocity if horizon sum is zero/empty
+                if future_sum_90 <= 0:
+                    rem_time = max(1, T - (t + 1))
+                    future_sum_90 = nominal_velocity * min(self.horizon, rem_time)
 
                 rem_budget = max(0.0, B - cum_spend)
+
 
                 # Proposed Quantile Throttling Equation
                 if future_sum_90 > 0:
