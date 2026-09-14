@@ -37,7 +37,7 @@ export PYTHONPATH="."
 export PYTORCH_ENABLE_MPS_FALLBACK=1
 export PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0
 export PYTORCH_MPS_LOW_WATERMARK_RATIO=0.0
-python -m pipeline.train_tft
+python -m pipeline.train_tft --epochs 35 "$@"
 
 # 5. Generate final publication plots from real out-of-sample prediction arrays
 echo "Generating publication plots in plots/..."
