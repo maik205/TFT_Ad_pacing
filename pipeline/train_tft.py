@@ -161,10 +161,19 @@ def main():
 
     logger.info(f"Loaded train ({len(train_df)} rows), val ({len(val_df)} rows), test ({len(test_df)} rows).")
 
+    # For test forecasting, prepend final 168h lookback from val_df for each campaign
+    # to yield full 15 daily forecasting windows (360 hours)
+    test_with_lookback = []
+    for cid in test_df['campaign_id'].unique():
+        c_val = val_df[val_df['campaign_id'] == cid].sort_values('time_idx').iloc[-168:]
+        c_test = test_df[test_df['campaign_id'] == cid].sort_values('time_idx')
+        test_with_lookback.append(pd.concat([c_val, c_test], ignore_index=True))
+    full_test_df = pd.concat(test_with_lookback, ignore_index=True)
+
     # Construct Datasets
     train_dataset = HourlyPacingDataset(train_df, lookback=168, horizon=24, is_train=True)
     val_dataset = HourlyPacingDataset(val_df, lookback=168, horizon=24, is_train=False)
-    test_dataset = HourlyPacingDataset(test_df, lookback=168, horizon=24, is_train=False)
+    test_dataset = HourlyPacingDataset(full_test_df, lookback=168, horizon=24, is_train=False)
 
     # Batch size 32 is optimal for 16GB unified memory & Metal MPS buffers
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
@@ -270,8 +279,9 @@ def main():
             lgb_results.append(res_lgb)
 
         # 4. Proposed TFT Simulation
-        # Predict on campaign sequences in safe chunk batches of 32
-        c_dataset = HourlyPacingDataset(c_test, lookback=168, horizon=24, is_train=False)
+        c_val = val_df[val_df['campaign_id'] == cid].sort_values('time_idx').iloc[-168:]
+        c_combined = pd.concat([c_val, c_test], ignore_index=True)
+        c_dataset = HourlyPacingDataset(c_combined, lookback=168, horizon=24, is_train=False)
         if len(c_dataset) > 0:
             c_loader = DataLoader(c_dataset, batch_size=32, shuffle=False)
             c_tft_out = eval_tft(model, c_loader, device, spend_mean, spend_std)

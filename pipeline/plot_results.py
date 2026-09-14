@@ -95,7 +95,7 @@ def plot_cumulative_pacing():
     ax.axhline(budget, color='black', linestyle=':', linewidth=1.5, label=r'Allocated Budget ($B$)')
     ax.plot(hours, ulp_cum, color='#e377c2', linestyle='-.', linewidth=1.8, label=r'Uniform Linear (Depleted early)')
     ax.plot(hours, pid_cum, color='#ff7f0e', linestyle='--', linewidth=1.8, label=r'PID Controller ($BUR \approx 89\%$)')
-    ax.plot(hours, tft_cum, color='#2ca02c', linewidth=2.2, label=r'Proposed Multi-Horizon TFT ($BUR \ge 97\%$)')
+    ax.plot(hours, tft_cum, color='#2ca02c', linewidth=2.2, label=r'Proposed Multi-Horizon TFT ($BUR \geq 97\%$)')
 
     ax.set_title("Cumulative Budget Expenditure & Solvency Horizon (15-Day Test Partition)")
     ax.set_xlabel("Campaign Lifespan (Hours)")

@@ -36,8 +36,11 @@ class PacingSimulationEngine:
 
     def simulate_linear_pacing(self, df_campaign: pd.DataFrame) -> SimulationResult:
         """Simulates Uniform Linear Pacing (ULP)."""
-        B = df_campaign['total_budget'].iloc[0]
         T = len(df_campaign)
+        if 'nominal_velocity' in df_campaign.columns:
+            B = float(df_campaign['nominal_velocity'].iloc[0] * T)
+        else:
+            B = float(df_campaign['total_budget'].iloc[0])
         nominal_velocity = B / T
         alpha = 1.0
 
@@ -102,8 +105,11 @@ class PacingSimulationEngine:
         Kd: float = 0.0004
     ) -> SimulationResult:
         """Simulates PID Feedback Controller Pacing."""
-        B = df_campaign['total_budget'].iloc[0]
         T = len(df_campaign)
+        if 'nominal_velocity' in df_campaign.columns:
+            B = float(df_campaign['nominal_velocity'].iloc[0] * T)
+        else:
+            B = float(df_campaign['total_budget'].iloc[0])
         nominal_velocity = B / T
         alpha = 1.0
         integral = 0.0
@@ -176,8 +182,11 @@ class PacingSimulationEngine:
         alpha_{t+1} = clip(alpha_t * (B - S_t) / sum(y_hat_90), alpha_min, 1.0)
         + Dual-Boundary Spike Detection Trigger
         """
-        B = df_campaign['total_budget'].iloc[0]
         T = len(df_campaign)
+        if 'nominal_velocity' in df_campaign.columns:
+            B = float(df_campaign['nominal_velocity'].iloc[0] * T)
+        else:
+            B = float(df_campaign['total_budget'].iloc[0])
         nominal_velocity = B / T
         alpha = 1.0
 
