@@ -1,0 +1,2 @@
+# Dev/test dependencies (pinned 2026-09-25)
+pytest==9.1.1

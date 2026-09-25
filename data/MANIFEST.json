@@ -1,0 +1,11 @@
+{
+  "criteo": {
+    "criteo_attribution_dataset.tsv.gz": {
+      "file": "criteo_attribution_dataset.tsv.gz",
+      "bytes": 653015824,
+      "sha256": "94ac7a465564349bc7ba008602211d5990a3c53cc133abc0aadef61ea2391a98",
+      "licence": "CC BY-NC-SA 4.0 (https://huggingface.co/datasets/criteo/criteo-attribution-dataset)",
+      "recorded_utc": "2026-09-25T09:37:11+00:00"
+    }
+  }
+}

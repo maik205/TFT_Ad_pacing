@@ -54,3 +54,12 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+# --- Paper-Optimizer S05 ---
+.pytest_cache/
+# Raw and processed data are never committed (licences: Criteo CC BY-NC-SA 4.0,
+# iPinYou CC0, AuctionNet Apache-2.0). Provenance is recorded in data/MANIFEST.json.
+data/raw/
+data/processed/
+# Large model weights produced by runs (metrics.json/config.json stay tracked)
+runs/**/*.ckpt
+runs/**/checkpoints/

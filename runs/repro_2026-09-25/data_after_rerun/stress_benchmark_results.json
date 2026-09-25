@@ -1,0 +1,187 @@
+{
+  "cold_start": {
+    "statistical": {
+      "lightgbm": {
+        "rmse": 20759.1016,
+        "mase": 1.0375,
+        "avg_pinball_loss": 4844.5851,
+        "pinball_q10": 2104.2974,
+        "pinball_q50": 7206.1074,
+        "pinball_q90": 5223.3506
+      },
+      "tft": {
+        "rmse": 46436.8008,
+        "mase": 2.4454,
+        "avg_pinball_loss": 15699.9785,
+        "pinball_q10": 5142.0996,
+        "pinball_q50": 16984.873,
+        "pinball_q90": 24972.9629
+      }
+    },
+    "economic": {
+      "ulp": {
+        "budget_utilization_rate": 62.79,
+        "premature_depletion_rate": 0.0,
+        "pacing_volatility_index": 0.0917
+      },
+      "pid": {
+        "budget_utilization_rate": 65.29,
+        "premature_depletion_rate": 0.0,
+        "pacing_volatility_index": 0.2166
+      },
+      "lightgbm": {
+        "budget_utilization_rate": 66.26,
+        "premature_depletion_rate": 0.0,
+        "pacing_volatility_index": 0.0353
+      },
+      "tft": {
+        "budget_utilization_rate": 54.43,
+        "premature_depletion_rate": 0.0,
+        "pacing_volatility_index": 0.0958
+      }
+    }
+  },
+  "pipeline_dropout_12h": {
+    "statistical": {
+      "lightgbm": {
+        "rmse": 13602.6104,
+        "mase": 0.0344,
+        "avg_pinball_loss": 903.4416,
+        "pinball_q10": 846.9954,
+        "pinball_q50": 1200.4235,
+        "pinball_q90": 662.9059
+      },
+      "tft": {
+        "rmse": 24346.5605,
+        "mase": 0.1667,
+        "avg_pinball_loss": 4252.4165,
+        "pinball_q10": 1930.1558,
+        "pinball_q50": 5824.314,
+        "pinball_q90": 5002.7798
+      }
+    },
+    "economic": {
+      "lightgbm": {
+        "budget_utilization_rate": 49.53,
+        "premature_depletion_rate": 0.0,
+        "pacing_volatility_index": 0.0798
+      },
+      "tft": {
+        "budget_utilization_rate": 48.97,
+        "premature_depletion_rate": 0.0,
+        "pacing_volatility_index": 0.1009
+      }
+    }
+  },
+  "multi_horizon_compounding": {
+    "H_12h": {
+      "lightgbm": {
+        "rmse": 5066.6523,
+        "mase": 0.0273,
+        "avg_pinball_loss": 790.5971,
+        "pinball_q10": 766.6307,
+        "pinball_q50": 951.9465,
+        "pinball_q90": 653.214,
+        "variance_preservation_ratio": 0.9622
+      },
+      "tft": {
+        "rmse": 14178.5615,
+        "mase": 0.124,
+        "avg_pinball_loss": 2714.4816,
+        "pinball_q10": 1683.7751,
+        "pinball_q50": 4316.9131,
+        "pinball_q90": 2142.7566,
+        "variance_preservation_ratio": 0.9178
+      }
+    },
+    "H_24h": {
+      "lightgbm": {
+        "rmse": 14993.6475,
+        "mase": 0.0581,
+        "avg_pinball_loss": 903.8859,
+        "pinball_q10": 849.7057,
+        "pinball_q50": 1219.035,
+        "pinball_q90": 642.9169,
+        "variance_preservation_ratio": 0.8449
+      },
+      "tft": {
+        "rmse": 16132.1045,
+        "mase": 0.1914,
+        "avg_pinball_loss": 2519.8868,
+        "pinball_q10": 1590.5326,
+        "pinball_q50": 4017.9485,
+        "pinball_q90": 1951.1794,
+        "variance_preservation_ratio": 0.8387
+      }
+    },
+    "H_48h": {
+      "lightgbm": {
+        "rmse": 11214.707,
+        "mase": 0.0465,
+        "avg_pinball_loss": 801.8206,
+        "pinball_q10": 701.0867,
+        "pinball_q50": 1033.2677,
+        "pinball_q90": 671.1075,
+        "variance_preservation_ratio": 0.8896
+      },
+      "tft": {
+        "rmse": 21245.25,
+        "mase": 0.2519,
+        "avg_pinball_loss": 4128.08,
+        "pinball_q10": 1922.5963,
+        "pinball_q50": 5603.5024,
+        "pinball_q90": 4858.1411,
+        "variance_preservation_ratio": 0.8639
+      }
+    }
+  },
+  "cross_campaign_zero_shot": {
+    "held_out_campaign_id": "937622",
+    "lightgbm": {
+      "statistical": {
+        "rmse": 6636.5957,
+        "mase": 0.1062,
+        "avg_pinball_loss": 738.756,
+        "pinball_q10": 599.8741,
+        "pinball_q50": 944.8839,
+        "pinball_q90": 671.5099
+      },
+      "economic": {
+        "budget_utilization_rate": 97.43,
+        "pacing_volatility_index": 0.0536,
+        "is_prematurely_depleted": false
+      }
+    },
+    "tft": {
+      "statistical": {
+        "rmse": 58077.7266,
+        "mase": 2.0655,
+        "avg_pinball_loss": 15341.0472,
+        "pinball_q10": 8564.2588,
+        "pinball_q50": 19975.584,
+        "pinball_q90": 17483.2988
+      },
+      "economic": {
+        "budget_utilization_rate": 96.07,
+        "pacing_volatility_index": 0.2851,
+        "is_prematurely_depleted": false
+      }
+    }
+  },
+  "quantile_monotonicity": {
+    "lightgbm": {
+      "total_points": 3240,
+      "crossings_q10_gt_q50": 205,
+      "rate_q10_gt_q50_pct": 6.33,
+      "crossings_q50_gt_q90": 270,
+      "rate_q50_gt_q90_pct": 8.33
+    },
+    "tft": {
+      "total_points": 1728,
+      "crossings_q10_gt_q50": 1,
+      "rate_q10_gt_q50_pct": 0.06,
+      "crossings_q50_gt_q90": 0,
+      "rate_q50_gt_q90_pct": 0.0
+    }
+  }
+}
