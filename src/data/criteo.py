@@ -36,12 +36,17 @@ def load_hourly(path: str, nrows: int | None = None) -> pd.DataFrame:
     return out
 
 
-def select_campaigns(hourly: pd.DataFrame, split: TimeSplit, min_active: float = 0.9) -> list:
-    """Campaigns with spend > 0 in at least `min_active` of TRAIN hours.
-
-    Uses train hours only, so the selection cannot depend on val/test behaviour.
+def select_campaigns(hourly: pd.DataFrame, split: TimeSplit, min_active: float = 0.9,
+                     min_active_val: float = 0.5) -> list:
+    """Campaigns with spend > 0 in >= `min_active` of TRAIN hours and in
+    >= `min_active_val` of VALIDATION hours (i.e. still running when the test
+    period starts). Test hours are never read, so selection cannot depend on
+    test behaviour; campaigns that stop during test are kept.
     """
-    train = hourly[hourly["hour"] < split.train_end]
-    assert_no_future(train, split.train_end)
-    active = train.assign(on=train["spend"] > 0).groupby("campaign")["on"].mean()
-    return sorted(active[active >= min_active].index.tolist())
+    past = hourly[hourly["hour"] < split.val_end]
+    assert_no_future(past, split.val_end)
+    on = past.assign(on=past["spend"] > 0)
+    tr = on[on["hour"] < split.train_end].groupby("campaign")["on"].mean()
+    va = on[on["hour"] >= split.train_end].groupby("campaign")["on"].mean()
+    ok = (tr >= min_active) & (va.reindex(tr.index).fillna(0) >= min_active_val)
+    return sorted(tr[ok].index.tolist())

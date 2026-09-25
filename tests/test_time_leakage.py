@@ -39,13 +39,19 @@ def test_budget_ignores_test_period():
     pd.testing.assert_series_equal(b0, budgets(df2, SPLIT, rho=0.7))
 
 
-def test_campaign_selection_ignores_val_and_test():
+def test_campaign_selection_ignores_test():
     df = _hourly()
     df.loc[(df["campaign"] == "b") & (df["hour"] < SPLIT.train_end), "spend"] = 0.0
-    sel0 = select_campaigns(df, SPLIT, min_active=0.9)
+    sel0 = select_campaigns(df, SPLIT)
     df2 = df.copy()
-    df2.loc[df2["hour"] >= SPLIT.train_end, "spend"] = 0.0  # wipe val+test
-    assert sel0 == select_campaigns(df2, SPLIT, min_active=0.9) == ["a"]
+    df2.loc[df2["hour"] >= SPLIT.val_end, "spend"] = 0.0  # wipe the test period only
+    assert sel0 == select_campaigns(df2, SPLIT) == ["a"]
+
+
+def test_campaign_selection_drops_stopped_in_val():
+    df = _hourly()
+    df.loc[(df["campaign"] == "b") & (df["hour"] >= SPLIT.train_end), "spend"] = 0.0
+    assert select_campaigns(df, SPLIT) == ["a"]
 
 
 def test_assert_no_future_detects_leak():

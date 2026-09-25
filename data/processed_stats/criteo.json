@@ -18,17 +18,17 @@
       742
     ]
   },
-  "selection_rule": "spend>0 in >=90% of TRAIN hours",
-  "n_campaigns_selected": 415,
-  "selected_spend_share_all_hours": 0.9170633681284537,
+  "selection_rule": "spend>0 in >=90% of TRAIN hours and >=50% of VAL hours (test never read)",
+  "n_campaigns_selected": 412,
+  "selected_spend_share_all_hours": 0.9147115713973112,
   "total_impressions": 16468027,
   "total_spend": 4829.340540947944,
   "per_series_mean_hourly_spend_quantiles": {
-    "0.1": 0.0014791613658985357,
-    "0.5": 0.006230620548067348,
-    "0.9": 0.029707580441587406
+    "0.1": 0.0014722459449002649,
+    "0.5": 0.006199091908553628,
+    "0.9": 0.029758797547319273
   },
-  "per_series_zero_hours_frac_median": 0.03099730458221024,
+  "per_series_zero_hours_frac_median": 0.03032345013477089,
   "raw_sha256": "94ac7a465564349bc7ba008602211d5990a3c53cc133abc0aadef61ea2391a98",
   "selected_campaigns": [
     73325,
@@ -187,7 +187,6 @@
     11843320,
     11938638,
     11959615,
-    12089529,
     12100671,
     12121528,
     12288258,
@@ -354,8 +353,6 @@
     26071516,
     26091094,
     26091099,
-    26321366,
-    26383493,
     26389107,
     26389108,
     26750602,

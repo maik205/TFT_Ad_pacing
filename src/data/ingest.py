@@ -59,7 +59,7 @@ def criteo_stats(hourly, selected) -> dict:
         "hours": [int(hourly["hour"].min()), int(hourly["hour"].max())],
         "n_campaigns_total": int(hourly["campaign"].nunique()),
         "split": {"train": [0, sp.train_end], "val": [sp.train_end, sp.val_end], "test": [sp.val_end, sp.end]},
-        "selection_rule": "spend>0 in >=90% of TRAIN hours",
+        "selection_rule": "spend>0 in >=90% of TRAIN hours and >=50% of VAL hours (test never read)",
         "n_campaigns_selected": len(selected),
         "selected_spend_share_all_hours": float(sel["spend"].sum() / hourly["spend"].sum()),
         "total_impressions": int(hourly["impressions"].sum()),

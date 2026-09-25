@@ -1,0 +1,14 @@
+{
+  "n_series": 412,
+  "median_acf_train_lag24": 0.4682450086615727,
+  "median_acf_train_lag168": 0.24679725420147827,
+  "daily_profile_peak_to_trough": 10.920727282822003,
+  "median_test_spend_over_budget_by_rho": {
+    "0.5": 1.8873517540307976,
+    "0.7": 1.348108395736284,
+    "0.9": 1.0485287522393318,
+    "1.1": 0.8578871609230896
+  },
+  "n_series_zero_spend_in_test": 2,
+  "note": "test_spend/budget > 1 means the unthrottled campaign would overspend B (budget binds)"
+}
