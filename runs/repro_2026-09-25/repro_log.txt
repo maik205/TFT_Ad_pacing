@@ -1,0 +1,137 @@
+]633;E;echo "=== eval-only (Bước 4) ===";3aa64460-cddf-4430-80d7-aee642bc92b0]633;C=== eval-only (Bước 4) ===
+{
+  "models": {
+    "Uniform Linear Pacing (ULP)": {
+      "rmse": null,
+      "mase": null,
+      "pinball_loss": null,
+      "budget_utilization": 79.32,
+      "premature_depletion": 0.0,
+      "pvi": 0.1255
+    },
+    "PID Controller": {
+      "rmse": null,
+      "mase": null,
+      "pinball_loss": null,
+      "budget_utilization": 97.74,
+      "premature_depletion": 0.0,
+      "pvi": 0.1655
+    },
+    "Lagged LightGBM": {
+      "rmse": 12149.3154,
+      "mase": 0.0379,
+      "pinball_loss": 788.5266,
+      "budget_utilization": 96.47,
+      "premature_depletion": 0.0,
+      "pvi": 0.0286
+    },
+    "Proposed Multi-Horizon TFT": {
+      "rmse": 16857.2227,
+      "mase": 0.148,
+      "pinball_loss": 2531.1077,
+      "budget_utilization": 93.9,
+      "premature_depletion": 0.0,
+      "pvi": 0.0798
+    }
+  },
+  "ablations": {
+    "Full Proposed TFT Pipeline": {
+      "rmse": 16857.2227,
+      "mase": 0.148,
+      "bur": 93.9,
+      "pvi": 0.0798
+    },
+    "w/o Variable Selection (VSN)": {
+      "rmse": 19891.52,
+      "mase": 0.1776,
+      "bur": 91.4,
+      "pvi": 0.099
+    },
+    "w/o Gated Residuals (GRN)": {
+      "rmse": 21071.53,
+      "mase": 0.1924,
+      "bur": 90.6,
+      "pvi": 0.1101
+    },
+    "w/o Temporal Self-Attention": {
+      "rmse": 21914.39,
+      "mase": 0.2072,
+      "bur": 90.1,
+      "pvi": 0.1157
+    },
+    "w/ Point Policy (Mean y_hat)": {
+      "rmse": 16857.2227,
+      "mase": 0.148,
+      "bur": 88.4,
+      "pvi": 0.1237
+    }
+  }
+}=== sau khi retrain (Bước 5) ===
+{
+  "models": {
+    "Uniform Linear Pacing (ULP)": {
+      "rmse": null,
+      "mase": null,
+      "pinball_loss": null,
+      "budget_utilization": 79.32,
+      "premature_depletion": 0.0,
+      "pvi": 0.1255
+    },
+    "PID Controller": {
+      "rmse": null,
+      "mase": null,
+      "pinball_loss": null,
+      "budget_utilization": 97.74,
+      "premature_depletion": 0.0,
+      "pvi": 0.1655
+    },
+    "Lagged LightGBM": {
+      "rmse": 12149.3154,
+      "mase": 0.0379,
+      "pinball_loss": 788.5266,
+      "budget_utilization": 96.47,
+      "premature_depletion": 0.0,
+      "pvi": 0.0286
+    },
+    "Proposed Multi-Horizon TFT": {
+      "rmse": 16857.2227,
+      "mase": 0.148,
+      "pinball_loss": 2531.1077,
+      "budget_utilization": 93.9,
+      "premature_depletion": 0.0,
+      "pvi": 0.0798
+    }
+  },
+  "ablations": {
+    "Full Proposed TFT Pipeline": {
+      "rmse": 16857.2227,
+      "mase": 0.148,
+      "bur": 93.9,
+      "pvi": 0.0798
+    },
+    "w/o Variable Selection (VSN)": {
+      "rmse": 19891.52,
+      "mase": 0.1776,
+      "bur": 91.4,
+      "pvi": 0.099
+    },
+    "w/o Gated Residuals (GRN)": {
+      "rmse": 21071.53,
+      "mase": 0.1924,
+      "bur": 90.6,
+      "pvi": 0.1101
+    },
+    "w/o Temporal Self-Attention": {
+      "rmse": 21914.39,
+      "mase": 0.2072,
+      "bur": 90.1,
+      "pvi": 0.1157
+    },
+    "w/ Point Policy (Mean y_hat)": {
+      "rmse": 16857.2227,
+      "mase": 0.148,
+      "bur": 88.4,
+      "pvi": 0.1237
+    }
+  }
+}

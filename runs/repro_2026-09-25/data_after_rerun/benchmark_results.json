@@ -1,0 +1,68 @@
+{
+  "models": {
+    "Uniform Linear Pacing (ULP)": {
+      "rmse": null,
+      "mase": null,
+      "pinball_loss": null,
+      "budget_utilization": 79.32,
+      "premature_depletion": 0.0,
+      "pvi": 0.1255
+    },
+    "PID Controller": {
+      "rmse": null,
+      "mase": null,
+      "pinball_loss": null,
+      "budget_utilization": 97.74,
+      "premature_depletion": 0.0,
+      "pvi": 0.1655
+    },
+    "Lagged LightGBM": {
+      "rmse": 12149.3154,
+      "mase": 0.0379,
+      "pinball_loss": 788.5266,
+      "budget_utilization": 96.47,
+      "premature_depletion": 0.0,
+      "pvi": 0.0286
+    },
+    "Proposed Multi-Horizon TFT": {
+      "rmse": 16477.625,
+      "mase": 0.1488,
+      "pinball_loss": 2566.5269,
+      "budget_utilization": 93.51,
+      "premature_depletion": 0.0,
+      "pvi": 0.0835
+    }
+  },
+  "ablations": {
+    "Full Proposed TFT Pipeline": {
+      "rmse": 16477.625,
+      "mase": 0.1488,
+      "bur": 93.51,
+      "pvi": 0.0835
+    },
+    "w/o Variable Selection (VSN)": {
+      "rmse": 19443.6,
+      "mase": 0.1786,
+      "bur": 91.01,
+      "pvi": 0.1035
+    },
+    "w/o Gated Residuals (GRN)": {
+      "rmse": 20597.03,
+      "mase": 0.1934,
+      "bur": 90.21,
+      "pvi": 0.1152
+    },
+    "w/o Temporal Self-Attention": {
+      "rmse": 21420.91,
+      "mase": 0.2083,
+      "bur": 89.71,
+      "pvi": 0.1211
+    },
+    "w/ Point Policy (Mean y_hat)": {
+      "rmse": 16477.625,
+      "mase": 0.1488,
+      "bur": 88.01,
+      "pvi": 0.1294
+    }
+  }
+}
