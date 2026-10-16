@@ -54,3 +54,9 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+# v2: large binaries stay on the compute host; checksums in v2/results/LARGE_FILES_SHA256.txt
+v2/results/forecasts/*.npz
+v2/results/pacing_test_episodes.parquet
+!v2/results/*.csv
+v2/paper/*.pdf
+!v2/paper/main.pdf
