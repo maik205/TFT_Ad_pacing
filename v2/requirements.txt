@@ -1,0 +1,9 @@
+numpy
+pandas
+pyarrow
+scipy
+lightgbm
+torch
+neuralforecast==3.3.0
+matplotlib
+pytest

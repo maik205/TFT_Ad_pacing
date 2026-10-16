@@ -1,0 +1,13 @@
+{
+  "n_impressions": 16468027,
+  "n_campaigns_total": 675,
+  "n_campaigns_selected": 414,
+  "hours": [
+    0,
+    741
+  ],
+  "selected_share_of_total_spend": 0.917194364087251,
+  "selected_share_of_impressions": 0.9197609403968064,
+  "n_eval_impressions": 4197856,
+  "test_episodes": 2070
+}

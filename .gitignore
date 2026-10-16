@@ -60,3 +60,5 @@ v2/results/pacing_test_episodes.parquet
 !v2/results/*.csv
 v2/paper/*.pdf
 !v2/paper/main.pdf
+!v2/logs/**/*.log
+!v2/logs/**/*.out

@@ -1,0 +1,10 @@
+\begin{tabular}{lcccccr}
+\toprule
+Forecaster & MASE & MASE$_{h=1}$ & MASE$_{h=24}$ & sPL$_{0.9}$ & Cov.\,80\% & Time (s) \\
+\midrule
+Seasonal naive & 0.917 & 0.920 & 0.908 & 0.194 & 60.6 & 0 \\
+LightGBM & 0.853 & 0.810 & 0.871 & 0.185 & 71.7 & 76 \\
+NHITS & 0.794 $\pm$ 0.014 & 0.719 & 0.813 & 0.158 & 75.8 & 40 \\
+TFT & 0.787 $\pm$ 0.004 & 0.729 & 0.814 & 0.161 & 76.9 & 205 \\
+\bottomrule
+\end{tabular}

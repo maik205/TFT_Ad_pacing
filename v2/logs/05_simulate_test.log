@@ -1,0 +1,7 @@
+rho                    0.3    0.5    0.7
+policy                                  
+Even pacing          20700  20700  20700
+Hindsight constant   20700  20700  20700
+NHITS_seed0 (q=0.5)  20700  20700  20700
+NHITS_seed0 (q=0.7)  20700  20700  20700
+NHITS_seed0 (q=0.9)  20700  20700  20700

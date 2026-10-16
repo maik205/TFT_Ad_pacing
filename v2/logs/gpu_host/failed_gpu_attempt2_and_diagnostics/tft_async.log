@@ -1,0 +1,168 @@
+W1016 22:59:29.624000 31016 Lib\site-packages\torch\utils\flop_counter.py:113] triton not found; flop counting will not work for triton kernels
+Seed set to 99
+C:\Users\maik\pacing_v2\venv\Lib\site-packages\neuralforecast\tsdataset.py:131: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:219.)
+  x = torch.from_numpy(x)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+You are using a CUDA device ('NVIDIA GeForce RTX 3070 Ti') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+   | Name                    | Type                     | Params | Mode  | FLOPs
+--------------------------------------------------------------------------------------
+0  | loss                    | MQLoss                   | 4      | train | 0    
+1  | hist_cat_embeddings     | ModuleList               | 0      | train | 0    
+2  | futr_cat_embeddings     | ModuleList               | 0      | train | 0    
+3  | stat_cat_embeddings     | ModuleList               | 0      | train | 0    
+4  | padder_train            | ConstantPad1d            | 0      | train | 0    
+5  | scaler                  | TemporalNorm             | 0      | train | 0    
+6  | embedding               | TFTEmbedding             | 1.3 K  | train | 0    
+7  | static_encoder          | StaticCovariateEncoder   | 138 K  | train | 0    
+8  | temporal_encoder        | TemporalCovariateEncoder | 326 K  | train | 0    
+9  | temporal_fusion_decoder | TemporalFusionDecoder    | 64.8 K | train | 0    
+10 | output_adapter          | Linear                   | 260    | train | 0    
+--------------------------------------------------------------------------------------
+532 K     Trainable params
+4         Non-trainable params
+532 K     Total params
+2.128     Total estimated model params size (MB)
+225       Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\utilities\_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\utilities\_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+Traceback (most recent call last):
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\trainer\call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\trainer\trainer.py", line 630, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path, weights_only=weights_only)
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1079, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1123, in _run_stage
+    self.fit_loop.run()
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\loops\fit_loop.py", line 217, in run
+    self.advance()
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\loops\fit_loop.py", line 469, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\loops\training_epoch_loop.py", line 153, in run
+    self.advance(data_fetcher)
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\loops\training_epoch_loop.py", line 352, in advance
+    batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\loops\optimization\automatic.py", line 192, in run
+    self._optimizer_step(batch_idx, closure)
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\loops\optimization\automatic.py", line 270, in _optimizer_step
+    call._call_lightning_module_hook(
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\trainer\call.py", line 177, in _call_lightning_module_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\core\module.py", line 1368, in optimizer_step
+    optimizer.step(closure=optimizer_closure)
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\core\optimizer.py", line 154, in step
+    step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\strategies\strategy.py", line 239, in optimizer_step
+    return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\plugins\precision\precision.py", line 123, in optimizer_step
+    return optimizer.step(closure=closure, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\torch\optim\lr_scheduler.py", line 166, in wrapper
+    return func.__get__(opt, opt.__class__)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\torch\optim\optimizer.py", line 549, in wrapper
+    out = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\torch\optim\optimizer.py", line 79, in _use_grad
+    ret = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\torch\optim\adam.py", line 227, in step
+    loss = closure()
+           ^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\plugins\precision\precision.py", line 109, in _wrap_closure
+    closure_result = closure()
+                     ^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\loops\optimization\automatic.py", line 146, in __call__
+    self._result = self.closure(*args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\torch\utils\_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\loops\optimization\automatic.py", line 131, in closure
+    step_output = self._step_fn()
+                  ^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\loops\optimization\automatic.py", line 319, in _training_step
+    training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\trainer\call.py", line 329, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\strategies\strategy.py", line 391, in training_step
+    return self.lightning_module.training_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\neuralforecast\common\_base_model.py", line 2388, in training_step
+    windows = self._normalization(windows=windows, y_idx=y_idx)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\neuralforecast\common\_base_model.py", line 1434, in _normalization
+    temporal_data = temporal[:, :, temporal_idxs]
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+The CUDA driver logged these messages, which may provide useful details:
+Returning 719 (CUDA_ERROR_LAUNCH_FAILED) from cuStreamSynchronize
+
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\maik\pacing_v2\code\scripts\02_forecast.py", line 33, in <module>
+    F, info = neural_forecast(args.model, panel, campaigns, stat, seed=args.seed,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\code\src\pacing\forecasters.py", line 168, in neural_forecast
+    cv = nf.cross_validation(df=df, static_df=static_df, n_windows=None, test_size=test_size,
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\neuralforecast\core.py", line 2592, in cross_validation
+    return self._no_refit_cross_validation(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\neuralforecast\core.py", line 2365, in _no_refit_cross_validation
+    model.fit(
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\neuralforecast\common\_base_model.py", line 2609, in fit
+    return self._fit(
+           ^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\neuralforecast\common\_base_model.py", line 1007, in _fit
+    trainer.fit(model, datamodule=datamodule)
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\trainer\trainer.py", line 584, in fit
+    call._call_and_handle_interrupt(
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\trainer\call.py", line 70, in _call_and_handle_interrupt
+    trainer._teardown()
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\trainer\trainer.py", line 1102, in _teardown
+    self.strategy.teardown()
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\pytorch_lightning\strategies\strategy.py", line 532, in teardown
+    _optimizers_to_device(self.optimizers, torch.device("cpu"))
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\lightning_fabric\utilities\optimizer.py", line 27, in _optimizers_to_device
+    _optimizer_to_device(opt, device)
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\lightning_fabric\utilities\optimizer.py", line 41, in _optimizer_to_device
+    v[key] = move_data_to_device(val, device)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\lightning_fabric\utilities\apply_func.py", line 110, in move_data_to_device
+    return apply_to_collection(batch, dtype=_TransferableDataType, function=batch_to)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\lightning_utilities\core\apply_func.py", line 70, in apply_to_collection
+    return function(data, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\maik\pacing_v2\venv\Lib\site-packages\lightning_fabric\utilities\apply_func.py", line 104, in batch_to
+    data_output = data.to(device, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unspecified launch failure
+Search for `cudaErrorLaunchFailure' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+The CUDA driver logged these messages, which may provide useful details:
+Sticky error detected
+Returning 719 (CUDA_ERROR_LAUNCH_FAILED) from cuStreamIsCapturing
+
+

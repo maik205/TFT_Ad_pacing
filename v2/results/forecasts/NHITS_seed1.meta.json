@@ -1,0 +1,54 @@
+{
+  "name": "forecasts/NHITS_seed1",
+  "utc": "2026-10-16T16:31:08.696839+00:00",
+  "code_version": "c5a548d75f18c7eb",
+  "argv": [
+    "scripts\\02_forecast.py",
+    "NHITS",
+    "--seed",
+    "1",
+    "--accelerator",
+    "gpu"
+  ],
+  "python": "3.12.10",
+  "host": "MaiksPC",
+  "config": {
+    "DEPLETION_TOL": 0.99,
+    "EARLY_DEPLETION_HOUR": 20,
+    "HEDGE_QUANTILES": [
+      0.5,
+      0.7,
+      0.9
+    ],
+    "HORIZON": 24,
+    "LOOKBACK": 168,
+    "MAX_CAMPAIGNS": 0,
+    "MIN_ACTIVE_FRAC": 0.9,
+    "N_BOOTSTRAP": 2000,
+    "N_HOURS": 742,
+    "N_NN_SEEDS": 3,
+    "N_REPLAY_SEEDS": 10,
+    "PATHS": {
+      "raw": "~/datasets/criteo_attribution/criteo_attribution_dataset.tsv.gz",
+      "work": "~/pacing_v2/work",
+      "results": "~/pacing_v2/results"
+    },
+    "QUANTILES": [
+      0.1,
+      0.5,
+      0.7,
+      0.9
+    ],
+    "RHOS": [
+      0.3,
+      0.5,
+      0.7
+    ],
+    "TEST_END": 720,
+    "TRAIN_END": 504,
+    "VAL_END": 600
+  },
+  "wall_seconds_fit_and_predict": 36.2126088142395,
+  "train_steps": 0,
+  "total_seconds": 42.55188798904419
+}
