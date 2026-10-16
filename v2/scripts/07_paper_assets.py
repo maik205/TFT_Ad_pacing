@@ -123,6 +123,18 @@ span("pid-pvi", [get("pid", r, "pvi") for r in C.RHOS], lambda x: f"{x:.2f}")
 span("pid-early", [get("pid", r, "early_depletion") for r in C.RHOS], pct)
 span("fc-pvi", [get(f"{m}-q0.5", r, "pvi") for m in nn for r in C.RHOS], lambda x: f"{x:.2f}")
 span("fc-early", [get(f"{m}-q0.5", r, "early_depletion") for m in nn for r in C.RHOS], pct)
+def sig_count(pairs, name):
+    sub = K[[(a, b) in pairs for a, b in zip(K.a, K.b)]]
+    V[f"{name}-sig"] = str(int((sub.p_holm < 0.05).sum()))
+    V[f"{name}-total"] = str(len(sub))
+    V[f"{name}-pmax"] = f"{sub.p_holm.max():.2g}"
+
+
+nn_med = [f"{m} (q=0.5)" for m in ("TFT", "NHITS")]
+sig_count({(a, b) for a in nn_med for b in ("Even pacing", "PID (tuned)")}, "cmp-nn-baselines")
+sig_count({(f"{m} (q=0.9)", b) for m in FORECASTERS for b in ("Even pacing", "PID (tuned)")}, "cmp-q09-baselines")
+sig_count({("NHITS (q=0.5)", "TFT (q=0.5)"), ("TFT (q=0.5)", "NHITS (q=0.5)")}, "cmp-tft-nhits")
+sig_count({(a, "lightgbm (q=0.5)") for a in nn_med}, "cmp-nn-lgb")
 V["n-comparisons"] = str(len(K))
 V["n-significant"] = str(int((K.p_holm < 0.05).sum()))
 V["n-campaigns-paired"] = str(int(K.n_campaigns.min()))
@@ -145,7 +157,7 @@ for model, ts in times.items():
 plt.rcParams.update({"font.size": 7, "axes.titlesize": 7, "legend.fontsize": 6, "pdf.fonttype": 42})
 colors = {"naive": "#7f7f7f", "lightgbm": "#d95f02", "NHITS": "#1b9e77", "TFT": "#7570b3"}
 markers = {"naive": "s", "lightgbm": "^", "NHITS": "o", "TFT": "D"}
-fig, axes = plt.subplots(1, 3, figsize=(7.0, 2.1), sharey=True)
+fig, axes = plt.subplots(1, 3, figsize=(7.0, 2.35), sharey=True)
 qs = list(C.HEDGE_QUANTILES)
 for ax, rho in zip(axes, C.RHOS):
     for j, m in enumerate(FORECASTERS):
@@ -163,8 +175,9 @@ for ax, rho in zip(axes, C.RHOS):
     ax.set_xlabel("hedging quantile $q$")
     ax.grid(alpha=0.25, lw=0.4)
 axes[0].set_ylabel("clicks / hindsight reference")
-axes[-1].legend(loc="lower left", ncol=2, frameon=False)
-fig.tight_layout()
+handles, labels = axes[0].get_legend_handles_labels()
+fig.legend(handles, labels, loc="lower center", ncol=7, frameon=False, bbox_to_anchor=(0.5, 0.0))
+fig.tight_layout(rect=(0, 0.08, 1, 1))
 fig.savefig(f"{R}/figures/fig_hedging.pdf")
 plt.close(fig)
 
