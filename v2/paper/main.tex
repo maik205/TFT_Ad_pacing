@@ -16,7 +16,7 @@
 
 \begin{document}
 
-\title{What Does a Forecast Add to Budget Pacing?}
+\title{What Do Neural Predictors Add to Budget Pacing?}
 \subtitle{Daily Totals, Hourly Shape and Hedging in Throttling-Based Pacing on Criteo Campaign Logs}
 
 \author{Mai Minh Duc}
@@ -29,10 +29,10 @@
 \begin{abstract}
 Demand-side platforms pace daily campaign budgets by throttling participation in auctions.
 A natural way to pace is to forecast the demand of the remaining day and throttle so that the
-forecast fits the remaining budget. We ask what such a forecast adds. On \res{data-impressions}
+forecast fits the remaining budget. We ask what neural predictors add to it. On \res{data-impressions}
 real impressions from \res{data-campaigns} campaigns in the Criteo Attribution dataset, we couple
-rolling-origin probabilistic forecasts (seasonal naive, LightGBM, NHITS and the Temporal Fusion
-Transformer, TFT) with an impression-replay pacing environment and compare them with no pacing,
+rolling-origin probabilistic forecasts from two neural predictors (NHITS and the Temporal Fusion Transformer, TFT) and two
+non-neural references (seasonal naive and LightGBM) with an impression-replay pacing environment and compare them with no pacing,
 even pacing and a proportional-integral-derivative (PID) controller tuned on validation days, at
 three budget levels. Throttling on the median neural forecast captures
 \res{gain-even-min}--\res{gain-even-max} points more clicks than even pacing and
@@ -56,7 +56,7 @@ of one dataset and a throttling-only simulator. We will release the code, protoc
 \end{abstract}
 
 \keywords{budget pacing, throttling, real-time bidding, probabilistic forecasting,
-Temporal Fusion Transformer, empirical study}
+neural predictors, empirical study}
 
 \maketitle
 
@@ -78,7 +78,9 @@ A practitioner therefore faces three questions. Does forecasting help over a wel
 If it does, what exactly does the forecast add: a better daily total, a better hourly shape, or
 something else? And should the policy hedge by planning against an upper quantile of demand?
 
-We answer these questions empirically on real campaign logs. This is an applied study: the
+We answer these questions empirically on real campaign logs, with neural predictors as the object of study: NHITS and TFT are two
+instances of the class, and TFT is the reference model in the analyses that need one (the analyses that were also run for NHITS give the same
+picture). This is an applied study: the
 forecasters and the throttling model are established methods, used as tools. Our contributions are:
 \begin{enumerate}
   \item A reproducible pipeline that couples hourly rolling-origin probabilistic spend forecasts
@@ -517,7 +519,7 @@ contradiction of it by more than a point estimate.
 % ------------------------------------------------------------------
 \section{Discussion}
 
-\textbf{What the forecast adds.} Forecast-driven throttling beat even pacing and a tuned PID here. Relative to a seasonal
+\textbf{What neural predictors add.} Forecast-driven throttling beat even pacing and a tuned PID here. Relative to a seasonal
 profile, the learned forecaster's contribution is mostly that it delivers more of the budget without losing efficiency: one scale on
 the naive total recovers \res{sn-share-rho0.3}\% to \res{sn-share-rho0.7}\% of the gain, more as the budget loosens, and in a total/shape
 swap the forecast total supplies \res{ex-tshare-min}--\res{ex-tshare-max}\% of it. A smaller edge remains beyond one scale, and an oracle
