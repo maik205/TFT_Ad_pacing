@@ -1,0 +1,136 @@
+{
+ "tuned": {
+  "O-P1": {
+   "eta": 6.440408321893595,
+   "lam0": 0.42268722119765845
+  },
+  "O-P4": {
+   "damp": 0.9538304611693746,
+   "kappa": 0.9431180786836281
+  }
+ },
+ "rho": 0.5,
+ "days": [
+  24,
+  28
+ ],
+ "runs": [
+  {
+   "world": "C:/Users/maik/pacing_v3/worlds/churn5_s0",
+   "cost": "C1",
+   "ub": {
+    "primal_value": 6021.614091585873,
+    "dual_bound": 6024.480598442861,
+    "gap": 0.0004760362941547136,
+    "max_utilisation": 1.0000000000000002
+   },
+   "P0": {
+    "value_over_ub": 0.37867174264182735,
+    "mean_ratio_per_campaign_day": 354.27720950030135,
+    "expected_clicks": 742.9228902171037,
+    "utilisation": 0.6036746768045753,
+    "early_depletion_share": 0.0,
+    "wasted_spend_share": 0.08802062374877934,
+    "campaign_days": 120
+   },
+   "O-P1": {
+    "value_over_ub": 0.6438459251617069,
+    "mean_ratio_per_campaign_day": 195.74941431767402,
+    "expected_clicks": 1412.4144430120377,
+    "utilisation": 0.5251681618315426,
+    "early_depletion_share": 0.0,
+    "wasted_spend_share": 0.08203657906459555,
+    "campaign_days": 120
+   },
+   "O-P4": {
+    "value_over_ub": 0.6525515738588187,
+    "mean_ratio_per_campaign_day": 173.04078396085825,
+    "expected_clicks": 1409.9765608528737,
+    "utilisation": 0.5109648041461617,
+    "early_depletion_share": 0.18333333333333332,
+    "wasted_spend_share": 0.07824982604823166,
+    "campaign_days": 120
+   },
+   "gain_O-P4_minus_O-P1": 0.008705648697111767,
+   "seconds": 98
+  },
+  {
+   "world": "C:/Users/maik/pacing_v3/worlds/churn5_s1",
+   "cost": "C1",
+   "ub": {
+    "primal_value": 4105.973344892173,
+    "dual_bound": 4107.885511301893,
+    "gap": 0.00046570356139752356,
+    "max_utilisation": 1.0000000000000002
+   },
+   "P0": {
+    "value_over_ub": 0.3501881955631117,
+    "mean_ratio_per_campaign_day": 67.02765498402283,
+    "expected_clicks": 693.3804663224635,
+    "utilisation": 0.5812477359402685,
+    "early_depletion_share": 0.0,
+    "wasted_spend_share": 0.08766837454821161,
+    "campaign_days": 120
+   },
+   "O-P1": {
+    "value_over_ub": 0.6989547651469339,
+    "mean_ratio_per_campaign_day": 18.42992619360865,
+    "expected_clicks": 1391.7726159193624,
+    "utilisation": 0.5059012084541731,
+    "early_depletion_share": 0.008333333333333333,
+    "wasted_spend_share": 0.08586514749042434,
+    "campaign_days": 120
+   },
+   "O-P4": {
+    "value_over_ub": 0.7058362085878332,
+    "mean_ratio_per_campaign_day": 15.123885380365689,
+    "expected_clicks": 1403.8439658795285,
+    "utilisation": 0.49947367290548217,
+    "early_depletion_share": 0.09166666666666666,
+    "wasted_spend_share": 0.08733200598887189,
+    "campaign_days": 120
+   },
+   "gain_O-P4_minus_O-P1": 0.00688144344089936,
+   "seconds": 90
+  },
+  {
+   "world": "C:/Users/maik/pacing_v3/worlds/churn5_s2",
+   "cost": "C1",
+   "ub": {
+    "primal_value": 5118.981501450647,
+    "dual_bound": 5121.144465209943,
+    "gap": 0.0004225379128022233,
+    "max_utilisation": 1.0000000000000002
+   },
+   "P0": {
+    "value_over_ub": 0.38755682030495875,
+    "mean_ratio_per_campaign_day": 334.37645262099795,
+    "expected_clicks": 689.4479986699964,
+    "utilisation": 0.5747024186847971,
+    "early_depletion_share": 0.0,
+    "wasted_spend_share": 0.0937880301792521,
+    "campaign_days": 120
+   },
+   "O-P1": {
+    "value_over_ub": 0.6682022637727189,
+    "mean_ratio_per_campaign_day": 162.28392128843083,
+    "expected_clicks": 1362.7880794792309,
+    "utilisation": 0.528616387085479,
+    "early_depletion_share": 0.0,
+    "wasted_spend_share": 0.0883219496862946,
+    "campaign_days": 120
+   },
+   "O-P4": {
+    "value_over_ub": 0.661844718047717,
+    "mean_ratio_per_campaign_day": 168.53480089049796,
+    "expected_clicks": 1338.3043624829352,
+    "utilisation": 0.5294231857768754,
+    "early_depletion_share": 0.14166666666666666,
+    "wasted_spend_share": 0.08676184803271779,
+    "campaign_days": 120
+   },
+   "gain_O-P4_minus_O-P1": -0.006357545725001801,
+   "seconds": 89
+  }
+ ]
+}
