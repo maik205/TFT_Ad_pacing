@@ -508,6 +508,19 @@ All entries below were logged on 2026-10-16, before any test-split pacing result
     the five have an edge at matched spend; otherwise it is reported as specific to some architectures. Descriptively, the
     Spearman rank correlation between the models' mean MASE and their mean click gain over seasonal naive is reported,
     over the five neural models. Output: `results/neural_models.json`.
+    - *Results (logged 2026-10-19).* All nine new training runs succeeded on the first attempt. Mean MASE over seeds
+      (SD): TiDE 0.786 (0.000), TFT 0.787 (0.004), NHITS 0.794 (0.014), PatchTST 0.806 (0.001), LSTM 0.816 (0.005),
+      against 0.853 for LightGBM and 0.917 for seasonal naive. Click gain over seasonal naive in points at the tight, medium
+      and loose budgets: TiDE 2.05, 1.92, 1.50; TFT 2.03, 1.73, 1.32; NHITS 2.14, 1.77, 1.16; PatchTST 1.82, 1.68, 1.26; LSTM
+      1.60, 1.27, 0.98; every interval is above zero. Points above the scaling curve at matched spend: TiDE 1.21, 0.82, 0.50;
+      TFT 1.20, 0.74, 0.47; NHITS 1.30, 0.83, 0.44; PatchTST 1.00, 0.67, 0.39; LSTM 0.81, 0.43, 0.26; every interval is above
+      zero and every resample fell inside the curve. By the rules: all 5 of 5 models beat the seasonal profile at 3 of 3
+      levels, so "beats the seasonal profile" is a property of the class; all 5 of 5 have an edge at matched spend at 3 of
+      3 levels, so "an edge beyond the total remains" is a property of the class. The Spearman rank correlation between
+      mean MASE and mean click gain is -1.00 over the five models: the order of accuracy (TiDE, TFT, NHITS, PatchTST, LSTM)
+      is the order of pacing gain; TFT and NHITS are nearly tied (mean gain 1.693 and 1.690). Five models is too few for
+      more than a descriptive statement. The spend and efficiency columns show the same pattern as for TFT: 1.2 to 2.1%
+      more spend and clicks per unit of spend within 0.25% of seasonal naive.
 
 ## Why v2
 

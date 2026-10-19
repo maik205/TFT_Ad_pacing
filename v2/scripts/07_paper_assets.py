@@ -243,6 +243,7 @@ BL = json.load(open(f"{R}/baselines.json"))          # 16_baselines.py (dual gra
 DF = json.load(open(f"{R}/dual_gradient_fixed.json"))  # 19_dual_gradient_fixed.py
 IP = json.load(open(f"{R}/ipinyou.json"))            # 18_ipinyou.py
 IPS = json.load(open(f"{R}/ipinyou_summary.json"))   # 17_ipinyou_build.py
+NN = json.load(open(f"{R}/neural_models.json"))      # 20_more_neural.py (five neural predictors; PROTOCOL 10.21)
 FR = json.load(open(f"{R}/frontier.json"))           # 11_frontier.py
 FB = json.load(open(f"{R}/feedback.json"))           # 12_feedback.py
 HC = json.load(open(f"{R}/hedge_coverage.json"))     # 13_hedge_coverage.py
@@ -442,6 +443,47 @@ for rho in C.RHOS:
                     ("Oracle remaining", "Naive", "oracle-naive")):
         r = next(r for r in IP["pairs"] if r["rho"] == rho and r["a"] == a and r["b"] == b)
         V[f"ipy-{k}-rho{rho}"], V[f"ipy-{k}-ci-rho{rho}"] = sg(r["points"], 1), ci2(r["ci"], 1)
+
+# five neural predictors (20_more_neural.py; PROTOCOL 10.21)
+NN_MODELS = ["TFT", "NHITS", "PatchTST", "LSTM", "TiDE"]
+
+
+def nnp(rho, m):
+    return next(r for r in NN["pairs"] if r["rho"] == rho and r["model"] == m)
+
+
+for m in NN_MODELS:
+    V[f"nn-mase-{m.lower()}"] = f"{NN['mase'][m]['mean']:.3f}"
+    for rho in C.RHOS:
+        r = nnp(rho, m)
+        V[f"nn-click-{m.lower()}-rho{rho}"] = ratio(NN["ratios"][str(rho)][m])
+        V[f"nn-gain-{m.lower()}-rho{rho}"] = sg(r["gain_vs_naive"], 2)
+        V[f"nn-gain-ci-{m.lower()}-rho{rho}"] = ci2(r["gain_ci"], 2)
+        V[f"nn-above-{m.lower()}-rho{rho}"] = sg(r["above_curve"], 2)
+        V[f"nn-above-ci-{m.lower()}-rho{rho}"] = ci2(r["above_ci"], 2)
+V["nn-mase-lightgbm"] = f"{NN['mase']['lightgbm']['mean']:.3f}"
+V["nn-mase-naive"] = f"{NN['mase']['naive']['mean']:.3f}"
+V["nn-n-models"] = str(len(NN_MODELS))
+V["nn-n-beat"], V["nn-n-edge"] = str(NN["n_beat"]), str(NN["n_edge"])
+V["nn-beat-verdict"] = "a property of the class" if NN["class_beats"] else "specific to some architectures"
+V["nn-edge-verdict"] = "a property of the class" if NN["class_edge"] else "specific to some architectures"
+V["nn-spearman"] = sg(NN["spearman_mase_gain"], 2)
+rng2("nn-gain", [r["gain_vs_naive"] for r in NN["pairs"]], 2)
+rng2("nn-above", [r["above_curve"] for r in NN["pairs"]], 2)
+rng2("nn-spend", [r["spend_pct"] for r in NN["pairs"]], 1)
+rng2("nn-eff", [r["eff_pct"] for r in NN["pairs"]], 2)
+NAMES = {"TFT": "TFT", "NHITS": "NHITS", "PatchTST": "PatchTST", "LSTM": "LSTM", "TiDE": "TiDE"}
+rows = [r"\begin{tabular}{lccccccc}", r"\toprule",
+        r" & & \multicolumn{3}{c}{Gain over seasonal naive} & \multicolumn{3}{c}{Above the scaling curve} \\",
+        r"\cmidrule(lr){3-5}\cmidrule(lr){6-8}",
+        r"Model & MASE & $\rho{=}0.3$ & $\rho{=}0.5$ & $\rho{=}0.7$ & $\rho{=}0.3$ & $\rho{=}0.5$ & $\rho{=}0.7$ \\", r"\midrule"]
+for m in NN_MODELS:
+    g = [sg(nnp(rho, m)["gain_vs_naive"], 2) for rho in C.RHOS]
+    a = [sg(nnp(rho, m)["above_curve"], 2) for rho in C.RHOS]
+    rows.append(f"{NAMES[m]} & {NN['mase'][m]['mean']:.3f} & " + " & ".join(g + a) + r" \\")
+rows += [r"\bottomrule", r"\end{tabular}"]
+with open(f"{R}/tables/neural.tex", "w") as fh:
+    fh.write("\n".join(rows) + "\n")
 
 # table: where the click gain comes from (median plans)
 dec = [("TFT", "Naive", "TFT $-$ seasonal naive"), ("Naive tuned", "Naive", "Scaled naive $-$ seasonal naive"),
