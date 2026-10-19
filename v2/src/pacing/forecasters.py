@@ -144,7 +144,7 @@ def _quantile_columns(cols, alias):
 def neural_forecast(kind, panel, campaigns, stat, seed, accelerator="cpu", max_steps=3000):
     from neuralforecast import NeuralForecast
     from neuralforecast.losses.pytorch import MQLoss
-    from neuralforecast.models import NHITS, TFT
+    from neuralforecast.models import LSTM, NHITS, TFT, PatchTST, TiDE
 
     df, static_df = nf_frames(panel, campaigns, stat)
     hist, futr, stat_cols = ["imps", "clicks"], ["hod_sin", "hod_cos", "dow_sin", "dow_cos"], ["log_scale", "ctr", "cv"]
@@ -158,6 +158,17 @@ def neural_forecast(kind, panel, campaigns, stat, seed, accelerator="cpu", max_s
         model = TFT(hidden_size=64, dropout=0.1, **common)
     elif kind == "NHITS":
         model = NHITS(**common)
+    elif kind == "PatchTST":
+        # univariate: the model takes no historical, future or static covariates (PROTOCOL 10.21)
+        for k in ("hist_exog_list", "futr_exog_list", "stat_exog_list"):
+            common.pop(k)
+        model = PatchTST(encoder_layers=2, n_heads=4, hidden_size=64, linear_hidden_size=128, dropout=0.1, fc_dropout=0.1,
+                         patch_len=16, stride=8, **common)
+    elif kind == "LSTM":
+        model = LSTM(encoder_n_layers=2, encoder_hidden_size=64, decoder_hidden_size=64, decoder_layers=2, **common)
+    elif kind == "TiDE":
+        model = TiDE(hidden_size=256, decoder_output_dim=16, temporal_decoder_dim=64, dropout=0.1, num_encoder_layers=1,
+                     num_decoder_layers=1, **common)
     else:
         raise ValueError(kind)
     nf = NeuralForecast(models=[model], freq=1)

@@ -1,6 +1,6 @@
 """Produce rolling-origin test forecasts for one forecaster/seed.
 
-usage: 02_forecast.py {naive,lightgbm,TFT,NHITS} [--seed S] [--accelerator cpu|mps] [--max-steps N]
+usage: 02_forecast.py {naive,lightgbm,TFT,NHITS,PatchTST,LSTM,TiDE} [--seed S] [--accelerator cpu|mps] [--max-steps N]
 """
 
 import argparse
@@ -14,7 +14,7 @@ from pacing.forecasters import lightgbm_forecast, neural_forecast, seasonal_naiv
 from pacing.provenance import write_meta
 
 ap = argparse.ArgumentParser()
-ap.add_argument("model", choices=["naive", "lightgbm", "TFT", "NHITS"])
+ap.add_argument("model", choices=["naive", "lightgbm", "TFT", "NHITS", "PatchTST", "LSTM", "TiDE"])
 ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--accelerator", default="cpu")
 ap.add_argument("--max-steps", type=int, default=3000)

@@ -486,6 +486,29 @@ All entries below were logged on 2026-10-16, before any test-split pacing result
       (+6.43 [1.6, 15.1], +5.47 [1.8, 10.8] and +4.85 [1.3, 10.5] points over the naive throttle). No pacing is the
       best realistic policy at the tight budget.
 
+21. **Three more neural predictors (logged 2026-10-19; hyperparameters and rules fixed before training).** The study was
+    refocused on neural predictors as a class. PatchTST (patch transformer, univariate: no historical, future or static
+    covariates), LSTM (recurrent, same covariates as TFT) and TiDE (MLP encoder-decoder, same covariates as TFT) are added to
+    TFT and NHITS. Training follows the protocol of the other neural models: 3 seeds, 168-hour input window, multi-quantile
+    loss at 0.1, 0.5, 0.7 and 0.9, robust scaling, learning rate 1e-3, batch size 64, windows batch size 256, at most 3000
+    steps, early stopping on the validation days (checks every 50 steps, patience 10). Hyperparameters, fixed now and not
+    tuned: PatchTST 2 encoder layers, 4 heads, hidden size 64, linear hidden size 128, dropout 0.1, fully-connected dropout
+    0.1, patch length 16, stride 8; LSTM 2 encoder layers, hidden size 64, decoder hidden size 64, 2 decoder layers; TiDE
+    hidden size 256, decoder output dimension 16, temporal decoder dimension 64, dropout 0.1, 1 encoder and 1 decoder layer.
+    A run that crashes is re-run (at most 3 attempts, all logged). A 60-step smoke run of each model was made first to check
+    that it trains and forecasts; its outputs are discarded.
+    `scripts/20_more_neural.py` computes the MASE of every saved forecast, simulates the median-plan throttle of the three new
+    models once on the test days (10 replay seeds, same draws), and compares each of the five neural models with seasonal
+    naive and with the 25-scale scaling curve of entry 19, as `11_frontier.py` does. Reading rules, per model, on the click
+    ratio with campaign-bootstrap intervals: a model "beats the seasonal profile" if the interval of (model minus seasonal
+    naive) is above zero at two of three budget levels; it "has an edge at matched spend" if the interval of its points above
+    the scaling curve is above zero at two of three levels (a level where the model's spend lies outside the curve does
+    not count). The finding that neural predictors beat a seasonal profile is a property of the class if at least four of the
+    five models beat it; the finding that an edge beyond the total remains is a property of the class if at least four of
+    the five have an edge at matched spend; otherwise it is reported as specific to some architectures. Descriptively, the
+    Spearman rank correlation between the models' mean MASE and their mean click gain over seasonal naive is reported,
+    over the five neural models. Output: `results/neural_models.json`.
+
 ## Why v2
 
 An audit on 2026-10-16 found that the v1 results were not valid:
