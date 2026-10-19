@@ -207,6 +207,189 @@ All entries below were logged on 2026-10-16, before any test-split pacing result
     breakdown of the pre-specified MASE by forecast step, computed from the saved forecasts.
     It adds no new comparison, metric or test. Figure layout was revised for legibility only
     (trade-off plot: log y-axis, label placement).
+15. **Disclosure added after the results (revision round 1, logged 2026-10-17).** The log above was
+    incomplete about what was looked at before the final runs. No design decision or hyperparameter
+    was changed because of any of it.
+    - *Descriptive profile of the full dataset.* Before the protocol was frozen, `profile.py`
+      summarized the whole 742-hour dataset, including the test hours: campaign counts by
+      activity share, concentration of spend, and lag-24 and lag-168 autocorrelations. The 90%
+      activity threshold was chosen after seeing it. The inclusion rule itself uses training hours only.
+    - *Test-origin accuracy before the final runs.* While smoke-testing, MASE on the test origins was
+      computed for seasonal naive (0.917), LightGBM seed 0 (0.853) and a 100-step TFT smoke run
+      (0.902, outputs deleted), plus an alignment check that shifted forecasts by one hour. The first
+      two are the final values, since those runs are deterministic or were rerun unchanged.
+    - *Pacing smoke test* on ten campaigns' test days: already logged in entry 8.
+16. **Revision round 1 (logged 2026-10-17).** A self-review of the draft led to text and presentation
+    changes only. No experiment, forecast, simulation or existing macro value changed. Details are
+    in `paper/revision/`.
+    - New macros in `scripts/07_paper_assets.py`: design constants read from `config.py` (so the
+      prose no longer types them), training-seed SDs of the click ratio (already in
+      `pacing_summary.csv`), the share of the 12 forecaster-by-budget combinations with monotone
+      decline in the hedging quantile, the signed-comparison count, and per-campaign MASE win
+      rates computed from `forecast_metrics_per_campaign.parquet`. The win rates are a descriptive
+      re-aggregation of saved per-campaign metrics, not a new test.
+    - Not done, because each needs new experiments or analysis: confidence intervals or tests on
+      the MASE differences, seed-aware inference for the pacing comparisons, quantiles below 0.5,
+      a forecast of the daily total, and a second dataset. The paper states these as limitations.
+17. **Exploratory group analysis and independent rerun (logged 2026-10-19).** Two additions after the main
+    results were final. No existing number changed.
+    - *Group analysis (exploratory).* `scripts/08_groups.py` splits the evaluated campaigns into terciles of
+      size (mean daily training spend) and volatility (coefficient of variation of daily training spend) and
+      reports the click ratio by group and budget level, with paired differences between forecasters and
+      campaign-bootstrap intervals. It was not pre-specified, was added after the main results were seen, and
+      its intervals are not corrected for the 18 group-and-budget cells (plus the three all-campaign rows).
+      Output: `results/pacing_groups.json`; new macros `grp-*` (29) and the table `tables/groups.tex` come from
+      `07_paper_assets.py`.
+    - *Independent rerun.* The pipeline was rerun on a second machine (Windows PC): data rebuilt from the raw
+      file, PID gains retuned, seasonal-naive and LightGBM forecasts regenerated, simulation and summary rerun.
+      The saved TFT and NHITS forecasts were reused (SHA-256 match `LARGE_FILES_SHA256.txt`); neural training
+      was not repeated. The only code change was a serial episode loop in `simulate.py` in place of the
+      Mac-only `fork` pool. Result: all 48 rows of `pacing_summary.csv` and the PID gains are identical, the
+      forecast metrics are identical, and the paired p-values agree to within 1e-15. Of the 465 existing macros
+      one differs, the LightGBM wall time (62 s against 76 s), which depends on the machine; the original
+      value is kept. The group results were computed from the rerun's episode file.
+18. **Post-hoc analyses: spend versus efficiency, and scaled seasonal naive (logged 2026-10-19, rule written
+    before the second run).** Both were added after the main results were seen and after an external review
+    raised the question. Neither changes an existing number.
+    - *Spend versus efficiency (descriptive).* For each pair of methods, the click gain is split into the
+      change in budget spent and the change in clicks per unit of spend, from `pacing_test_episodes.parquet`
+      with `scripts/09_spend_efficiency.py` (ratio of totals, forecast seeds averaged, campaign bootstrap). No new simulation.
+    - *Scaled seasonal naive (one new simulation).* Question: does a single scale on the seasonal-naive
+      forecast total close the gap to the learned forecasters? Policies: the throttle of Section 5 with the
+      seasonal-naive median forecast multiplied by a scale s in {0.80, 0.825, ..., 1.10} (13 values); and the
+      throttle with the mean of the previous 7 days in place of the median (the Section 5 wording; the
+      main study used the median, which was not logged). The scale is chosen per budget level on the
+      validation days 21 to 24 (3 replay seeds, highest click ratio), as the PID gains were; the test days are
+      not used for the choice. The test days are then simulated once for all scales (10 replay seeds, the
+      same uniform draws as the main run), which also gives the curve of click ratio against s. TFT and NHITS
+      forecasts exist only for the test origins, so they cannot be tuned the same way and enter unchanged.
+      Reading rule, fixed before the run, per budget level, on the click ratio against the hindsight
+      reference with campaign-bootstrap intervals: let g be the gain of TFT over the unscaled naive and c the
+      gain of the tuned-scale naive over the unscaled naive. If c is at least g/2 and the interval of
+      (TFT minus tuned naive) contains zero at two of three budget levels, the finding is "the total
+      explains most of the gain". If the interval of c contains zero, or c is below g/4 at two of three
+      levels, the finding is "scaling does not help; the gain needs more than the total". Anything else is
+      reported as partial. A scale at the edge of the grid is reported as such. Output:
+      `scripts/10_scaled_naive.py`, `results/scaled_naive.json`.
+      Result of the run (logged 2026-10-19): chosen scales 0.85, 0.82 and 0.80 for rho 0.3, 0.5 and 0.7 (the
+      last at the grid edge); gains over the unscaled naive 0.73, 1.03 and 1.22 points against 2.03, 1.73 and
+      1.32 for TFT; the interval of TFT minus tuned naive excludes zero at rho 0.3 and 0.5 and includes it at
+      0.7. Neither the "explains most" nor the "does not help" condition holds: reported as partial.
+    - *Spend-matched comparison (added after that result, exploratory).* Because scaling mainly changes the
+      amount spent, `scripts/11_frontier.py` reads the curve that the 13 scales trace in (spend, clicks) and
+      reports how far each method lies above that curve at its own spend (linear interpolation; points of the
+      hindsight reference; campaign bootstrap, resamples whose spend falls outside the curve are dropped and
+      counted). It is not pre-specified and uses the test days, so it is descriptive. Output:
+      `results/frontier.json`.
+    - *Forecast plus feedback (one new simulation; rule fixed before the run).* Question: does adding a
+      proportional-integral-derivative (PID) correction to the forecast throttle help, and does the neural
+      edge survive it? Policy: the Section 5 throttle (median forecast, optionally times a scale), plus
+      `kp*e + ki*sum(e) + kd*(e - e_prev)` added to the rate and clipped to [0, 1], where `e` is the share of
+      the daily budget by which spend so far trails the day's plan (`min(B, D)` spread in proportion to the
+      forecast demand profile issued at hour 0; `D` the forecast daily demand). With all gains zero it is the
+      existing throttle (checked on one episode in the script). The gains come from the grid kp in {0, 2, 8, 32},
+      ki in {0, 0.5}, kd in {0, 4}, chosen per budget level on the validation days (3 replay seeds, highest
+      click ratio), separately for two seasonal-naive bases: the plain median, and the median times the
+      scale chosen in the previous bullet's run (0.85, 0.825, 0.80). TFT and NHITS forecasts exist only for the
+      test origins, so they use the gains tuned on the plain naive base; this transfer is a limitation. The test
+      days are simulated once (10 replay seeds, same draws as before). Reading rule, per budget level, on the click
+      ratio with campaign-bootstrap intervals: (1) feedback helps a forecast if its interval for
+      (with feedback minus without) is above zero at two of three budget levels, for TFT; it does not help if the
+      interval includes zero or is negative at two of three. (2) The neural edge survives if
+      (TFT with feedback minus scaled naive with feedback) is above zero at two of three levels. A gain at the
+      grid edge is reported as such. Output: `scripts/12_feedback.py`, `results/feedback.json`.
+      Result of the run (logged 2026-10-19): chosen proportional gain 8 (tight), 32 (medium, grid edge) and 8
+      (loose) for the plain base, and 8, 8 and 0 for the scaled base; integral and derivative gains were zero in
+      every case. Feedback minus no feedback, in points of the hindsight reference: TFT +0.50 [0.23, 0.79],
+      -0.97 [-1.68, -0.41] and -2.01 [-2.79, -1.43] at the tight, medium and loose budgets. By rule (1) feedback
+      does not help TFT (negative at two of three levels). By rule (2) the neural edge does not survive
+      (TFT with feedback minus scaled naive with feedback: +0.26 [-0.02, 0.59], +0.38 [-0.31, 1.42], -1.92
+      [-2.75, -1.26]); at the loose budget the scaled base chose zero gains, so the comparison there is
+      between unequal designs. The validation gain of feedback for plain naive at the loose budget (+1.0
+      points) did not carry to the test days (-0.8, interval [-2.50, 0.17]), which shows that gains chosen on four
+      validation days are unstable.
+    - *Coverage of the summed hedge plans (descriptive, no simulation).* The throttle divides the remaining
+      budget by the sum of the hourly q-quantile forecasts over the rest of the day. That sum is not the
+      q-quantile of the day's remaining demand. `scripts/13_hedge_coverage.py` measures, on the test days, how
+      often the realised rest-of-day spend falls at or below each plan's total (the effective quantile), by
+      forecaster and hour of the day, and the factor on the median plan that would give the nominal coverage.
+      It reads the saved forecasts and the hourly spend only; it changes no policy and no existing number.
+      Output: `results/hedge_coverage.json`.
+      Result (logged 2026-10-19): the summed 90% plan covered 94.0% (seasonal naive) to 97.4% (NHITS) of
+      rest-of-day totals and was 1.80 to 2.06 times the median plan, where 1.62 to 1.70 would give 90%; at 70%
+      the coverage was 76% to 80%. The hourly quantiles themselves were calibrated (TFT 90.8% at q=0.9).
+    - *Calibrated-total hedge (one new simulation; rule fixed before the run).* Question: how much of the
+      hedging cost is the summing of hourly quantiles? Policy: the throttle with the median plan times a factor
+      f(q, hour of day) in place of the sum of q-quantile forecasts, q in {0.7, 0.9}, for every saved forecast
+      (seasonal naive, LightGBM, TFT, NHITS; each seed separately). f is the q-quantile, over campaigns and
+      the calibration days, of realised rest-of-day spend divided by the median plan, per origin hour.
+      Two variants. *Causal (primary):* f for test day d uses all campaigns on the earlier test days only, so it
+      is evaluated on days 26 to 29 (day 25 has no earlier day); comparison policies are restricted to the
+      same days. *Cross-fitted (secondary, an upper bound, because it sees same-day shocks of the other campaigns):*
+      campaigns are split into two random halves (seed 0) and f for one half comes from the other half over all
+      five test days. Metrics as in the main study (click ratio against the hindsight reference, spend, clicks per
+      spend; campaign bootstrap). Reading rule on the primary variant, TFT at q=0.9: the hedging cost is mostly
+      the summing if (calibrated minus summed) has an interval above zero at two of three budget levels and
+      recovers at least a third of the summed plan's loss against the median plan; it is inherent if that
+      interval includes zero at two of three levels. Anything else is reported as partial. The secondary
+      variant and the other forecasters are reported, not used for the verdict. Output:
+      `scripts/14_calibrated_hedge.py`, `results/calibrated_hedge.json`.
+      Result (logged 2026-10-19; the first attempt crashed in the analysis step on the hindsight-reference
+      rows after the simulation had finished, the script was fixed to drop them and to reuse the saved episodes;
+      no policy or number changed). Primary variant, days 26 to 29, TFT at q=0.9: calibrated minus summed plan
+      +1.54 [0.81, 2.46], +1.21 [0.42, 2.15] and +0.95 [0.10, 2.00] points at the tight, medium and loose
+      budgets, all above zero; but they recover only about 20%, 14% and 11% of the summed plan's loss against the
+      median plan (-7.71, -8.61, -9.02), below the third the rule required. By the rule: partial. At q=0.7 the
+      calibrated plan recovers 85%, 55% and 37% of the loss (+1.27, +1.07, +0.80), and at the tight budget costs
+      only -0.23 [-0.41, -0.05] against the median plan. For seasonal naive the calibrated 90% plan is worse than
+      the summed one (-1.9, -2.9, -3.6 points); the 70% plan is better at two of three budgets. The cross-fitted
+      variant (upper bound) is no better for TFT at q=0.9 (+0.04, -0.16, -0.28 on days 26 to 29, intervals
+      include zero).
+    - *Wording corrections found during the revision (no analysis).* (i) The paper called the forecast quantiles
+      "calibrated"; the nominal 80% interval covers 61% to 77% of outcomes, so the word was removed. (ii) The
+      protocol of Section 5 defines seasonal naive as the mean of the same hour on the previous 7 days, but the
+      study ran empirical quantiles of those 7 days, the median at q=0.5; the mean version, run in the
+      scaled-naive analysis, gives 0.7 to 0.95 points fewer clicks, so the median is the stronger baseline.
+      (iii) The paired tests use 409 campaigns because they need positive hindsight clicks; the other
+      analyses use all 414.
+    - *Paper revision (logged 2026-10-19).* `paper/main.tex` was rewritten around the question of what a forecast
+      adds: new title, abstract, introduction, a setup paragraph for the scaled, calibrated and feedback variants,
+      and Sections 6.3 to 6.5 (where the gain comes from, hedging, feedback). The group table, the horizon figure
+      and the standalone conversions paragraph were removed from the paper (the group result is kept as one
+      sentence; the figure and table files are still generated by `07_paper_assets.py`). Every new number is a
+      macro from a new block of `07_paper_assets.py` that reads the six new results files
+      (`spend_efficiency`, `scaled_naive`, `frontier`, `feedback`, `hedge_coverage`, `calibrated_hedge`);
+      the table `tables/decomp.tex` comes from the same block. The new macros were merged into
+      `tables/numbers.tex` without changing any existing line. The related-work section cites one preprint
+      (arXiv:2606.10187) from its abstract only; it was not read in full.
+19. **Second batch of post-hoc experiments, after an external review (logged 2026-10-19, rules written before
+    the run).** An independent review of the revised paper (a model-written review, not a human one) found that the
+    scale grid stops at its best value, that the "edge at matched spend" may come from per-campaign daily totals
+    and not from hourly shape, and that no headroom was measured. `scripts/15_extended.py` runs three
+    things on the test days with 10 replay seeds and the same draws as before. It adds no tuning on test data.
+    - *Extended scale grid.* The scaled seasonal-naive throttle of entry 18 with 25 scales from 0.50 to 1.10 in
+      steps of 0.025, scale chosen per budget level on the validation days (3 replay seeds) as before; the
+      first run's grid (0.80 to 1.10) is superseded. Reading rule, per budget level, on the click ratio against the
+      hindsight reference with campaign-bootstrap intervals: let g be the gain of TFT over the unscaled naive
+      and c that of the tuned-scale naive. If c is at least 0.8 g at all three levels, the finding is "the total
+      explains almost all of the gain". If the interval of (TFT minus tuned naive) is above zero at two or three
+      levels, the finding is "an edge beyond one scale remains". If neither, partial. A chosen scale at the
+      edge of the grid is reported as such.
+    - *Total and shape swap.* Because the throttle uses only the remaining forecast sum, shape is defined from the
+      forecast issued at hour 0 of the day: the planned remaining demand at hour h is the day total times the share
+      of the day-start forecast that lies in hours h to 23, with no re-planning. Four static plans: naive total with
+      naive shape, TFT total with TFT shape, TFT total with naive shape, naive total with TFT shape (TFT: the three
+      seeds, averaged). With T the gain of (TFT total, naive shape) and S that of (naive total, TFT shape), both over
+      (naive total, naive shape): the total is the source of the TFT gain if T is at least twice S and the interval
+      of S includes zero; shape matters if the interval of S is above zero and S is at least half of T. Otherwise
+      partial. The static plans are compared with the re-planned throttle of the main study to show what
+      re-planning adds.
+    - *Oracle remaining demand.* The throttle with the true remaining demand of the day in place of the forecast
+      (an oracle forecast), and the throttle with the true day total times the naive or TFT day-start shape.
+      Reading: headroom is the click ratio of the oracle minus that of TFT; under 1 point means that forecast
+      accuracy has little left to buy in this simulator, 2 points or more that it matters. The oracle total with a
+      forecast shape separates the value of the total from the value of the shape.
+      Output: `scripts/15_extended.py`, `results/extended.json`.
 
 ## Why v2
 

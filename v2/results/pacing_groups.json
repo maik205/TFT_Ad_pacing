@@ -1,0 +1,902 @@
+{
+ "campaigns": 414,
+ "tercile_bounds": {
+  "size": [
+   0.008272857142857143,
+   0.09193294933037424,
+   0.24388076510674306,
+   4.916403716940043
+  ],
+  "vol": [
+   0.08421685918172704,
+   0.26051026145484,
+   0.3750111924196468,
+   0.9430799281200619
+  ]
+ },
+ "spearman_size_vol": -0.24328183351365246,
+ "rows": [
+  {
+   "group": "all",
+   "value": "all",
+   "rho": 0.3,
+   "campaigns": 414,
+   "ratio_TFT": 1.0271233855989026,
+   "ratio_NHITS": 1.028182374576273,
+   "ratio_LightGBM": 1.0187548241372646,
+   "ratio_Seasonal naive": 1.0068049870965734,
+   "ratio_Even pacing": 0.9931565926962418,
+   "ratio_PID": 1.0085607905649192,
+   "diff_TFT_minus_Seasonal naive": 0.020318398502329218,
+   "ci_TFT_minus_Seasonal naive": [
+    0.01569770463372828,
+    0.02619668304971547
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.021377387479699722,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.016418086325474254,
+    0.027819144150893683
+   ],
+   "diff_TFT_minus_NHITS": -0.0010589889773705069,
+   "ci_TFT_minus_NHITS": [
+    -0.0023572079542633927,
+    0.00027034438398995924
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.011949837040691226,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.006970567308150839,
+    0.017441041497716095
+   ],
+   "diff_TFT_minus_Even pacing": 0.03396679290266086,
+   "ci_TFT_minus_Even pacing": [
+    0.029507009250550987,
+    0.03790730726991162
+   ],
+   "diff_TFT_minus_PID": 0.018562595033983432,
+   "ci_TFT_minus_PID": [
+    0.012881386146619047,
+    0.024059493287554842
+   ]
+  },
+  {
+   "group": "size",
+   "value": "low",
+   "rho": 0.3,
+   "campaigns": 138,
+   "ratio_TFT": 1.079074359345345,
+   "ratio_NHITS": 1.0785325015390466,
+   "ratio_LightGBM": 1.0698826353013269,
+   "ratio_Seasonal naive": 1.0551375779807144,
+   "ratio_Even pacing": 1.0340732103798396,
+   "ratio_PID": 1.0565205920151153,
+   "diff_TFT_minus_Seasonal naive": 0.023936781364630587,
+   "ci_TFT_minus_Seasonal naive": [
+    0.017532542431789946,
+    0.030105650242181706
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.02339492355833207,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.01668653588478697,
+    0.029740920780666594
+   ],
+   "diff_TFT_minus_NHITS": 0.0005418578062985179,
+   "ci_TFT_minus_NHITS": [
+    -0.0022446319782957937,
+    0.0037324476948784337
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.014745057320612442,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.009068417427566268,
+    0.02068441200434117
+   ],
+   "diff_TFT_minus_Even pacing": 0.0450011489655055,
+   "ci_TFT_minus_Even pacing": [
+    0.03532990364438339,
+    0.054734243985723616
+   ],
+   "diff_TFT_minus_PID": 0.022553767330229707,
+   "ci_TFT_minus_PID": [
+    0.010273903091522178,
+    0.03445407130537729
+   ]
+  },
+  {
+   "group": "size",
+   "value": "mid",
+   "rho": 0.3,
+   "campaigns": 138,
+   "ratio_TFT": 1.0441688135773286,
+   "ratio_NHITS": 1.0421911360000653,
+   "ratio_LightGBM": 1.034135368761275,
+   "ratio_Seasonal naive": 1.0224756518878853,
+   "ratio_Even pacing": 1.021117020081191,
+   "ratio_PID": 1.027897920782572,
+   "diff_TFT_minus_Seasonal naive": 0.021693161689443328,
+   "ci_TFT_minus_Seasonal naive": [
+    0.015808962550088675,
+    0.027967966888189633
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.019715484112180083,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.013587917223553653,
+    0.026077717323217287
+   ],
+   "diff_TFT_minus_NHITS": 0.0019776775772632456,
+   "ci_TFT_minus_NHITS": [
+    -0.0011018467499618635,
+    0.004914919012948145
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.011659716873389818,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.005725527864504856,
+    0.018284732732740002
+   ],
+   "diff_TFT_minus_Even pacing": 0.023051793496137604,
+   "ci_TFT_minus_Even pacing": [
+    0.01519538034299941,
+    0.030208529047451294
+   ],
+   "diff_TFT_minus_PID": 0.016270892794756703,
+   "ci_TFT_minus_PID": [
+    0.006051954848825546,
+    0.025961346693860982
+   ]
+  },
+  {
+   "group": "size",
+   "value": "high",
+   "rho": 0.3,
+   "campaigns": 138,
+   "ratio_TFT": 1.0161821963364814,
+   "ratio_NHITS": 1.0182327658109465,
+   "ratio_LightGBM": 1.0083504583834662,
+   "ratio_Seasonal naive": 0.9966747234260038,
+   "ratio_Even pacing": 0.9807516211122587,
+   "ratio_PID": 0.9975217479263605,
+   "diff_TFT_minus_Seasonal naive": 0.019507472910477733,
+   "ci_TFT_minus_Seasonal naive": [
+    0.013537849907205263,
+    0.027121787992145988
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.021558042384942692,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.015050342600255355,
+    0.030103042395692267
+   ],
+   "diff_TFT_minus_NHITS": -0.002050569474464959,
+   "ci_TFT_minus_NHITS": [
+    -0.0036628728702730352,
+    -0.00056289114859557
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.011675734957462441,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.005559813951127554,
+    0.018517531737321447
+   ],
+   "diff_TFT_minus_Even pacing": 0.03543057522422285,
+   "ci_TFT_minus_Even pacing": [
+    0.030125395075435085,
+    0.040534090430977054
+   ],
+   "diff_TFT_minus_PID": 0.018660448410121034,
+   "ci_TFT_minus_PID": [
+    0.011740195551458246,
+    0.02605667420794584
+   ]
+  },
+  {
+   "group": "volatility",
+   "value": "low",
+   "rho": 0.3,
+   "campaigns": 138,
+   "ratio_TFT": 1.0218985820716175,
+   "ratio_NHITS": 1.0244143800274257,
+   "ratio_LightGBM": 1.0154476440900801,
+   "ratio_Seasonal naive": 1.0052063276644472,
+   "ratio_Even pacing": 0.9874676619025404,
+   "ratio_PID": 1.0088790873234659,
+   "diff_TFT_minus_Seasonal naive": 0.016692254407170353,
+   "ci_TFT_minus_Seasonal naive": [
+    0.011977155085385192,
+    0.02262420047344757
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.019208052362978487,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.01397346994549232,
+    0.02582155986279512
+   ],
+   "diff_TFT_minus_NHITS": -0.002515797955808134,
+   "ci_TFT_minus_NHITS": [
+    -0.004202303791755936,
+    -0.0010148126492302229
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.010241316425632979,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.006724145650743758,
+    0.014480675846470704
+   ],
+   "diff_TFT_minus_Even pacing": 0.03443092016907714,
+   "ci_TFT_minus_Even pacing": [
+    0.027838023230624367,
+    0.03994133447953423
+   ],
+   "diff_TFT_minus_PID": 0.013019494748151736,
+   "ci_TFT_minus_PID": [
+    0.005109833220661267,
+    0.021367006866035525
+   ]
+  },
+  {
+   "group": "volatility",
+   "value": "mid",
+   "rho": 0.3,
+   "campaigns": 138,
+   "ratio_TFT": 1.033495189461516,
+   "ratio_NHITS": 1.0361025008751084,
+   "ratio_LightGBM": 1.027568915617315,
+   "ratio_Seasonal naive": 1.0166686459460577,
+   "ratio_Even pacing": 0.9995343133657402,
+   "ratio_PID": 1.0086385537828033,
+   "diff_TFT_minus_Seasonal naive": 0.01682654351545838,
+   "ci_TFT_minus_Seasonal naive": [
+    0.010598189715393988,
+    0.024812961678806852
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.019433854929050514,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.012985258883545625,
+    0.028087767303101925
+   ],
+   "diff_TFT_minus_NHITS": -0.0026073114135921347,
+   "ci_TFT_minus_NHITS": [
+    -0.004474850647116975,
+    -0.00063050463867059
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.01090026967125726,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.00579779658390352,
+    0.017246911241859977
+   ],
+   "diff_TFT_minus_Even pacing": 0.03396087609577598,
+   "ci_TFT_minus_Even pacing": [
+    0.027674414670887066,
+    0.03928778042461707
+   ],
+   "diff_TFT_minus_PID": 0.0248566356787129,
+   "ci_TFT_minus_PID": [
+    0.015190210769052883,
+    0.03369575847606379
+   ]
+  },
+  {
+   "group": "volatility",
+   "value": "high",
+   "rho": 0.3,
+   "campaigns": 138,
+   "ratio_TFT": 1.029176354060402,
+   "ratio_NHITS": 1.0259681462677832,
+   "ratio_LightGBM": 1.014741643140139,
+   "ratio_Seasonal naive": 0.9986388223292448,
+   "ratio_Even pacing": 0.9960143294346516,
+   "ratio_PID": 1.0079179616141967,
+   "diff_TFT_minus_Seasonal naive": 0.03053753173115703,
+   "ci_TFT_minus_Seasonal naive": [
+    0.018486573378609542,
+    0.05064390569388677
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.027329323938538316,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.014771533772279096,
+    0.0496452540172426
+   ],
+   "diff_TFT_minus_NHITS": 0.0032082077926187166,
+   "ci_TFT_minus_NHITS": [
+    -0.00026130548500124764,
+    0.006147562131330617
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.016102820810894165,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.0013258477717610205,
+    0.0364090490133555
+   ],
+   "diff_TFT_minus_Even pacing": 0.033162024625750276,
+   "ci_TFT_minus_Even pacing": [
+    0.022763239316825026,
+    0.04290935656081019
+   ],
+   "diff_TFT_minus_PID": 0.02125839244620531,
+   "ci_TFT_minus_PID": [
+    0.01068328767111205,
+    0.030889285469856597
+   ]
+  },
+  {
+   "group": "all",
+   "value": "all",
+   "rho": 0.5,
+   "campaigns": 414,
+   "ratio_TFT": 1.0066019192076134,
+   "ratio_NHITS": 1.0070549155098234,
+   "ratio_LightGBM": 0.9973455307216093,
+   "ratio_Seasonal naive": 0.9893490797003991,
+   "ratio_Even pacing": 0.9603927030333879,
+   "ratio_PID": 0.9896492805607874,
+   "diff_TFT_minus_Seasonal naive": 0.017252839507214318,
+   "ci_TFT_minus_Seasonal naive": [
+    0.013716661156053838,
+    0.021134058990273416
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.017705835809424236,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.014137361954218374,
+    0.021613405155502138
+   ],
+   "diff_TFT_minus_NHITS": -0.00045299630220991687,
+   "ci_TFT_minus_NHITS": [
+    -0.0014252570338424075,
+    0.0005729226020160887
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.00799645102121021,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.0015921146403845075,
+    0.01350810057942042
+   ],
+   "diff_TFT_minus_Even pacing": 0.04620921617422548,
+   "ci_TFT_minus_Even pacing": [
+    0.04089950436370539,
+    0.05149416247084642
+   ],
+   "diff_TFT_minus_PID": 0.016952638646825998,
+   "ci_TFT_minus_PID": [
+    0.010464533953618448,
+    0.024242435933912673
+   ]
+  },
+  {
+   "group": "size",
+   "value": "low",
+   "rho": 0.5,
+   "campaigns": 138,
+   "ratio_TFT": 1.0367438774120117,
+   "ratio_NHITS": 1.0366744448692427,
+   "ratio_LightGBM": 1.0290192873057098,
+   "ratio_Seasonal naive": 1.0196801708567889,
+   "ratio_Even pacing": 1.0011390452585922,
+   "ratio_PID": 1.0131517540505979,
+   "diff_TFT_minus_Seasonal naive": 0.01706370655522294,
+   "ci_TFT_minus_Seasonal naive": [
+    0.012037439690453747,
+    0.022174178213491633
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.01699427401245386,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.011631485396019374,
+    0.022288337891034612
+   ],
+   "diff_TFT_minus_NHITS": 6.943254276907684e-05,
+   "ci_TFT_minus_NHITS": [
+    -0.0020978945286939553,
+    0.002225051154230137
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.009339116448920938,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.004238499988453068,
+    0.014766085552222108
+   ],
+   "diff_TFT_minus_Even pacing": 0.035604832153419454,
+   "ci_TFT_minus_Even pacing": [
+    0.028979227999419235,
+    0.04263685706268755
+   ],
+   "diff_TFT_minus_PID": 0.02359212336141386,
+   "ci_TFT_minus_PID": [
+    0.011242269549478441,
+    0.036374200589622215
+   ]
+  },
+  {
+   "group": "size",
+   "value": "mid",
+   "rho": 0.5,
+   "campaigns": 138,
+   "ratio_TFT": 1.015332425374533,
+   "ratio_NHITS": 1.0137297531434948,
+   "ratio_LightGBM": 1.0057563754951082,
+   "ratio_Seasonal naive": 1.000697212399885,
+   "ratio_Even pacing": 0.976347256756588,
+   "ratio_PID": 0.9927867254757412,
+   "diff_TFT_minus_Seasonal naive": 0.014635212974647958,
+   "ci_TFT_minus_Seasonal naive": [
+    0.009858700986499937,
+    0.020183978909073554
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.01303254074360983,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.008144663192309876,
+    0.01877524349063601
+   ],
+   "diff_TFT_minus_NHITS": 0.001602672231038127,
+   "ci_TFT_minus_NHITS": [
+    -0.0005705103903082733,
+    0.003488553243057329
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.00505916309522322,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.000502297433788726,
+    0.010347574310810041
+   ],
+   "diff_TFT_minus_Even pacing": 0.0389851686179451,
+   "ci_TFT_minus_Even pacing": [
+    0.031454144765996984,
+    0.046222212851132254
+   ],
+   "diff_TFT_minus_PID": 0.02254569989879175,
+   "ci_TFT_minus_PID": [
+    0.012927476705102199,
+    0.0324843919802364
+   ]
+  },
+  {
+   "group": "size",
+   "value": "high",
+   "rho": 0.5,
+   "campaigns": 138,
+   "ratio_TFT": 1.0006363193921735,
+   "ratio_NHITS": 1.001686343553741,
+   "ratio_LightGBM": 0.9912746295766091,
+   "ratio_Seasonal naive": 0.9826817267294305,
+   "ratio_Even pacing": 0.9512519319537704,
+   "ratio_PID": 0.9859490443549379,
+   "diff_TFT_minus_Seasonal naive": 0.017954592662742897,
+   "ci_TFT_minus_Seasonal naive": [
+    0.01359987836259741,
+    0.023467164068389355
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.01900461682431059,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.014627226934418024,
+    0.024637372356674365
+   ],
+   "diff_TFT_minus_NHITS": -0.0010500241615676905,
+   "ci_TFT_minus_NHITS": [
+    -0.002362650676907647,
+    0.00026172779135235106
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.008592902847178409,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.00014785983962938996,
+    0.016345259916941333
+   ],
+   "diff_TFT_minus_Even pacing": 0.049384387438403066,
+   "ci_TFT_minus_Even pacing": [
+    0.04218208633162601,
+    0.0560637079958672
+   ],
+   "diff_TFT_minus_PID": 0.014687275037235539,
+   "ci_TFT_minus_PID": [
+    0.006123818180989885,
+    0.024833031540465806
+   ]
+  },
+  {
+   "group": "volatility",
+   "value": "low",
+   "rho": 0.5,
+   "campaigns": 138,
+   "ratio_TFT": 1.0045771001560455,
+   "ratio_NHITS": 1.0055868867445334,
+   "ratio_LightGBM": 0.9985611049737245,
+   "ratio_Seasonal naive": 0.988773160157307,
+   "ratio_Even pacing": 0.9552543828060945,
+   "ratio_PID": 0.9933563637917249,
+   "diff_TFT_minus_Seasonal naive": 0.015803939998738616,
+   "ci_TFT_minus_Seasonal naive": [
+    0.011067783974188006,
+    0.020984376633969543
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.016813726587226466,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.012271306366726386,
+    0.02203381634875803
+   ],
+   "diff_TFT_minus_NHITS": -0.0010097865884878508,
+   "ci_TFT_minus_NHITS": [
+    -0.002490741771404831,
+    0.0004900803076460015
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.009787944816417543,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.006307890378763165,
+    0.013797531283888284
+   ],
+   "diff_TFT_minus_Even pacing": 0.04932271734995107,
+   "ci_TFT_minus_Even pacing": [
+    0.04020446144840674,
+    0.05724717805416684
+   ],
+   "diff_TFT_minus_PID": 0.011220736364320694,
+   "ci_TFT_minus_PID": [
+    0.000796601002357181,
+    0.02357753204279536
+   ]
+  },
+  {
+   "group": "volatility",
+   "value": "mid",
+   "rho": 0.5,
+   "campaigns": 138,
+   "ratio_TFT": 1.0107406247055308,
+   "ratio_NHITS": 1.0125468365386345,
+   "ratio_LightGBM": 1.0037466546288338,
+   "ratio_Seasonal naive": 0.994809288675229,
+   "ratio_Even pacing": 0.9679448407389898,
+   "ratio_PID": 0.9837835574050793,
+   "diff_TFT_minus_Seasonal naive": 0.015931336030301835,
+   "ci_TFT_minus_Seasonal naive": [
+    0.010254471388025111,
+    0.022670479952490753
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.01773754786340556,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.011893460540302757,
+    0.02478093526482729
+   ],
+   "diff_TFT_minus_NHITS": -0.0018062118331037267,
+   "ci_TFT_minus_NHITS": [
+    -0.0036338501029883835,
+    8.584261390239559e-05
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.008937365953604948,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.003191310723784847,
+    0.014568571546540383
+   ],
+   "diff_TFT_minus_Even pacing": 0.04279578396654105,
+   "ci_TFT_minus_Even pacing": [
+    0.035071451272615406,
+    0.049374566286498736
+   ],
+   "diff_TFT_minus_PID": 0.02695706730045158,
+   "ci_TFT_minus_PID": [
+    0.015197616184136089,
+    0.04001638630519196
+   ]
+  },
+  {
+   "group": "volatility",
+   "value": "high",
+   "rho": 0.5,
+   "campaigns": 138,
+   "ratio_TFT": 1.0055090411958856,
+   "ratio_NHITS": 1.0033427410854472,
+   "ratio_LightGBM": 0.9875874307397514,
+   "ratio_Seasonal naive": 0.9840184631068236,
+   "ratio_Even pacing": 0.9610773921333573,
+   "ratio_PID": 0.9896442359426473,
+   "diff_TFT_minus_Seasonal naive": 0.021490578089062077,
+   "ci_TFT_minus_Seasonal naive": [
+    0.013673128471192822,
+    0.03301040883262555
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.019324277978623468,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.011657874380359085,
+    0.030993774091228027
+   ],
+   "diff_TFT_minus_NHITS": 0.0021663001104386096,
+   "ci_TFT_minus_NHITS": [
+    0.00032403552460057725,
+    0.004371746850828301
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.0035689676329277616,
+   "ci_LightGBM_minus_Seasonal naive": [
+    -0.015503611587714,
+    0.024024881581010696
+   ],
+   "diff_TFT_minus_Even pacing": 0.044431649062528444,
+   "ci_TFT_minus_Even pacing": [
+    0.03325776650435058,
+    0.05473430056533803
+   ],
+   "diff_TFT_minus_PID": 0.015864805253238363,
+   "ci_TFT_minus_PID": [
+    0.008398795555156529,
+    0.026984189283988793
+   ]
+  },
+  {
+   "group": "all",
+   "value": "all",
+   "rho": 0.7,
+   "campaigns": 414,
+   "ratio_TFT": 0.9964577874918673,
+   "ratio_NHITS": 0.9948649264959257,
+   "ratio_LightGBM": 0.9918742213254832,
+   "ratio_Seasonal naive": 0.9832538711247407,
+   "ratio_Even pacing": 0.9421671578255444,
+   "ratio_PID": 0.9879209742604047,
+   "diff_TFT_minus_Seasonal naive": 0.0132039163671266,
+   "ci_TFT_minus_Seasonal naive": [
+    0.010576336148732011,
+    0.015953545597471957
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.011611055371185031,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.008717050257175875,
+    0.014675924514775354
+   ],
+   "diff_TFT_minus_NHITS": 0.0015928609959415694,
+   "ci_TFT_minus_NHITS": [
+    0.0005873307419061875,
+    0.002606928429321146
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.008620350200742487,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.005951025109234668,
+    0.011575091880249626
+   ],
+   "diff_TFT_minus_Even pacing": 0.05429062966632295,
+   "ci_TFT_minus_Even pacing": [
+    0.04821866364222952,
+    0.060784146321888596
+   ],
+   "diff_TFT_minus_PID": 0.00853681323146262,
+   "ci_TFT_minus_PID": [
+    0.0025524106722800135,
+    0.015450909303171103
+   ]
+  },
+  {
+   "group": "size",
+   "value": "low",
+   "rho": 0.7,
+   "campaigns": 138,
+   "ratio_TFT": 1.01587370016199,
+   "ratio_NHITS": 1.0142237550295239,
+   "ratio_LightGBM": 1.0092177457281706,
+   "ratio_Seasonal naive": 1.0023828186236088,
+   "ratio_Even pacing": 0.967273475466374,
+   "ratio_PID": 0.9973918325756388,
+   "diff_TFT_minus_Seasonal naive": 0.013490881538381185,
+   "ci_TFT_minus_Seasonal naive": [
+    0.009363049942513463,
+    0.017715652964531137
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.01184093640591528,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.007491582995837084,
+    0.016441662950043356
+   ],
+   "diff_TFT_minus_NHITS": 0.0016499451324659038,
+   "ci_TFT_minus_NHITS": [
+    -0.0003944253718908641,
+    0.0037289849331941212
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.006834927104561844,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.002182872123119059,
+    0.011601627384802362
+   ],
+   "diff_TFT_minus_Even pacing": 0.04860022469561586,
+   "ci_TFT_minus_Even pacing": [
+    0.0422267381839127,
+    0.05488179602660099
+   ],
+   "diff_TFT_minus_PID": 0.018481867586351085,
+   "ci_TFT_minus_PID": [
+    0.009035204475419424,
+    0.028338416838609864
+   ]
+  },
+  {
+   "group": "size",
+   "value": "mid",
+   "rho": 0.7,
+   "campaigns": 138,
+   "ratio_TFT": 1.0024189592166677,
+   "ratio_NHITS": 1.000353726097987,
+   "ratio_LightGBM": 0.9968889679829233,
+   "ratio_Seasonal naive": 0.9911047459245387,
+   "ratio_Even pacing": 0.9507084094848812,
+   "ratio_PID": 0.9856613814903011,
+   "diff_TFT_minus_Seasonal naive": 0.011314213292129107,
+   "ci_TFT_minus_Seasonal naive": [
+    0.006850819012198674,
+    0.01680231088255241
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.009248980173448268,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.004090073763397037,
+    0.015119983921760168
+   ],
+   "diff_TFT_minus_NHITS": 0.002065233118680839,
+   "ci_TFT_minus_NHITS": [
+    2.2189836184268664e-05,
+    0.004015297774627473
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.00578422205838458,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.0013826397782487115,
+    0.01148687659268266
+   ],
+   "diff_TFT_minus_Even pacing": 0.05171054973178648,
+   "ci_TFT_minus_Even pacing": [
+    0.044314938745137505,
+    0.05896740149967492
+   ],
+   "diff_TFT_minus_PID": 0.016757577726366657,
+   "ci_TFT_minus_PID": [
+    0.008013490903793953,
+    0.02487701676786243
+   ]
+  },
+  {
+   "group": "size",
+   "value": "high",
+   "rho": 0.7,
+   "campaigns": 138,
+   "ratio_TFT": 0.9925368629713957,
+   "ratio_NHITS": 0.9910721629737297,
+   "ratio_LightGBM": 0.9884513326685483,
+   "ratio_Seasonal naive": 0.9788837406952234,
+   "ratio_Even pacing": 0.9368834944189449,
+   "ratio_PID": 0.987333431521915,
+   "diff_TFT_minus_Seasonal naive": 0.013653122276172176,
+   "ci_TFT_minus_Seasonal naive": [
+    0.01038959961473324,
+    0.017643672774494516
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.01218842227850624,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.00837169361099321,
+    0.01641319711510323
+   ],
+   "diff_TFT_minus_NHITS": 0.001464699997665934,
+   "ci_TFT_minus_NHITS": [
+    0.00024805295836918904,
+    0.002791999371316937
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.009567591973324898,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.006119627498726888,
+    0.013680807247416608
+   ],
+   "diff_TFT_minus_Even pacing": 0.0556533685524507,
+   "ci_TFT_minus_Even pacing": [
+    0.046822498759713865,
+    0.06496086726736475
+   ],
+   "diff_TFT_minus_PID": 0.0052034314494806555,
+   "ci_TFT_minus_PID": [
+    -0.0027681966203679967,
+    0.014439071837474188
+   ]
+  },
+  {
+   "group": "volatility",
+   "value": "low",
+   "rho": 0.7,
+   "campaigns": 138,
+   "ratio_TFT": 0.9935410332941802,
+   "ratio_NHITS": 0.9921319162303692,
+   "ratio_LightGBM": 0.9882551805756281,
+   "ratio_Seasonal naive": 0.9789878388785429,
+   "ratio_Even pacing": 0.9312550766849788,
+   "ratio_PID": 0.9861385472390043,
+   "diff_TFT_minus_Seasonal naive": 0.01455319441563728,
+   "ci_TFT_minus_Seasonal naive": [
+    0.011459697025340318,
+    0.018532736005111454
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.01314407735182623,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.009447589406653426,
+    0.017477376119542514
+   ],
+   "diff_TFT_minus_NHITS": 0.0014091170638110503,
+   "ci_TFT_minus_NHITS": [
+    -7.211260335639293e-05,
+    0.002808058112148939
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.009267341697085183,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.005873421020124821,
+    0.012632347819297667
+   ],
+   "diff_TFT_minus_Even pacing": 0.06228595660920146,
+   "ci_TFT_minus_Even pacing": [
+    0.052031829181925865,
+    0.07175969898717466
+   ],
+   "diff_TFT_minus_PID": 0.0074024860551759174,
+   "ci_TFT_minus_PID": [
+    -0.004516958245867794,
+    0.02025698718307302
+   ]
+  },
+  {
+   "group": "volatility",
+   "value": "mid",
+   "rho": 0.7,
+   "campaigns": 138,
+   "ratio_TFT": 0.9989313839437326,
+   "ratio_NHITS": 0.9990754070727803,
+   "ratio_LightGBM": 0.9955406171894864,
+   "ratio_Seasonal naive": 0.9885990579820523,
+   "ratio_Even pacing": 0.9457572149364432,
+   "ratio_PID": 0.9885196378203551,
+   "diff_TFT_minus_Seasonal naive": 0.010332325961680365,
+   "ci_TFT_minus_Seasonal naive": [
+    0.006651429847039111,
+    0.014321178990483777
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.010476349090728051,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.006804197254048599,
+    0.014425184059036528
+   ],
+   "diff_TFT_minus_NHITS": -0.00014402312904768707,
+   "ci_TFT_minus_NHITS": [
+    -0.0015690429454634609,
+    0.0013888380372063967
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.006941559207434202,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.00270030295412321,
+    0.0110627569568586
+   ],
+   "diff_TFT_minus_Even pacing": 0.05317416900728947,
+   "ci_TFT_minus_Even pacing": [
+    0.0449471143251773,
+    0.06009405052579602
+   ],
+   "diff_TFT_minus_PID": 0.010411746123377443,
+   "ci_TFT_minus_PID": [
+    0.0028557930384291606,
+    0.018723433677641368
+   ]
+  },
+  {
+   "group": "volatility",
+   "value": "high",
+   "rho": 0.7,
+   "campaigns": 138,
+   "ratio_TFT": 0.999268303075825,
+   "ratio_NHITS": 0.9950828554737208,
+   "ratio_LightGBM": 0.9945992597808994,
+   "ratio_Seasonal naive": 0.9851600668965638,
+   "ratio_Even pacing": 0.9599104717629786,
+   "ratio_PID": 0.990803613503666,
+   "diff_TFT_minus_Seasonal naive": 0.014108236179261267,
+   "ci_TFT_minus_Seasonal naive": [
+    0.007363704363665333,
+    0.02347819464021048
+   ],
+   "diff_NHITS_minus_Seasonal naive": 0.009922788577157029,
+   "ci_NHITS_minus_Seasonal naive": [
+    0.002613685955858143,
+    0.019866803004346043
+   ],
+   "diff_TFT_minus_NHITS": 0.004185447602104238,
+   "ci_TFT_minus_NHITS": [
+    0.0021579437816652215,
+    0.0064715793216319085
+   ],
+   "diff_LightGBM_minus_Seasonal naive": 0.00943919288433566,
+   "ci_LightGBM_minus_Seasonal naive": [
+    0.00202524274359909,
+    0.019650922945701903
+   ],
+   "diff_TFT_minus_Even pacing": 0.039357831312846384,
+   "ci_TFT_minus_Even pacing": [
+    0.031008336080818728,
+    0.05007590284930372
+   ],
+   "diff_TFT_minus_PID": 0.008464689572159066,
+   "ci_TFT_minus_PID": [
+    0.002661730571992146,
+    0.017423579395018006
+   ]
+  }
+ ]
+}

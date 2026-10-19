@@ -1,0 +1,3438 @@
+{
+ "factors_last_day_every_6h": {
+  "b 0.7 NHITS_seed0": [
+   1.2773560796520302,
+   1.216066981460525,
+   1.1168057843185006,
+   1.277043205113072
+  ],
+  "a 0.7 NHITS_seed0": [
+   1.3138526616310227,
+   1.2349089706584422,
+   1.1400643618433297,
+   1.2461312650564582
+  ],
+  "b 0.9 NHITS_seed0": [
+   1.6060740016680044,
+   1.5735787311299005,
+   1.4440345401568693,
+   1.7556319612760762
+  ],
+  "a 0.9 NHITS_seed0": [
+   1.6801874590761496,
+   1.623354135541212,
+   1.4514332085936381,
+   1.6849195447013003
+  ],
+  "b 0.7 NHITS_seed1": [
+   1.21549466820525,
+   1.1067904915684972,
+   1.1458680876760694,
+   1.142673307276592
+  ],
+  "a 0.7 NHITS_seed1": [
+   1.2553125292065292,
+   1.1216678640319826,
+   1.1609347313511855,
+   1.100759105108835
+  ],
+  "b 0.9 NHITS_seed1": [
+   1.568321884125844,
+   1.4292803166404053,
+   1.472054717933246,
+   1.5492947891409468
+  ],
+  "a 0.9 NHITS_seed1": [
+   1.5936452124593652,
+   1.429696408756216,
+   1.4862305653825412,
+   1.460073196367895
+  ],
+  "b 0.7 NHITS_seed2": [
+   1.1641732527630235,
+   1.1372713286280944,
+   1.0665607745900667,
+   1.2048423850938874
+  ],
+  "a 0.7 NHITS_seed2": [
+   1.214579505155666,
+   1.1810743906362717,
+   1.0975927548735884,
+   1.1987281587192873
+  ],
+  "b 0.9 NHITS_seed2": [
+   1.4644332291440973,
+   1.4291117447364499,
+   1.3944484590858146,
+   1.7224314535814857
+  ],
+  "a 0.9 NHITS_seed2": [
+   1.5140554948477132,
+   1.4882451872477456,
+   1.4111902472652875,
+   1.6428348960658112
+  ],
+  "b 0.7 TFT_seed0": [
+   1.2144499532659123,
+   1.1307472651386141,
+   1.125975746794781,
+   1.181496710407793
+  ],
+  "a 0.7 TFT_seed0": [
+   1.2646461425942352,
+   1.161069174050492,
+   1.1420252461896483,
+   1.1867999902808686
+  ],
+  "b 0.9 TFT_seed0": [
+   1.5754701077939057,
+   1.4593949213416098,
+   1.441591123108851,
+   1.5787201435027194
+  ],
+  "a 0.9 TFT_seed0": [
+   1.628550842154508,
+   1.4999097858134514,
+   1.4636782585584203,
+   1.5376913405511636
+  ],
+  "b 0.7 TFT_seed1": [
+   1.2339948350905896,
+   1.203489062712435,
+   1.2252521064154944,
+   1.3209401729312802
+  ],
+  "a 0.7 TFT_seed1": [
+   1.261530878021277,
+   1.2318644773297203,
+   1.2356822874829168,
+   1.2978464519822936
+  ],
+  "b 0.9 TFT_seed1": [
+   1.570322141633893,
+   1.532932942003553,
+   1.585078436121567,
+   1.8172295049159453
+  ],
+  "a 0.9 TFT_seed1": [
+   1.6113561200567084,
+   1.5659844815585222,
+   1.596702747094528,
+   1.8052087953544023
+  ],
+  "b 0.7 TFT_seed2": [
+   1.2245139555013507,
+   1.1535902340606414,
+   1.1697202319746551,
+   1.2234320408781627
+  ],
+  "a 0.7 TFT_seed2": [
+   1.272061752143289,
+   1.1797149017190978,
+   1.2051447830207418,
+   1.2271129115293835
+  ],
+  "b 0.9 TFT_seed2": [
+   1.6112588595150328,
+   1.4980551114248186,
+   1.494041791322923,
+   1.6713645625093205
+  ],
+  "a 0.9 TFT_seed2": [
+   1.6550306611442487,
+   1.5424125509064077,
+   1.522697340151358,
+   1.6216065709454053
+  ],
+  "b 0.7 lightgbm_seed0": [
+   1.245971033691054,
+   1.22377639940201,
+   1.156477208469391,
+   1.2005311309801736
+  ],
+  "a 0.7 lightgbm_seed0": [
+   1.2879325984769168,
+   1.2519008269298866,
+   1.1722377988659667,
+   1.2121550788299513
+  ],
+  "b 0.9 lightgbm_seed0": [
+   1.6261019868713027,
+   1.5855210395640107,
+   1.517553759497797,
+   1.6555063832038177
+  ],
+  "a 0.9 lightgbm_seed0": [
+   1.725701425424217,
+   1.7177678820356066,
+   1.5932964444038453,
+   1.654324174724228
+  ],
+  "b 0.7 naive_seed0": [
+   1.221175669230608,
+   1.1948604997640997,
+   1.1583713372773314,
+   1.1717448242855495
+  ],
+  "a 0.7 naive_seed0": [
+   1.228322285393204,
+   1.204492179084691,
+   1.176147544821081,
+   1.1488133307546111
+  ],
+  "b 0.9 naive_seed0": [
+   1.667477330614513,
+   1.6365891927538259,
+   1.6339674544595426,
+   1.741545471710342
+  ],
+  "a 0.9 naive_seed0": [
+   1.7158349941727682,
+   1.6736827776404324,
+   1.6601994161905174,
+   1.75207686614562
+  ]
+ },
+ "pairs": [
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.265599150162091,
+   "ci": [
+    1.0885661093827155,
+    1.4805473517909984
+   ],
+   "spend_pct": 1.109603964538941,
+   "eff_pct": 0.13732574683389398
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.22900823985553037,
+   "ci": [
+    -0.4073227830783466,
+    -0.047110827413724146
+   ],
+   "spend_pct": -1.05865661595832,
+   "eff_pct": 0.8449785497045781
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -1.494607390017621,
+   "ci": [
+    -1.7541226187712171,
+    -1.2598866863432372
+   ],
+   "spend_pct": -2.1444655062220597,
+   "eff_pct": 0.7066823460612159
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.7473361117743117,
+   "ci": [
+    0.5794373067045034,
+    0.9533701656413107
+   ],
+   "spend_pct": 0.5449776883715174,
+   "eff_pct": 0.19119195614536455
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.7472712782433095,
+   "ci": [
+    -0.9530648894514331,
+    -0.5394417739861397
+   ],
+   "spend_pct": -1.611174676394278,
+   "eff_pct": 0.8992254220077545
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -1.494607390017621,
+   "ci": [
+    -1.7541226187712171,
+    -1.2598866863432372
+   ],
+   "spend_pct": -2.1444655062220597,
+   "eff_pct": 0.7066823460612159
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 1.5350797217409495,
+   "ci": [
+    0.812512954063002,
+    2.4603797306115096
+   ],
+   "spend_pct": 0.9260332531900284,
+   "eff_pct": 0.680933826770791
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -6.179737673808586,
+   "ci": [
+    -6.638577647625536,
+    -5.709035351296256
+   ],
+   "spend_pct": -7.600670738833825,
+   "eff_pct": 1.7242811533906943
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.7148173955495345,
+   "ci": [
+    -8.630185291958833,
+    -6.9372493524551855
+   ],
+   "spend_pct": -8.448468365573413,
+   "eff_pct": 1.0362908715318975
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 0.040699249081835635,
+   "ci": [
+    -0.7442101875751231,
+    1.0129384191356514
+   ],
+   "spend_pct": -0.7657098417038988,
+   "eff_pct": 0.8147206021949627
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -7.674118146467699,
+   "ci": [
+    -8.193343752026665,
+    -7.119102114688841
+   ],
+   "spend_pct": -9.14948745352888,
+   "eff_pct": 1.8594543489558912
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.7148173955495345,
+   "ci": [
+    -8.630185291958833,
+    -6.9372493524551855
+   ],
+   "spend_pct": -8.448468365573413,
+   "eff_pct": 1.0362908715318975
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.2262451968483734,
+   "ci": [
+    1.0283995613366965,
+    1.4482965744444394
+   ],
+   "spend_pct": 1.344708182525567,
+   "eff_pct": -0.13547880557186476
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.17563403546426562,
+   "ci": [
+    -0.3062087351375778,
+    -0.038327942811921395
+   ],
+   "spend_pct": -0.7148882164130566,
+   "eff_pct": 0.548226088194026
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -1.401879232312639,
+   "ci": [
+    -1.6841910324132878,
+    -1.1366695297615632
+   ],
+   "spend_pct": -2.0322683205414416,
+   "eff_pct": 0.6846324255986413
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.8318628278084441,
+   "ci": [
+    0.6658637442838731,
+    1.0275286672220298
+   ],
+   "spend_pct": 0.8609617333824815,
+   "eff_pct": -0.041520530716077086
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.570016404504195,
+   "ci": [
+    -0.752117645155781,
+    -0.3747693415194181
+   ],
+   "spend_pct": -1.188803639718472,
+   "eff_pct": 0.6428276318660053
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -1.401879232312639,
+   "ci": [
+    -1.6841910324132878,
+    -1.1366695297615632
+   ],
+   "spend_pct": -2.0322683205414416,
+   "eff_pct": 0.6846324255986413
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 0.7285019710203842,
+   "ci": [
+    -0.06906731126472805,
+    1.687912071779157
+   ],
+   "spend_pct": 0.5939746196766738,
+   "eff_pct": 0.16560852005307325
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -6.449461371128696,
+   "ci": [
+    -6.853709332187898,
+    -6.024422717611684
+   ],
+   "spend_pct": -7.445956928336839,
+   "eff_pct": 1.277130591487996
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.17796334214908,
+   "ci": [
+    -8.170123885633064,
+    -6.3658942650761485
+   ],
+   "spend_pct": -7.992458373785006,
+   "eff_pct": 1.1096843396228184
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -0.8133690630922493,
+   "ci": [
+    -1.6105740505814479,
+    0.16604531427230787
+   ],
+   "spend_pct": -1.134361682633911,
+   "eff_pct": 0.2884646052980555
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -7.991332405241329,
+   "ci": [
+    -8.48121394283329,
+    -7.482799339199134
+   ],
+   "spend_pct": -9.036156671126239,
+   "eff_pct": 1.4013499914712124
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.17796334214908,
+   "ci": [
+    -8.170123885633064,
+    -6.3658942650761485
+   ],
+   "spend_pct": -7.992458373785006,
+   "eff_pct": 1.1096843396228184
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.9500629452544043,
+   "ci": [
+    1.517079362971119,
+    2.3541042925002555
+   ],
+   "spend_pct": 1.4731837067413656,
+   "eff_pct": 0.4722742967869564
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.217111286918036,
+   "ci": [
+    -0.6036673838199521,
+    0.12786779525306735
+   ],
+   "spend_pct": -1.0560308495543458,
+   "eff_pct": 0.8522742960467955
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.1671742321724405,
+   "ci": [
+    -2.5215678095109406,
+    -1.8625061908793215
+   ],
+   "spend_pct": -2.4924955184269737,
+   "eff_pct": 0.37821379272986455
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.3944233762482683,
+   "ci": [
+    0.9595563739403855,
+    1.784155105504997
+   ],
+   "spend_pct": 0.9723038253779626,
+   "eff_pct": 0.419720800613832
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.772750855924172,
+   "ci": [
+    -1.185026195956804,
+    -0.41343479487520784
+   ],
+   "spend_pct": -1.5444263223220567,
+   "eff_pct": 0.7995220353025578
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.1671742321724405,
+   "ci": [
+    -2.5215678095109406,
+    -1.8625061908793215
+   ],
+   "spend_pct": -2.4924955184269737,
+   "eff_pct": 0.37821379272986455
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 3.945250028081023,
+   "ci": [
+    3.0893152819288483,
+    4.990090902449505
+   ],
+   "spend_pct": 3.082053663939033,
+   "eff_pct": 1.1735669276720317
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -6.175928703862636,
+   "ci": [
+    -7.078447516786176,
+    -5.402912757222127
+   ],
+   "spend_pct": -7.2531354351316635,
+   "eff_pct": 1.2950013488959522
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -10.121178731943658,
+   "ci": [
+    -11.26989154678778,
+    -8.978119177591934
+   ],
+   "spend_pct": -10.0261769451788,
+   "eff_pct": 0.12002583768815356
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 2.44813033873737,
+   "ci": [
+    1.5584346829672249,
+    3.521192749744709
+   ],
+   "spend_pct": 1.4588283183503803,
+   "eff_pct": 1.1870228124290172
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -7.6730483932062885,
+   "ci": [
+    -8.610026427328112,
+    -6.911393011273019
+   ],
+   "spend_pct": -8.7136133353526,
+   "eff_pct": 1.3084733841913554
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -10.121178731943658,
+   "ci": [
+    -11.26989154678778,
+    -8.978119177591934
+   ],
+   "spend_pct": -10.0261769451788,
+   "eff_pct": 0.12002583768815356
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.3119064996749408,
+   "ci": [
+    1.0169814648228903,
+    1.6455049631297307
+   ],
+   "spend_pct": 0.9435091727084677,
+   "eff_pct": 0.38315276197320447
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.9068590147864213,
+   "ci": [
+    -1.1784047836777685,
+    -0.6370196383151824
+   ],
+   "spend_pct": -1.860404919658154,
+   "eff_pct": 0.9792994818742073
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.2187655144613623,
+   "ci": [
+    -2.691666950050263,
+    -1.813390322826352
+   ],
+   "spend_pct": -2.7777061797696123,
+   "eff_pct": 0.5938712856673911
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.4208754568940491,
+   "ci": [
+    1.1324341517234606,
+    1.771227055093469
+   ],
+   "spend_pct": 1.150819373944456,
+   "eff_pct": 0.28665361719832916
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.797890057567313,
+   "ci": [
+    -1.0206298052342284,
+    -0.5712078789938899
+   ],
+   "spend_pct": -1.6588531866931988,
+   "eff_pct": 0.8822272563876021
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.2187655144613623,
+   "ci": [
+    -2.691666950050263,
+    -1.813390322826352
+   ],
+   "spend_pct": -2.7777061797696123,
+   "eff_pct": 0.5938712856673911
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -1.8941440247715955,
+   "ci": [
+    -2.954943651064196,
+    -0.774174306940082
+   ],
+   "spend_pct": -3.223628733564987,
+   "eff_pct": 1.2334473501747656
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.421754599574335,
+   "ci": [
+    -10.325320347307013,
+    -8.530595546240562
+   ],
+   "spend_pct": -11.026197505078539,
+   "eff_pct": 1.8912573578101721
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.52761057480274,
+   "ci": [
+    -8.802110046036846,
+    -6.459261916257496
+   ],
+   "spend_pct": -8.06247296670415,
+   "eff_pct": 0.6497951268615632
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -2.0830527257069975,
+   "ci": [
+    -3.1304560672755657,
+    -0.9321978971438842
+   ],
+   "spend_pct": -3.383313451192005,
+   "eff_pct": 1.1912206767436428
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.610663300509737,
+   "ci": [
+    -10.482762109674693,
+    -8.722750402574942
+   ],
+   "spend_pct": -11.173007685514936,
+   "eff_pct": 1.8487562975128657
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.52761057480274,
+   "ci": [
+    -8.802110046036846,
+    -6.459261916257496
+   ],
+   "spend_pct": -8.06247296670415,
+   "eff_pct": 0.6497951268615632
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.0672747181629256,
+   "ci": [
+    0.8801986077067718,
+    1.2699895711465816
+   ],
+   "spend_pct": 1.0029034798020975,
+   "eff_pct": 0.07556818388985143
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.8695337529117213,
+   "ci": [
+    -1.2053376628122923,
+    -0.5951503664911472
+   ],
+   "spend_pct": -1.6236558987056338,
+   "eff_pct": 0.7738365289728932
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -1.936808471074647,
+   "ci": [
+    -2.2331146465799767,
+    -1.6677589804839859
+   ],
+   "spend_pct": -2.600479083289897,
+   "eff_pct": 0.6977410748245649
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.5079091456379515,
+   "ci": [
+    0.30868878025668944,
+    0.7310744798743091
+   ],
+   "spend_pct": 0.348806224483833,
+   "eff_pct": 0.1642193362201505
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.4288993254366955,
+   "ci": [
+    -1.7763378725240042,
+    -1.126281096814046
+   ],
+   "spend_pct": -2.2607434917149782,
+   "eff_pct": 0.8631062368063214
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -1.936808471074647,
+   "ci": [
+    -2.2331146465799767,
+    -1.6677589804839859
+   ],
+   "spend_pct": -2.600479083289897,
+   "eff_pct": 0.6977410748245649
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 1.2132831921559766,
+   "ci": [
+    0.4216021804434102,
+    2.1521970892543325
+   ],
+   "spend_pct": 0.8491436585303713,
+   "eff_pct": 0.4625727321613038
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -7.396109582568975,
+   "ci": [
+    -8.06204544344559,
+    -6.7894095929909115
+   ],
+   "spend_pct": -8.93920304051089,
+   "eff_pct": 1.761361331109712
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -8.609392774724952,
+   "ci": [
+    -9.492229292501861,
+    -7.741951027272778
+   ],
+   "spend_pct": -9.705929414913083,
+   "eff_pct": 1.2928084197197043
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -0.16353856155872054,
+   "ci": [
+    -1.0167779271703408,
+    0.8216297758278949
+   ],
+   "spend_pct": -0.8021502199183961,
+   "eff_pct": 0.6298668733197177
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -8.772931336283673,
+   "ci": [
+    -9.436392251305083,
+    -8.122748774721659
+   ],
+   "spend_pct": -10.430223500684633,
+   "eff_pct": 1.9308182650107142
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -8.609392774724952,
+   "ci": [
+    -9.492229292501861,
+    -7.741951027272778
+   ],
+   "spend_pct": -9.705929414913083,
+   "eff_pct": 1.2928084197197043
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.1883782421049225,
+   "ci": [
+    0.9889421039883748,
+    1.40664532717707
+   ],
+   "spend_pct": 1.380911626545278,
+   "eff_pct": -0.1786765463738016
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.6997837430029823,
+   "ci": [
+    -0.9171129159569202,
+    -0.5011406681358251
+   ],
+   "spend_pct": -1.13416998735415,
+   "eff_pct": 0.44595295835081483
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -1.8881619851079048,
+   "ci": [
+    -2.143524916619607,
+    -1.6604649711079427
+   ],
+   "spend_pct": -2.4808236319319943,
+   "eff_pct": 0.6257475688696834
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.689332734668044,
+   "ci": [
+    0.5011499026186416,
+    0.903345781546467
+   ],
+   "spend_pct": 0.7473248619659811,
+   "eff_pct": -0.05100436173051115
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.1988292504398605,
+   "ci": [
+    -1.427350527329847,
+    -0.983510833988906
+   ],
+   "spend_pct": -1.7520385817489714,
+   "eff_pct": 0.5744240485856311
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -1.8881619851079048,
+   "ci": [
+    -2.143524916619607,
+    -1.6604649711079427
+   ],
+   "spend_pct": -2.4808236319319943,
+   "eff_pct": 0.6257475688696834
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 0.6468976970513065,
+   "ci": [
+    -0.1810802860695345,
+    1.5717980507773084
+   ],
+   "spend_pct": 0.7411860400494907,
+   "eff_pct": -0.04358821024865733
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -7.5168088693961055,
+   "ci": [
+    -7.995241903208643,
+    -7.0370747254213
+   ],
+   "spend_pct": -8.582359532600803,
+   "eff_pct": 1.2420646867365326
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -8.163706566447413,
+   "ci": [
+    -9.003838480474718,
+    -7.392667618250657
+   ],
+   "spend_pct": -9.254949181304806,
+   "eff_pct": 1.2862135344448467
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -0.8683210415672049,
+   "ci": [
+    -1.7587600162576325,
+    0.10620518252417031
+   ],
+   "spend_pct": -1.0654591854370787,
+   "eff_pct": 0.1309125906821862
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.032027608014618,
+   "ci": [
+    -9.53725771584477,
+    -8.509727677064994
+   ],
+   "spend_pct": -10.221800660582137,
+   "eff_pct": 1.4188099405866739
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -8.163706566447413,
+   "ci": [
+    -9.003838480474718,
+    -7.392667618250657
+   ],
+   "spend_pct": -9.254949181304806,
+   "eff_pct": 1.2862135344448467
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.4402574024196253,
+   "ci": [
+    0.9085833790482069,
+    1.8386007751872688
+   ],
+   "spend_pct": 1.2677966006622299,
+   "eff_pct": 0.20624957899995078
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.8633321640035329,
+   "ci": [
+    -1.3919627252357858,
+    -0.42876791052870195
+   ],
+   "spend_pct": -1.6259060773785805,
+   "eff_pct": 0.7737564122274332
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.3035895664231583,
+   "ci": [
+    -2.631544417190075,
+    -2.0205307421728493
+   ],
+   "spend_pct": -2.8574756982733485,
+   "eff_pct": 0.5663387619153193
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.9397329787089298,
+   "ci": [
+    0.43502764942163374,
+    1.3403368184091855
+   ],
+   "spend_pct": 0.7118099812401857,
+   "eff_pct": 0.2498966745045239
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.3638565877142284,
+   "ci": [
+    -1.8719760780997479,
+    -0.9321751635915961
+   ],
+   "spend_pct": -2.1660055142649792,
+   "eff_pct": 0.8176506981523168
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.3035895664231583,
+   "ci": [
+    -2.631544417190075,
+    -2.0205307421728493
+   ],
+   "spend_pct": -2.8574756982733485,
+   "eff_pct": 0.5663387619153193
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 2.898261800125057,
+   "ci": [
+    2.0061201584524917,
+    3.8931811952879083
+   ],
+   "spend_pct": 2.320556276906127,
+   "eff_pct": 0.8939955693484825
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -7.357519727264177,
+   "ci": [
+    -8.289608257903133,
+    -6.517872835277575
+   ],
+   "spend_pct": -8.783792152687319,
+   "eff_pct": 1.5505554512552422
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -10.255781527389233,
+   "ci": [
+    -11.32335891772568,
+    -9.307133557438519
+   ],
+   "spend_pct": -10.852509831496793,
+   "eff_pct": 0.6507422748021519
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 1.623820490325817,
+   "ci": [
+    0.695619495753009,
+    2.649406986030293
+   ],
+   "spend_pct": 0.8555103129911368,
+   "eff_pct": 0.9490235042883599
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -8.631961037063416,
+   "ci": [
+    -9.545293673914262,
+    -7.8072521514440325
+   ],
+   "spend_pct": -10.089843859332493,
+   "eff_pct": 1.6059414762307433
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -10.255781527389233,
+   "ci": [
+    -11.32335891772568,
+    -9.307133557438519
+   ],
+   "spend_pct": -10.852509831496793,
+   "eff_pct": 0.6507422748021519
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.5789661428739602,
+   "ci": [
+    0.17275264386423525,
+    0.9375924328367167
+   ],
+   "spend_pct": 0.3721129613668106,
+   "eff_pct": 0.22552743775647865
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.7470142159347903,
+   "ci": [
+    -2.2321821127900927,
+    -1.3094312344713581
+   ],
+   "spend_pct": -2.6601469910782827,
+   "eff_pct": 0.921156557445757
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.3259803588087506,
+   "ci": [
+    -2.7180457182420943,
+    -1.9703566290693801
+   ],
+   "spend_pct": -3.0210183515935407,
+   "eff_pct": 0.6940638153501322
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.8767903020952694,
+   "ci": [
+    0.5535587534297343,
+    1.2071383223805625
+   ],
+   "spend_pct": 0.7661459088246669,
+   "eff_pct": 0.13912979366019762
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.4491900567134812,
+   "ci": [
+    -1.8249782067971818,
+    -1.097398807825985
+   ],
+   "spend_pct": -2.27801785127445,
+   "eff_pct": 0.8341592585645152
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.3259803588087506,
+   "ci": [
+    -2.7180457182420943,
+    -1.9703566290693801
+   ],
+   "spend_pct": -3.0210183515935407,
+   "eff_pct": 0.6940638153501322
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -2.9285795837383097,
+   "ci": [
+    -4.031601110394474,
+    -1.7546209271913769
+   ],
+   "spend_pct": -4.298465207155067,
+   "eff_pct": 1.1389812750805417
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -10.716759729938056,
+   "ci": [
+    -11.72145471156525,
+    -9.605927372655287
+   ],
+   "spend_pct": -12.667625473540856,
+   "eff_pct": 2.118080439177672
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.788180146199747,
+   "ci": [
+    -8.887807277126942,
+    -6.827781304540974
+   ],
+   "spend_pct": -8.745063790775799,
+   "eff_pct": 0.9680729939667287
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -2.7611958398676784,
+   "ci": [
+    -3.8414148204182257,
+    -1.624714037460486
+   ],
+   "spend_pct": -4.079757983440846,
+   "eff_pct": 1.0995538656714876
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -10.549375986067426,
+   "ci": [
+    -11.498318733666979,
+    -9.517619040714152
+   ],
+   "spend_pct": -12.468044336055472,
+   "eff_pct": 2.078271343665894
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.788180146199747,
+   "ci": [
+    -8.887807277126942,
+    -6.827781304540974
+   ],
+   "spend_pct": -8.745063790775799,
+   "eff_pct": 0.9680729939667287
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.801234263880109,
+   "ci": [
+    0.5883191163782925,
+    1.0352557082085365
+   ],
+   "spend_pct": 0.7372243613894325,
+   "eff_pct": 0.08299844335883932
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.3661585201920272,
+   "ci": [
+    -1.6004562670533666,
+    -1.136504054596222
+   ],
+   "spend_pct": -2.1086835574201657,
+   "eff_pct": 0.755436137320542
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.167392784072136,
+   "ci": [
+    -2.426939434922295,
+    -1.9109303076754651
+   ],
+   "spend_pct": -2.8250807353993213,
+   "eff_pct": 0.6718800439839523
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.23818792902896027,
+   "ci": [
+    -0.003885172187982628,
+    0.49385784935919125
+   ],
+   "spend_pct": 0.05703936008065735,
+   "eff_pct": 0.18686872153574896
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.929204855043176,
+   "ci": [
+    -2.2074858965753625,
+    -1.6581417682434427
+   ],
+   "spend_pct": -2.7696527832918982,
+   "eff_pct": 0.8600042991681489
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.167392784072136,
+   "ci": [
+    -2.426939434922295,
+    -1.9109303076754651
+   ],
+   "spend_pct": -2.8250807353993213,
+   "eff_pct": 0.6718800439839523
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 0.9520401599372789,
+   "ci": [
+    0.10309810596587443,
+    2.002591633729824
+   ],
+   "spend_pct": 0.5275220831757466,
+   "eff_pct": 0.5187488327556888
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -8.071203739587174,
+   "ci": [
+    -8.657603616588363,
+    -7.4510478335781105
+   ],
+   "spend_pct": -9.78875664389911,
+   "eff_pct": 1.8841540663621092
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -9.023243899524454,
+   "ci": [
+    -9.899997934261041,
+    -8.252356614387324
+   ],
+   "spend_pct": -10.262143653097544,
+   "eff_pct": 1.3583587633767769
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -0.28087396410807935,
+   "ci": [
+    -1.1850675194856288,
+    0.8125387986139413
+   ],
+   "spend_pct": -0.9960106689232973,
+   "eff_pct": 0.6934358018894748
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.304117863632532,
+   "ci": [
+    -9.947345997726382,
+    -8.619746892261558
+   ],
+   "spend_pct": -11.155942276375752,
+   "eff_pct": 2.061213911249604
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -9.023243899524454,
+   "ci": [
+    -9.899997934261041,
+    -8.252356614387324
+   ],
+   "spend_pct": -10.262143653097544,
+   "eff_pct": 1.3583587633767769
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.087815348677552,
+   "ci": [
+    0.8835307728109991,
+    1.3312636069571933
+   ],
+   "spend_pct": 1.289934283572225,
+   "eff_pct": -0.17254026377010456
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.0412487649548616,
+   "ci": [
+    -1.2215025781088868,
+    -0.8624887114883116
+   ],
+   "spend_pct": -1.4994947428996763,
+   "eff_pct": 0.46178847212747787
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.1290641136324133,
+   "ci": [
+    -2.3810785101855614,
+    -1.8770721677265156
+   ],
+   "spend_pct": -2.7539054558595955,
+   "eff_pct": 0.6354251000412647
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.5145504802527321,
+   "ci": [
+    0.308810015829152,
+    0.7673533609473415
+   ],
+   "spend_pct": 0.5753082347891514,
+   "eff_pct": -0.047545895427203444
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.6145136333796815,
+   "ci": [
+    -1.8364345576885945,
+    -1.3930249764659286
+   ],
+   "spend_pct": -2.1944406659363036,
+   "eff_pct": 0.5875770860604757
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.1290641136324133,
+   "ci": [
+    -2.3810785101855614,
+    -1.8770721677265156
+   ],
+   "spend_pct": -2.7539054558595955,
+   "eff_pct": 0.6354251000412647
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 0.842783276199777,
+   "ci": [
+    0.034898499130743506,
+    1.852505385560793
+   ],
+   "spend_pct": 0.8081856508408203,
+   "eff_pct": 0.11680374635054669
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -7.81360573170971,
+   "ci": [
+    -8.382121940028357,
+    -7.187482494991412
+   ],
+   "spend_pct": -9.209778965969594,
+   "eff_pct": 1.5098481416251142
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -8.656389007909487,
+   "ci": [
+    -9.551583324737067,
+    -7.844741552737305
+   ],
+   "spend_pct": -9.937649955836548,
+   "eff_pct": 1.3914191655617358
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -0.5790966948362153,
+   "ci": [
+    -1.4437731538238263,
+    0.4733062526881159
+   ],
+   "spend_pct": -0.9264321148027554,
+   "eff_pct": 0.2929146297421026
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.235485702745702,
+   "ci": [
+    -9.849125240901818,
+    -8.54319263705433
+   ],
+   "spend_pct": -10.772016489991753,
+   "eff_pct": 1.6884094656008264
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -8.656389007909487,
+   "ci": [
+    -9.551583324737067,
+    -7.844741552737305
+   ],
+   "spend_pct": -9.937649955836548,
+   "eff_pct": 1.3914191655617358
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.9948655719998389,
+   "ci": [
+    0.5545243785407049,
+    1.3934561305510555
+   ],
+   "spend_pct": 0.8314937518602017,
+   "eff_pct": 0.19548731691203525
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.595609713049933,
+   "ci": [
+    -2.0243897156073616,
+    -1.1659849610569648
+   ],
+   "spend_pct": -2.2758302380546436,
+   "eff_pct": 0.6847209026800583
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.590475285049772,
+   "ci": [
+    -2.8940423773433173,
+    -2.2839907930035435
+   ],
+   "spend_pct": -3.0816998482257607,
+   "eff_pct": 0.4882790621304034
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.5170739372156572,
+   "ci": [
+    0.09937158350103871,
+    0.9137260737039041
+   ],
+   "spend_pct": 0.287915070321354,
+   "eff_pct": 0.24598724487763235
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -2.073401347834115,
+   "ci": [
+    -2.500454228791438,
+    -1.6406119048541077
+   ],
+   "spend_pct": -2.802657456189517,
+   "eff_pct": 0.735467411220303
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.590475285049772,
+   "ci": [
+    -2.8940423773433173,
+    -2.2839907930035435
+   ],
+   "spend_pct": -3.0816998482257607,
+   "eff_pct": 0.4882790621304034
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 1.7843848336422001,
+   "ci": [
+    0.8189433688846944,
+    2.8773330170300166
+   ],
+   "spend_pct": 1.1819746442763623,
+   "eff_pct": 0.8179804641746724
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -8.733831261274405,
+   "ci": [
+    -9.684104636990442,
+    -7.791384083589635
+   ],
+   "spend_pct": -10.136039082576442,
+   "eff_pct": 1.492861866825712
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -10.518216094916607,
+   "ci": [
+    -11.420977216489257,
+    -9.682066542519422
+   ],
+   "spend_pct": -11.18580040233782,
+   "eff_pct": 0.6694057940298315
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 0.7643213701667088,
+   "ci": [
+    -0.21303770165936575,
+    1.8849303455271187
+   ],
+   "spend_pct": -0.02351626754455438,
+   "eff_pct": 0.8845240890074546
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.753894724749896,
+   "ci": [
+    -10.671046781840047,
+    -8.818627351080826
+   ],
+   "spend_pct": -11.206686187132753,
+   "eff_pct": 1.5598509385386983
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -10.518216094916607,
+   "ci": [
+    -11.420977216489257,
+    -9.682066542519422
+   ],
+   "spend_pct": -11.18580040233782,
+   "eff_pct": 0.6694057940298315
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": -0.08166757665165576,
+   "ci": [
+    -0.40996365376219607,
+    0.25788642458363487
+   ],
+   "spend_pct": -0.3756936237397146,
+   "eff_pct": 0.29173754431768284
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -2.386185305513981,
+   "ci": [
+    -2.8007710190951873,
+    -1.9963680001094153
+   ],
+   "spend_pct": -3.3612184938838996,
+   "eff_pct": 0.966886411598078
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.3045177288623253,
+   "ci": [
+    -2.6846041815616832,
+    -1.9570998114497982
+   ],
+   "spend_pct": -2.996783595027974,
+   "eff_pct": 0.6731849340849916
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.3909744453768031,
+   "ci": [
+    0.12421613771714003,
+    0.686773607206117
+   ],
+   "spend_pct": 0.21496028017324864,
+   "eff_pct": 0.19180497988040557
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.913543283485522,
+   "ci": [
+    -2.261671218406874,
+    -1.5943221991159864
+   ],
+   "spend_pct": -2.7882652092667937,
+   "eff_pct": 0.8662811161927575
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.3045177288623253,
+   "ci": [
+    -2.6846041815616832,
+    -1.9570998114497982
+   ],
+   "spend_pct": -2.996783595027974,
+   "eff_pct": 0.6731849340849916
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -3.5892800907388174,
+   "ci": [
+    -4.694968644208435,
+    -2.3779688316440466
+   ],
+   "spend_pct": -5.102341125208487,
+   "eff_pct": 1.1960046632173205
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -11.444200094585621,
+   "ci": [
+    -12.446427921728514,
+    -10.386895077051197
+   ],
+   "spend_pct": -13.527075340295058,
+   "eff_pct": 2.1832687790035443
+  },
+  {
+   "set": "days 26-29",
+   "variant": "b",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.8549200038468046,
+   "ci": [
+    -8.87271670273307,
+    -6.915688286287925
+   ],
+   "spend_pct": -8.877705008721248,
+   "eff_pct": 0.9755959428159988
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -3.201672699856141,
+   "ci": [
+    -4.289870028604574,
+    -2.0298470481804043
+   ],
+   "spend_pct": -4.640470690423648,
+   "eff_pct": 1.1551508521231657
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -11.056592703702945,
+   "ci": [
+    -11.998597104956415,
+    -10.068688176970461
+   ],
+   "spend_pct": -13.106208400232921,
+   "eff_pct": 2.142016399785862
+  },
+  {
+   "set": "days 26-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.8549200038468046,
+   "ci": [
+    -8.87271670273307,
+    -6.915688286287925
+   ],
+   "spend_pct": -8.877705008721248,
+   "eff_pct": 0.9755959428159988
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.7289209774459177,
+   "ci": [
+    0.5493812747873719,
+    0.9329147486725907
+   ],
+   "spend_pct": 0.4927734405445028,
+   "eff_pct": 0.227904087659625
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.9969403427671829,
+   "ci": [
+    -1.1965195627353404,
+    -0.815535568884942
+   ],
+   "spend_pct": -1.7561063462714799,
+   "eff_pct": 0.79953299102129
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -1.7258613202131006,
+   "ci": [
+    -1.9881962079627573,
+    -1.5068220531183838
+   ],
+   "spend_pct": -2.237852245312466,
+   "eff_pct": 0.5703291000295652
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -0.23957560526875424,
+   "ci": [
+    -1.0677866435164747,
+    0.7323483876085729
+   ],
+   "spend_pct": -1.1572227551325698,
+   "eff_pct": 0.9143239168230011
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -8.437167144934236,
+   "ci": [
+    -8.971801302828577,
+    -7.869441003671688
+   ],
+   "spend_pct": -9.719872840926392,
+   "eff_pct": 1.6675952423477636
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -8.197591539665481,
+   "ci": [
+    -9.14957669883957,
+    -7.390104300872786
+   ],
+   "spend_pct": -8.662899125730961,
+   "eff_pct": 0.7464463876759808
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.8909389911442583,
+   "ci": [
+    0.7148290045388321,
+    1.0942101262534871
+   ],
+   "spend_pct": 0.8711404471875017,
+   "eff_pct": 0.009918355059035378
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.81581467936224,
+   "ci": [
+    -0.9726723411740721,
+    -0.6540912390360507
+   ],
+   "spend_pct": -1.3862831059300196,
+   "eff_pct": 0.6011636543424626
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -1.7067536705064983,
+   "ci": [
+    -1.9975493162778002,
+    -1.4647649780170333
+   ],
+   "spend_pct": -2.237928056637195,
+   "eff_pct": 0.5911866632910989
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -1.0107203904107953,
+   "ci": [
+    -1.872990185575514,
+    -0.020963767716621486
+   ],
+   "spend_pct": -1.4411675531002421,
+   "eff_pct": 0.3827048873829453
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -8.834483314168065,
+   "ci": [
+    -9.291941627831768,
+    -8.362684142344948
+   ],
+   "spend_pct": -9.782575613238286,
+   "eff_pct": 1.3193067730858044
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.823762923757269,
+   "ci": [
+    -8.77058496771377,
+    -6.989999734014507
+   ],
+   "spend_pct": -8.463379539963721,
+   "eff_pct": 0.9330311299676763
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.3422483582084965,
+   "ci": [
+    0.9505294574417487,
+    1.7068491703297841
+   ],
+   "spend_pct": 0.9284188979960195,
+   "eff_pct": 0.41623978565603625
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.9985411847331928,
+   "ci": [
+    -1.378005024043158,
+    -0.6764130707170215
+   ],
+   "spend_pct": -1.66925400080713,
+   "eff_pct": 0.700793540290312
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.3407895429416894,
+   "ci": [
+    -2.6852754133303605,
+    -2.046455134004295
+   ],
+   "spend_pct": -2.5737774624494003,
+   "eff_pct": 0.2833742383121285
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 2.0597073071776246,
+   "ci": [
+    1.184181781546748,
+    3.0439883446648683
+   ],
+   "spend_pct": 0.9196683072346445,
+   "eff_pct": 1.3219620804343135
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -8.427088243916064,
+   "ci": [
+    -9.26684577893527,
+    -7.697897394941862
+   ],
+   "spend_pct": -9.308356949091811,
+   "eff_pct": 1.1427818754975672
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -10.486795551093689,
+   "ci": [
+    -11.63703814987291,
+    -9.367637181427035
+   ],
+   "spend_pct": -10.134818542198133,
+   "eff_pct": -0.1768424152648107
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 1.3929246114852598,
+   "ci": [
+    1.1091744065193025,
+    1.7222789032797232
+   ],
+   "spend_pct": 1.0922933808235946,
+   "eff_pct": 0.3201397181237464
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -0.9123262398104808,
+   "ci": [
+    -1.1412006150129037,
+    -0.7003572939152802
+   ],
+   "spend_pct": -1.6818318251254905,
+   "eff_pct": 0.7889406461601522
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.3052508512957406,
+   "ci": [
+    -2.7516717949750022,
+    -1.9517884846566038
+   ],
+   "spend_pct": -2.744151025933017,
+   "eff_pct": 0.4673048994485285
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -2.284465519208759,
+   "ci": [
+    -3.3332326605974507,
+    -1.1041963964023898
+   ],
+   "spend_pct": -3.6021999484261102,
+   "eff_pct": 1.1881377031118134
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.981877188270925,
+   "ci": [
+    -10.750681520957734,
+    -9.202046712996394
+   ],
+   "spend_pct": -11.35589649114992,
+   "eff_pct": 1.6261507266606134
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.3,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.697411669062166,
+   "ci": [
+    -8.831446838474271,
+    -6.735902952620815
+   ],
+   "spend_pct": -8.043437234641749,
+   "eff_pct": 0.43286993267326324
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.4556991254647921,
+   "ci": [
+    0.2597357582793292,
+    0.6823751597779193
+   ],
+   "spend_pct": 0.25931507689838096,
+   "eff_pct": 0.20277090548934673
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.6987634739840445,
+   "ci": [
+    -1.9765176718018937,
+    -1.4372435316080376
+   ],
+   "spend_pct": -2.4962258228436007,
+   "eff_pct": 0.8293052236393761
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.1544625994488364,
+   "ci": [
+    -2.414187053459903,
+    -1.9140189467535809
+   ],
+   "spend_pct": -2.74841384825788,
+   "eff_pct": 0.625266459688012
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -0.3893471580399563,
+   "ci": [
+    -1.2209841069632197,
+    0.5587443598028775
+   ],
+   "spend_pct": -1.180159862139507,
+   "eff_pct": 0.7643084110167342
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.410738441778657,
+   "ci": [
+    -9.948550471935416,
+    -8.869813673505245
+   ],
+   "spend_pct": -11.013458135672472,
+   "eff_pct": 1.8704414328741814
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -9.0213912837387,
+   "ci": [
+    -9.89880527262016,
+    -8.234198254917903
+   ],
+   "spend_pct": -9.95073282836203,
+   "eff_pct": 1.097742880689001
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.7215210114433463,
+   "ci": [
+    0.5354269782171501,
+    0.9422987254879189
+   ],
+   "spend_pct": 0.7474839221075946,
+   "eff_pct": -0.014920414165420226
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.4763508042734916,
+   "ci": [
+    -1.650432695911795,
+    -1.3049100473219017
+   ],
+   "spend_pct": -2.0216550365043773,
+   "eff_pct": 0.5671118416093135
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.197871815716838,
+   "ci": [
+    -2.4403870578794864,
+    -1.9937714356961616
+   ],
+   "spend_pct": -2.748593662897736,
+   "eff_pct": 0.5821191103569268
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -0.9684934392871186,
+   "ci": [
+    -1.8106855197277747,
+    0.03277942318675084
+   ],
+   "spend_pct": -1.2839166225109389,
+   "eff_pct": 0.23362416252166174
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.724797130070423,
+   "ci": [
+    -10.13264595399201,
+    -9.316404339926104
+   ],
+   "spend_pct": -10.932887870688933,
+   "eff_pct": 1.4328720242960724
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -8.756303690783305,
+   "ci": [
+    -9.56354631230633,
+    -8.036015461427201
+   ],
+   "spend_pct": -9.774467258066199,
+   "eff_pct": 1.1964526592692204
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.8680280928012021,
+   "ci": [
+    0.40914656568868313,
+    1.2541126607697926
+   ],
+   "spend_pct": 0.6379410986201872,
+   "eff_pct": 0.2532530916642184
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.6422229112078035,
+   "ci": [
+    -2.0734296978991638,
+    -1.288863054718556
+   ],
+   "spend_pct": -2.3929055499824603,
+   "eff_pct": 0.7646081572996177
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.5102510040090054,
+   "ci": [
+    -2.801623064600908,
+    -2.2506508412133743
+   ],
+   "spend_pct": -3.0116341963241866,
+   "eff_pct": 0.5100633145219247
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 1.2451656764256553,
+   "ci": [
+    0.38109230299114133,
+    2.225013902394831
+   ],
+   "spend_pct": 0.32227643977218445,
+   "eff_pct": 1.0704479371899334
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.30526584180563,
+   "ci": [
+    -10.058380604178064,
+    -8.587434743286327
+   ],
+   "spend_pct": -10.701508014408079,
+   "eff_pct": 1.5358332021780718
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -10.550431518231285,
+   "ci": [
+    -11.548121106738046,
+    -9.666305460302263
+   ],
+   "spend_pct": -10.988371521651342,
+   "eff_pct": 0.4604563198110645
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.8507331486195799,
+   "ci": [
+    0.551290188077373,
+    1.1595231968789643
+   ],
+   "spend_pct": 0.7213784790673028,
+   "eff_pct": 0.15878871441443732
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.5539437042536424,
+   "ci": [
+    -1.8813508359349325,
+    -1.2558217821827946
+   ],
+   "spend_pct": -2.3302222523327143,
+   "eff_pct": 0.7776708974086777
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.404676852873222,
+   "ci": [
+    -2.7479350664765434,
+    -2.1008021417736864
+   ],
+   "spend_pct": -3.029744804410328,
+   "eff_pct": 0.6179010258988704
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -2.844268401597978,
+   "ci": [
+    -3.8678672489822956,
+    -1.7106847209425924
+   ],
+   "spend_pct": -4.245208136830536,
+   "eff_pct": 1.1683617541823343
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -10.804676571654618,
+   "ci": [
+    -11.625892615933566,
+    -9.927654269199504
+   ],
+   "spend_pct": -12.624298676145907,
+   "eff_pct": 1.9494017547088571
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.5,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.96040817005664,
+   "ci": [
+    -8.956013632993143,
+    -7.0989275485208605
+   ],
+   "spend_pct": -8.750570468879326,
+   "eff_pct": 0.7720200139488931
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.1783969313931273,
+   "ci": [
+    -0.06769685887156326,
+    0.43778946278310416
+   ],
+   "spend_pct": -0.04102601564534014,
+   "eff_pct": 0.22435773891655852
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -2.11023018110196,
+   "ci": [
+    -2.3724735962690886,
+    -1.836961041612185
+   ],
+   "spend_pct": -2.8996861878952784,
+   "eff_pct": 0.8053058951121628
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.2886271124950874,
+   "ci": [
+    -2.5519602323701034,
+    -2.0495230536107067
+   ],
+   "spend_pct": -2.85983344796773,
+   "eff_pct": 0.5796476717855104
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -0.5002651073721426,
+   "ci": [
+    -1.4442936953942147,
+    0.5472859224413764
+   ],
+   "spend_pct": -1.346912591996119,
+   "eff_pct": 0.8043378097854825
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.748968490520223,
+   "ci": [
+    -10.372175998909615,
+    -9.050910936028313
+   ],
+   "spend_pct": -11.505038398980327,
+   "eff_pct": 1.945211570715144
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "TFT",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -9.24870338314808,
+   "ci": [
+    -10.126819830459876,
+    -8.487566816950268
+   ],
+   "spend_pct": -10.2968149034939,
+   "eff_pct": 1.1317705028551783
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.5261312331952365,
+   "ci": [
+    0.31176686277720606,
+    0.7696598109151095
+   ],
+   "spend_pct": 0.5431486862140344,
+   "eff_pct": -0.001407464110403378
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.8404384384163763,
+   "ci": [
+    -2.06547601264011,
+    -1.6011977360599816
+   ],
+   "spend_pct": -2.389097105373583,
+   "eff_pct": 0.5523554063424418
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.3665696716116127,
+   "ci": [
+    -2.629385782213307,
+    -2.12491045548744
+   ],
+   "spend_pct": -2.916405374113451,
+   "eff_pct": 0.553770664576203
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -0.6900725354071036,
+   "ci": [
+    -1.583895998031009,
+    0.2944785149538448
+   ],
+   "spend_pct": -1.1340896942038325,
+   "eff_pct": 0.3747754381139057
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -9.801424106984257,
+   "ci": [
+    -10.424007759560045,
+    -9.076087904294422
+   ],
+   "spend_pct": -11.275541622971307,
+   "eff_pct": 1.6044354862335464
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "NHITS",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -9.111351571577153,
+   "ci": [
+    -9.977011164569557,
+    -8.343151643355403
+   ],
+   "spend_pct": -10.25778440455316,
+   "eff_pct": 1.2250687911902425
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.5056320076331322,
+   "ci": [
+    0.14593317432967057,
+    0.8676159225427389
+   ],
+   "spend_pct": 0.25761006576785483,
+   "eff_pct": 0.2657611419794481
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -2.197413142407023,
+   "ci": [
+    -2.580886495007316,
+    -1.7917858750804252
+   ],
+   "spend_pct": -2.8887105492281906,
+   "eff_pct": 0.6933235442860841
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.7030451500401553,
+   "ci": [
+    -3.0103678467209134,
+    -2.415585967914622
+   ],
+   "spend_pct": -3.1382362026504462,
+   "eff_pct": 0.4264291194091774
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": 0.42140084147162504,
+   "ci": [
+    -0.5431860044716416,
+    1.4860055855375711
+   ],
+   "spend_pct": -0.48810732813160396,
+   "eff_pct": 0.9681501603166831
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -10.109262505650559,
+   "ci": [
+    -10.884306447473985,
+    -9.268253060660198
+   ],
+   "spend_pct": -11.542701365023255,
+   "eff_pct": 1.5268613047832114
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "LightGBM",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -10.530663347122184,
+   "ci": [
+    -11.388410976476171,
+    -9.767129184190011
+   ],
+   "spend_pct": -11.108816986672332,
+   "eff_pct": 0.5533538482971112
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - summed",
+   "points": 0.41419052764271563,
+   "ci": [
+    0.1556033689748189,
+    0.697564310330023
+   ],
+   "spend_pct": 0.2227522228208212,
+   "eff_pct": 0.2085318084837473
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "calibrated - median plan",
+   "points": -1.9779185889065822,
+   "ci": [
+    -2.2950200685543902,
+    -1.646001803720224
+   ],
+   "spend_pct": -2.8052637627999255,
+   "eff_pct": 0.8165653870609857
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.7,
+   "contrast": "summed - median plan",
+   "points": -2.392109116549298,
+   "ci": [
+    -2.718694753600294,
+    -2.085065338892416
+   ],
+   "spend_pct": -3.021286003889312,
+   "eff_pct": 0.6067682737227464
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - summed",
+   "points": -3.225565392733719,
+   "ci": [
+    -4.267256693520457,
+    -2.0638311276082564
+   ],
+   "spend_pct": -4.738510364715487,
+   "eff_pct": 1.2280421954149467
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "calibrated - median plan",
+   "points": -11.165030957972446,
+   "ci": [
+    -12.023298921482974,
+    -10.164380038453816
+   ],
+   "spend_pct": -13.168788128561692,
+   "eff_pct": 2.0886518995959724
+  },
+  {
+   "set": "days 25-29",
+   "variant": "a",
+   "rho": 0.7,
+   "forecaster": "Seasonal naive",
+   "q": 0.9,
+   "contrast": "summed - median plan",
+   "points": -7.939465565238727,
+   "ci": [
+    -8.87844055538282,
+    -7.091791835479391
+   ],
+   "spend_pct": -8.849617821558464,
+   "eff_pct": 0.8501692668516414
+  }
+ ]
+}
