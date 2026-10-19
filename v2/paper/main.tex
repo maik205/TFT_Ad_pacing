@@ -9,14 +9,15 @@
 \usepackage{amsmath}
 
 \input{../results/tables/numbers.tex}
+\input{../../v3/results/numbers_v3.tex}
 \graphicspath{{../results/figures/}}
 
 \settopmatter{printacmref=false, printfolios=true}
 
 \begin{document}
 
-\title{Does Better Forecasting Buy Better Budget Pacing?}
-\subtitle{An Empirical Study of Probabilistic Spend Forecasts for Throttling-Based Daily Pacing on Real Campaign Logs}
+\title{What Does a Forecast Add to Budget Pacing?}
+\subtitle{Daily Totals, Hourly Shape and Hedging in Throttling-Based Pacing on Criteo Campaign Logs}
 
 \author{Mai Minh Duc}
 \affiliation{%
@@ -28,20 +29,27 @@
 \begin{abstract}
 Demand-side platforms pace daily campaign budgets by throttling participation in auctions.
 A natural way to pace is to forecast the demand of the remaining day and throttle so that the
-forecast fits the remaining budget. We ask how much the forecaster and its quantile level
-matter for this. On \res{data-impressions} real impressions from \res{data-campaigns} campaigns
-in the Criteo Attribution dataset, we couple rolling-origin probabilistic forecasts (seasonal
-naive, LightGBM, NHITS and the Temporal Fusion Transformer) with an impression-replay pacing
-environment. We compare them with no pacing, even pacing and a PID controller tuned on
-validation days, at three budget levels. Throttling on the median forecast of a neural model
-captures \res{gain-even-min}--\res{gain-even-max} percentage points more clicks than even pacing
-and \res{gain-pid-min}--\res{gain-pid-max} points more than tuned PID, with far smoother
-participation rates. The hedging quantile matters much more than the forecaster: throttling on the
-90th percentile costs \res{hedge-cost-min}--\res{hedge-cost-max} points of clicks because it
-leaves \res{hedge-bur-min}--\res{hedge-bur-max}\% of the budget unspent. TFT and NHITS are
-practically tied (at most \res{tft-nhits-diff-max} points apart). Both beat LightGBM by
-\res{nn-lgb-min}--\res{nn-lgb-max} points and seasonal naive by
-\res{nn-naive-min}--\res{nn-naive-max} points. Code, protocol and all results files are released.
+forecast fits the remaining budget. We ask what such a forecast adds. On \res{data-impressions}
+real impressions from \res{data-campaigns} campaigns in the Criteo Attribution dataset, we couple
+rolling-origin probabilistic forecasts (seasonal naive, LightGBM, NHITS and the Temporal Fusion
+Transformer, TFT) with an impression-replay pacing environment and compare them with no pacing,
+even pacing and a proportional-integral-derivative (PID) controller tuned on validation days, at
+three budget levels. Throttling on the median neural forecast captures
+\res{gain-even-min}--\res{gain-even-max} points more clicks than even pacing and
+\res{gain-pid-min}--\res{gain-pid-max} points more than tuned PID. Over a seasonal-naive profile the
+neural models add \res{nn-naive-min}--\res{nn-naive-max} points, with
+\res{se-tft-naive-spend-min}--\res{se-tft-naive-spend-max}\% more spend and no loss of clicks per unit of spend.
+One scale on the naive forecast total, chosen on validation days, recovers \res{sn-share-rho0.3}\% to
+\res{sn-share-rho0.7}\% of the TFT gain depending on the budget. In a swap of daily total and hourly shape, the
+forecast total supplies \res{ex-tshare-min}--\res{ex-tshare-max}\% of the gain, and an exploratory matched-spend comparison
+leaves TFT and NHITS \res{fr-tft-min}--\res{fr-tft-max} and \res{fr-nhits-min}--\res{fr-nhits-max} points above what scaling
+alone reaches. An oracle forecast shows \res{ex-head-min}--\res{ex-head-max} points of headroom over TFT. Planning against the
+90th percentile costs \res{hedge-cost-min}--\res{hedge-cost-max} points. Summing hourly quantiles over-covers the day
+(\res{hc-cov90-min}--\res{hc-cov90-max}\% against a nominal 90\%), but a calibrated daily-total hedge recovers only
+\res{ch-rec-rho0.7}--\res{ch-rec-rho0.3}\% of that loss for TFT, and PID feedback on top of the forecast helps at the tight budget only.
+This simulator barely penalizes early depletion, so part of the hedging cost is a property of the environment. A synthetic world
+of our own shows the same ordering of the pieces. The results come from \res{cfg-test-days} test days of one real dataset and a
+throttling-only simulator. We will release the code, protocol and results files.
 \end{abstract}
 
 \keywords{budget pacing, throttling, real-time bidding, probabilistic forecasting,
@@ -54,45 +62,58 @@ Temporal Fusion Transformer, empirical study}
 
 Advertisers buy display impressions with daily budgets, and the platform must spend each
 budget across the day rather than exhaust it in the first busy hours~\cite{lee2013real,agarwal2014budget}.
-A widely deployed mechanism is \emph{probabilistic throttling}: the platform takes part in each
-eligible auction with a probability $\alpha_t$ that it adjusts over the day~\cite{agarwal2014budget,xu2015smart,balseiro2017budget}.
+A mechanism used in production systems is \emph{probabilistic throttling}: the platform takes part
+in each eligible auction with a probability $\alpha_t$ that it adjusts over the day~\cite{agarwal2014budget,xu2015smart,balseiro2017budget}.
 How to set $\alpha_t$ is the pacing problem.
 
-Forecast-free controllers, such as even pacing or a PID loop on the spend gap, react to past
-spend. A forecast-driven policy instead predicts the remaining day's eligible spend and sets
+Forecast-free controllers, such as even pacing or a proportional-integral-derivative (PID) loop on
+the spend gap, react to past spend. A forecast-driven policy instead predicts the remaining day's eligible spend and sets
 $\alpha_t$ so that the predicted spend fits the remaining budget. Modern multi-horizon
 forecasters, including the Temporal Fusion Transformer (TFT)~\cite{lim2021temporal} and
-NHITS~\cite{challu2023nhits}, produce such forecasts with calibrated quantiles. A practitioner
-therefore faces three questions. Does forecasting help over a well-tuned controller? Does a more
-accurate forecaster translate into better pacing? Should the policy hedge by planning against
-an upper quantile of demand?
+NHITS~\cite{challu2023nhits}, produce multi-horizon quantile forecasts that can feed such a policy.
+A practitioner therefore faces three questions. Does forecasting help over a well-tuned controller?
+If it does, what exactly does the forecast add: a better daily total, a better hourly shape, or
+something else? And should the policy hedge by planning against an upper quantile of demand?
 
 We answer these questions empirically on real campaign logs. This is an applied study: the
 forecasters and the throttling model are established methods, used as tools. Our contributions are:
 \begin{enumerate}
   \item A reproducible pipeline that couples hourly rolling-origin probabilistic spend forecasts
         with an impression-replay throttling environment built from the public Criteo Attribution
-        dataset~\cite{diemert2017attribution}.
-  \item A controlled comparison of forecast-free and forecast-driven policies at three
-        budget-tightness levels, with campaign-level bootstrap intervals and multiplicity-corrected
-        paired tests.
-  \item Practical guidance: forecasting helps, the hedging quantile dominates the choice of
-        forecaster, and upper-quantile hedging is costly.
+        dataset~\cite{diemert2017attribution}, and a controlled comparison of forecast-free and
+        forecast-driven policies at three budget-tightness levels.
+    \item A decomposition of the gain of a learned forecaster. Over a seasonal profile it is
+        extra budget delivered, not cheaper clicks; a single scale on the naive forecast total
+        recovers a large part of it; a swap of total and shape and an oracle forecast show where the rest
+        lies; and an exploratory comparison at matched spend leaves a smaller edge.
+  \item An analysis of hedging: the summed hourly quantiles over-cover the remaining day, a calibrated
+        daily-total hedge recovers only part of the loss, and PID feedback on top of the forecast
+                helps only at the tight budget.
+  \item A second, synthetic environment from a world builder we developed for this study, in which
+        the same ordering of the pieces appears (Section~\ref{sec:world}).
 \end{enumerate}
-The design, metrics and every deviation from them were fixed in a written protocol before the
-test split was evaluated. Every number reported here is generated from released results files.
+The design and the main metrics were fixed in a written protocol before the test split was evaluated.
+The decomposition, hedging and feedback analyses were added after the main results were seen;
+each new simulation was entered in the protocol log before it ran (Section~\ref{sec:protocol}). Every number
+reported here is generated from results files written by the accompanying code, which we will release.
 
 % ------------------------------------------------------------------
 \section{Related Work}
 
-\textbf{Budget pacing.} Lee et al.~\cite{lee2013real} pace real-time bids with a participation
-rate adjusted toward a target spend curve. Agarwal et al.~\cite{agarwal2014budget} describe
-throttling-based pacing at LinkedIn that uses global supply patterns. Smart pacing~\cite{xu2015smart}
-learns per-segment pacing rates to also improve performance. Balseiro et
-al.~\cite{balseiro2017budget} compare throttling with other budget-management strategies in
-equilibrium. Optimal bidding under budgets in real-time bidding is studied by Zhang et
-al.~\cite{zhang2014optimal}. These works design pacing mechanisms. We instead hold the
-mechanism fixed and vary the quality and hedging level of the demand forecast inside it.
+\textbf{Budget pacing.} Lee et al.~\cite{lee2013real} study bid optimization with smooth budget
+delivery. Agarwal et al.~\cite{agarwal2014budget} describe pacing at LinkedIn that uses global
+supply patterns to spread spend. Smart pacing~\cite{xu2015smart} learns per-segment pacing rates to
+also improve performance. Dai et al.~\cite{dai2023percentile} adjust probabilistic throttling
+through dual multipliers over a percentile space and report an online test on the Taobao brand
+advertising platform. Zhang et al.~\cite{zhang2016feedback} use feedback control to adjust bids
+toward KPI targets such as the winning ratio and the effective cost per click; PID controllers of
+this kind are a natural forecast-free reference, and ours adjusts the participation rate instead of
+the bid. Balseiro et al.~\cite{balseiro2017budget} compare throttling with other budget-management
+strategies in equilibrium. Optimal bidding under budgets in real-time bidding is studied by Zhang et
+al.~\cite{zhang2014optimal}. A recent preprint~\cite{shekhar2026decision} calibrates forecast
+uncertainty by its effect on pacing decisions with split conformal prediction. These works design pacing
+mechanisms or uncertainty sets. We instead hold the mechanism fixed and ask what the forecast inside it
+contributes, and where that contribution comes from.
 
 \textbf{Forecasting.} TFT~\cite{lim2021temporal} combines recurrent encoding, attention and
 variable selection for multi-horizon quantile forecasts. NHITS~\cite{challu2023nhits} uses
@@ -103,7 +124,7 @@ code, and we evaluate accuracy with MASE~\cite{hyndman2006another} and the pinba
 loss~\cite{koenker1978regression}.
 
 % ------------------------------------------------------------------
-\section{Pacing Setup}
+\section{Pacing Setup}\label{sec:setup}
 
 \textbf{Episodes and budgets.} An episode is one campaign-day of 24 hours. Campaign $c$ receives
 the daily budget $B = \rho\, \bar{D}_c$, where $\bar{D}_c$ is its mean daily spend over the
@@ -116,8 +137,12 @@ Each logged impression of that hour is kept independently with probability $\alp
 impressions are served in log order, with their logged cost, click and conversion, until the
 next impression would exceed the remaining budget. The uniform draws are fixed per replay seed,
 campaign and hour, so all policies face identical randomness. We assume that throttling does
-not change the price or value of the kept impressions. This is the standard throttling model,
-and we make no claim about bid-shading interactions.
+not change the price or value of the kept impressions. This is a common simplification in
+throttling-based pacing, and we make no claim about bid-shading interactions. The log contains only
+impressions that were displayed, that is, impressions won by the logging bidder under its own
+bidding and pacing. We treat this stream as the eligible demand. It is therefore shaped by the
+logging policy, and a replay that throttles it further is a counterfactual that the log cannot
+verify.
 
 \textbf{Policies.} Let $S_h$ be the spend before hour $h$ and $R_h = B - S_h$.
 \begin{itemize}
@@ -139,14 +164,31 @@ and we make no claim about bid-shading interactions.
         time-varying rate can capture more clicks than a constant one.
 \end{itemize}
 Raising $q$ in Eq.~\eqref{eq:throttle} inflates the planned demand and lowers $\alpha_h$. This is
-the ``hedging'' knob: it trades spend for protection against early depletion.
+the ``hedging'' knob: it trades spend for protection against early depletion. Note that the
+denominator is the sum of hourly quantiles, which is not the $q$-quantile of the remaining day's demand.
+
+\textbf{Variants used in the decomposition analyses.} (i) \emph{Scaled throttle}: the denominator of
+Eq.~\eqref{eq:throttle} is multiplied by a scale $s$, with the median forecast; $s<1$ plans for less demand and
+spends more. We evaluate 25 values from 0.50 to 1.10, and choose $s$ per budget level on the validation days.
+(ii) \emph{Calibrated hedge}: the denominator is the median plan times a factor $f_q(h)$, the $q$-quantile
+of realised remaining-day spend divided by the median plan at origin hour $h$, taken over all campaigns and
+the earlier test days only (so it is evaluated on the last \res{ph-test-days-causal} test days).
+(iii) \emph{Feedback}: a PID term on the gap between spend so far and a plan that spreads
+$\min(B, \hat D)$ in proportion to the day-start forecast profile is added to $\alpha_h$ of
+Eq.~\eqref{eq:throttle}, and the sum is clipped to $[0,1]$. Its gains are chosen on the validation days
+with the seasonal-naive forecast, because the neural forecasts exist only for test origins.
+(iv) \emph{Static plans}: the planned remaining demand at hour $h$ is a day total times the share of the day-start
+forecast that lies in hours $h$ to 23, with no re-planning; the total and the shape can come from different
+forecasters. (v) \emph{Oracle}: the true remaining demand of the day, or the true day total with a forecast shape, in
+place of the forecast.
 
 % ------------------------------------------------------------------
 \begin{table*}[t]
   \caption{Pacing outcomes on the test days. Clicks are relative to the hindsight
   constant-rate reference, pooled over campaign-days and replay seeds; the best non-reference
-  value per budget level is in bold. The right block reports $\rho=0.5$. Bootstrap CIs for all
-  entries are in the released \texttt{pacing\_summary.csv}.}
+  value per budget level is in bold. The right block reports $\rho=0.5$. For the neural models,
+  values pool the training seeds. Bootstrap confidence intervals and the seed SDs for all entries are
+  in the results file \texttt{pacing\_summary.csv}.}
   \label{tab:pacing}
   \small
   \input{../results/tables/pacing_main.tex}
@@ -155,6 +197,9 @@ the ``hedging'' knob: it trades spend for protection against early depletion.
 \begin{figure*}[t]
   \centering
   \includegraphics[width=\textwidth]{fig_hedging.pdf}
+  \Description{Three panels, one per budget level. Each plots clicks relative to the hindsight
+  reference against the hedging quantile for four forecasters, with horizontal reference lines for
+  no pacing, even pacing and tuned PID. Clicks fall as the quantile rises in every panel.}
   \caption{Clicks relative to the hindsight reference as a function of the hedging quantile, with
   95\% campaign-bootstrap CIs. Horizontal lines are the forecast-free policies.}
   \label{fig:hedging}
@@ -171,12 +216,13 @@ $\{0.1, 0.5, 0.7, 0.9\}$.
         trained with the quantile objective, one model per quantile. Features are spend lags,
         same-hour seasonal lags, rolling statistics, calendar phase and static campaign statistics,
         with the target normalized by the campaign's training mean.
-  \item \emph{TFT} and \emph{NHITS}: \texttt{neuralforecast} models with a 168-hour input window,
-        multi-quantile loss, robust scaling, historical impressions and clicks, calendar phase as
-        known future inputs, and static campaign statistics.
+  \item \emph{TFT} and \emph{NHITS}: \texttt{neuralforecast} models with a \res{cfg-lookback}-hour
+        input window, multi-quantile loss, robust scaling, historical impressions and clicks,
+        calendar phase as known future inputs, and static campaign statistics.
 \end{itemize}
 Models are trained on the training days and early-stopped on the validation days.
-Hyperparameters were fixed before evaluation and not tuned on test data. The neural models are
+Hyperparameters were fixed before evaluation and not tuned on test data; they are listed in the
+protocol (deviation log, entry on hyperparameters) and in the released code. The neural models are
 trained with \res{n-nn-seeds} seeds each.
 
 % ------------------------------------------------------------------
@@ -184,143 +230,293 @@ trained with \res{n-nn-seeds} seeds each.
 
 \begin{table}[tb]
   \caption{Forecast accuracy on the test origins, averaged over campaigns; $\pm$ is the
-  standard deviation over seeds. Time is the wall-clock time to fit and forecast (neural models on
-  one RTX 3070 Ti, LightGBM on an Apple M4 CPU).}
+  standard deviation over seeds. MASE$_h$ is the MASE at forecast step $h$, sPL$_{0.9}$ is the
+  0.9-quantile pinball loss divided by the campaign's mean training hourly spend, and Cov.\ is the
+  share of outcomes inside the nominal 80\% interval. Time is the wall-clock time to fit and
+  forecast (neural models on one RTX 3070 Ti, LightGBM on an Apple M4 CPU).}
   \label{tab:forecast}
   \small\setlength{\tabcolsep}{3pt}
   \resizebox{\linewidth}{!}{\input{../results/tables/forecast_main.tex}}
 \end{table}
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=\linewidth]{fig_horizon.pdf}
-  \caption{MASE by forecast step, averaged over campaigns and seeds.}
-  \label{fig:horizon}
-\end{figure}
-
-
-
 \textbf{Data.} The Criteo Attribution dataset~\cite{diemert2017attribution} contains
-\res{data-impressions} impressions from \res{data-campaigns-total} campaigns over 31 days, with
-the paid cost (transformed by Criteo), click and attributed conversion of each impression. The
-first 21 days are for training, the next 4 for validation and the following 5 for testing.
-A campaign is included if it has spend in at least 90\% of training hours. The inclusion rule
-uses training data only. It keeps \res{data-campaigns} campaigns, which account for
-\res{data-spend-share}\% of all spend, and gives \res{data-test-episodes} test episodes, each
-replayed with \res{n-replay-seeds} seeds.
+\res{data-impressions} impressions from \res{data-campaigns-total} campaigns over
+\res{cfg-n-hours} hours (its documentation states 30 days), with the paid cost (transformed by
+Criteo), click and attributed conversion of each impression. The data are released under CC BY-NC-SA 4.0.
+We use the first \res{cfg-use-days} days and discard the last \res{cfg-discard-hours} hours. The
+first \res{cfg-train-days} days are for training, the next \res{cfg-val-days} for validation and
+the following \res{cfg-test-days} for testing. A campaign is included if it has spend in at least
+\res{cfg-min-active}\% of training hours. The inclusion rule uses training data only, but the
+threshold itself was chosen after a descriptive profile of the whole dataset (see Protocol below).
+The rule keeps \res{data-campaigns} campaigns, which account for \res{data-spend-share}\% of all
+spend, and gives \res{data-test-episodes} test episodes, each replayed with \res{n-replay-seeds} seeds.
 
 \textbf{Metrics.} Forecast accuracy is measured with MASE (scaled by each campaign's in-sample
 lag-24 naive error), the scaled pinball loss sPL$_q$, the 80\% interval coverage and the
-quantile-crossing rate. Pacing is measured by the ratio of clicks (and of attributed
-conversions) to the hindsight reference, pooled over episodes; budget utilization (BUR); the
-early-depletion rate (budget exhausted before hour 20); and the pacing volatility index (PVI),
-the RMS change of $\alpha_h$ between consecutive hours.
+quantile-crossing rate. Pacing is measured by the ratio of clicks (and of attributed conversions) to the
+hindsight reference, pooled over episodes; budget utilization (BUR); the early-depletion rate (budget
+exhausted before hour \res{cfg-early-hour}); and the pacing volatility index (PVI), the RMS change of
+$\alpha_h$ between consecutive hours. For the decomposition we also report the change in total spend and
+in clicks per unit of spend.
 
-\textbf{Statistics.} We report 95\% confidence intervals from a bootstrap over campaigns
-(\res{n-bootstrap} resamples). Pre-specified paired comparisons use Wilcoxon signed-rank
-tests~\cite{wilcoxon1945individual} on per-campaign click ratios, with a Holm
-correction~\cite{holm1979simple} over all \res{n-comparisons} comparisons.
+\textbf{Statistics.} We report 95\% confidence intervals (CIs) from a bootstrap over campaigns
+(\res{n-bootstrap} resamples); differences between methods are paired. Pre-specified paired comparisons use
+Wilcoxon signed-rank tests~\cite{wilcoxon1945individual} on per-campaign click ratios, with a Holm
+correction~\cite{holm1979simple} over all \res{n-comparisons} comparisons; these use the
+\res{cmp-n-campaigns} campaigns with positive hindsight clicks (a ratio needs a positive denominator), while all
+other analyses use all \res{data-campaigns}. These intervals and tests treat the trained models as fixed: the
+\res{n-nn-seeds} seeds of each neural model are pooled inside each per-campaign ratio, so training-seed
+variation is reported separately (Section~\ref{sec:pacing}).
 
-\textbf{Protocol.} The study protocol, including a deviation log, was written before the test
-split was evaluated. All logged deviations are released, including two widenings of the PID
-grid (on validation data) and intermittent GPU faults during neural training (crashed runs
-produced no output and were re-run).
+\textbf{Protocol.}\label{sec:protocol} The study protocol, including a deviation log, was written
+before the test split was evaluated. Two things it did not anticipate are disclosed in the log: the
+activity threshold and other design choices were informed by a descriptive profile of the whole dataset,
+which includes the test hours; and before the final runs we inspected the test-origin accuracy of the
+seasonal-naive and LightGBM forecasts and of a short smoke-test TFT run, and ran a pacing smoke test on ten
+campaigns' test days. No hyperparameter was changed as a result. The log also records two widenings of the
+PID grid (on validation data) and intermittent GPU faults during neural training (crashed runs produced no
+output and were re-run). Everything in Sections~\ref{sec:where} to~\ref{sec:world} was added after the main
+results were seen: the split of gains into spend and efficiency, the scaled, calibrated, static and oracle plans, the
+feedback variant, and an exploratory split of campaigns by size and volatility. A model-written review of an earlier
+version led to the 25-scale grid, the swap and the oracle runs. Each new simulation was entered in the
+log, with a reading rule where a verdict was drawn, before it ran; the two analyses that only re-read saved
+episodes (the spend split and the group split) were logged after they ran. None changes a number in the main
+tables. The matched-spend comparison had no reading rule. Two metrics of the protocol are not reported here: the hourly
+spend deviation from the oracle profile, which is computed and stored in \texttt{pacing\_summary.csv}, and the forecast
+metrics on the validation split. The protocol defined seasonal naive as the mean of the previous seven days, but the study ran
+the empirical quantiles (the median at $q{=}0.5$); the mean version is worse (Section~\ref{sec:where}). An
+independent rerun on a second machine rebuilt the data from the raw file, retuned the PID gains, regenerated
+the seasonal-naive and LightGBM forecasts and reproduced the pacing summary exactly; it reused the saved
+neural forecasts, whose checksums match, because neural training needs a GPU.
 
 % ------------------------------------------------------------------
 \section{Results}
 
-
-
-
-
 \subsection{Forecast accuracy}
 All four forecasters beat the in-sample seasonal-naive scale (Table~\ref{tab:forecast}). TFT
-(MASE \res{fc-tft-mase}) and NHITS (\res{fc-nhits-mase}) are close and both clearly ahead of
-LightGBM (\res{fc-lightgbm-mase}) and seasonal naive (\res{fc-naive-mase}). The neural models'
-advantage is largest at short steps (Figure~\ref{fig:horizon}). All intervals are too narrow:
+(MASE \res{fc-tft-mase}) and NHITS (\res{fc-nhits-mase}) have the lowest mean MASE, followed by
+LightGBM (\res{fc-lightgbm-mase}) and seasonal naive (\res{fc-naive-mase}). The ranking is less
+clear for the typical campaign: the median-campaign MASE is \res{fc-tft-medmase} for TFT,
+\res{fc-nhits-medmase} for NHITS and \res{fc-lightgbm-medmase} for LightGBM, and TFT has a lower MASE
+than LightGBM in \res{win-tft-lightgbm}\% of campaigns, NHITS in \res{win-nhits-lightgbm}\%. We
+report no confidence intervals for these accuracy differences. The intervals are too narrow:
 the nominal 80\% interval covers only \res{fc-tft-cov80}\% of outcomes for TFT and
 \res{fc-naive-cov80}\% for seasonal naive.
 
+\subsection{Pacing outcomes}\label{sec:pacing}
+Table~\ref{tab:pacing} and Figure~\ref{fig:hedging} summarize pacing. Throttling on the median
+forecast of a neural model is the best policy we tested at every budget level. It captures
+\res{gain-even-min}--\res{gain-even-max} points more clicks than even pacing and
+\res{gain-pid-min}--\res{gain-pid-max} points more than tuned PID. A seasonal-naive profile at $q{=}0.5$
+already captures \res{gain-naive-even-min}--\res{gain-naive-even-max} points more than even pacing, and the neural
+models add \res{nn-naive-min}--\res{nn-naive-max} points on top of it. All
+\res{cmp-nn-baselines-sig} of \res{cmp-nn-baselines-total} paired comparisons against even pacing
+and PID are significant after Holm correction (largest adjusted $p$ = \res{cmp-nn-baselines-pmax}),
+conditional on the trained models. The policy is also far smoother: its PVI of
+\res{fc-pvi-min}--\res{fc-pvi-max} compares with \res{pid-pvi-min}--\res{pid-pvi-max} for PID, and it
+depletes early in only \res{fc-early-min}--\res{fc-early-max}\% of episodes, against
+\res{pid-early-min}--\res{pid-early-max}\% for PID.
 
+\textbf{TFT and NHITS are indistinguishable.} They differ by at most \res{tft-nhits-diff-max} points of
+clicks. The training-seed SD of the click ratio at $q{=}0.5$ is up to \res{nhits-seed-sd-max} points for NHITS
+and \res{tft-seed-sd-max} points for TFT, so the difference is smaller than the variation between seeds of
+the same model. Only \res{cmp-tft-nhits-sig} of \res{cmp-tft-nhits-total} of their paired comparisons is
+significant, and those tests treat the trained models as fixed. The neural models beat LightGBM by
+\res{nn-lgb-min}--\res{nn-lgb-max} points; the lower end is below the NHITS seed SD, and LightGBM and
+seasonal naive were run once, so their seed variation is unknown. In an exploratory split of the
+\res{data-campaigns} campaigns into terciles of size and of volatility, both measured on training hours,
+the gain of TFT over the seasonal-naive profile was positive in all \res{grp-n-cells} group-and-budget cells
+(\res{grp-gain-min} to \res{grp-gain-max} points) and larger in the most volatile third at the two tighter
+budgets; the intervals overlap and are not corrected for the number of cells.
 
+\subsection{Where the gain comes from}\label{sec:where}
+\begin{table}[tb]
+  \caption{Split of the click gain at the median plan (points of the hindsight reference, with 95\%
+  campaign-bootstrap intervals; spend and clicks per unit of spend as relative changes). ``Scaled naive'' is the
+  seasonal-naive forecast total times the scale chosen on the validation days (25-value grid). Intervals are shown
+  for the click column only.}
+  \label{tab:decomp}
+  \small\setlength{\tabcolsep}{3pt}
+  \resizebox{\linewidth}{!}{\input{../results/tables/decomp.tex}}
+\end{table}
 
+\textbf{Delivery, not efficiency.} Table~\ref{tab:decomp} splits the click gain into budget spent and clicks per
+unit of spend. TFT's gain over the seasonal-naive profile comes with \res{se-tft-naive-spend-min}--\res{se-tft-naive-spend-max}\%
+more spend and no loss of clicks per unit of spend (\res{se-tft-naive-eff-min} to \res{se-tft-naive-eff-max}\%, with an interval that
+includes zero at \res{se-tft-naive-eff-ci0} of 3 budget levels). NHITS behaves the same way (spend
+\res{se-nhits-naive-spend-min}--\res{se-nhits-naive-spend-max}\%). A plain rescaling of the naive plan buys its clicks differently: it
+spends \res{sn-spend-rho0.3}--\res{sn-spend-rho0.7}\% more and changes clicks per unit of spend by \res{sn-eff-rho0.3} to
+\res{sn-eff-rho0.7}\%. Against tuned PID the picture differs: TFT spends about the same (\res{se-tft-pid-spend-min} to
+\res{se-tft-pid-spend-max}\%) and buys \res{se-tft-pid-eff-min}--\res{se-tft-pid-eff-max}\% more clicks per unit of spend, with the
+interval above zero at \res{se-tft-pid-eff-ci-pos} of 3 levels. A forecast therefore helps against reactive control through efficiency,
+and against a seasonal profile through delivery: the seasonal-naive plan under-spends, and the learned forecast corrects that
+without paying for it in efficiency.
 
+\textbf{One scale recovers much of it.} If the gain over the profile is mostly delivery, one scale on the naive total
+should capture much of it. The scales chosen on validation days are \res{sn-scale-rho0.3}, \res{sn-scale-rho0.5} and
+\res{sn-scale-rho0.7} for the tight, medium and loose budgets, none at the edge of the grid. The scaled plan gains
+\res{sn-gain-rho0.3} (\res{sn-gain-ci-rho0.3}), \res{sn-gain-rho0.5} (\res{sn-gain-ci-rho0.5}) and \res{sn-gain-rho0.7}
+(\res{sn-gain-ci-rho0.7}) points over the plain naive plan: \res{sn-share-rho0.3}\%, \res{sn-share-rho0.5}\% and
+\res{sn-share-rho0.7}\% of the TFT gain. TFT stays ahead of the scaled plan at the tight (\res{sn-gap-rho0.3},
+\res{sn-gap-ci-rho0.3}) and medium (\res{sn-gap-rho0.5}, \res{sn-gap-ci-rho0.5}) budgets and ties it at the loose one
+(\res{sn-gap-rho0.7}, \res{sn-gap-ci-rho0.7}). By the pre-registered rule the total does not explain almost all of the
+gain (the scaled plan reaches 80\% of the TFT gain only at the loose budget), and an edge beyond one scale remains. The scaled plan
+beats tuned PID at the medium budget (\res{sn-pid-medium}, \res{sn-pid-medium-ci}). Using the mean of the previous seven days
+instead of the median, as the protocol first specified, changes clicks by \res{sn-mean7-max} to \res{sn-mean7-min} points relative to
+the median plan.
+
+\textbf{Total or shape?} The throttle uses only the sum of the remaining forecast, so we separate the two on the plans of
+the forecast issued at hour 0 (static plans, no re-planning). With the plan (naive total, naive shape) as the base, the plan
+(TFT total, TFT shape) gains \res{ex-g-rho0.3}, \res{ex-g-rho0.5} and \res{ex-g-rho0.7} points. Keeping the TFT total and the naive shape
+gains \res{ex-t-rho0.3} (\res{ex-t-ci-rho0.3}), \res{ex-t-rho0.5} (\res{ex-t-ci-rho0.5}) and \res{ex-t-rho0.7} (\res{ex-t-ci-rho0.7}); keeping
+the naive total and the TFT shape gains only \res{ex-s-rho0.3} (\res{ex-s-ci-rho0.3}), \res{ex-s-rho0.5} (\res{ex-s-ci-rho0.5}) and
+\res{ex-s-rho0.7} (\res{ex-s-ci-rho0.7}). By the pre-registered rule the total is the source at the tight budget; at the medium and loose
+budgets the result is partial: the total supplies \res{ex-tshare-rho0.5}\% and \res{ex-tshare-rho0.7}\% of the gain and the shape adds a
+small positive amount. Re-planning every hour adds \res{ex-replan-min}--\res{ex-replan-max} points to TFT and nothing to seasonal
+naive, whose forecast does not depend on the origin hour.
+
+\textbf{Headroom.} With the true remaining demand in place of the forecast, the same throttle gains \res{ex-head-rho0.3}
+(\res{ex-head-ci-rho0.3}), \res{ex-head-rho0.5} (\res{ex-head-ci-rho0.5}) and \res{ex-head-rho0.7} (\res{ex-head-ci-rho0.7}) points over
+TFT, and \res{ex-head-naive-rho0.3}, \res{ex-head-naive-rho0.5} and \res{ex-head-naive-rho0.7} over seasonal naive. This is moderate headroom
+by the pre-registered thresholds (below 1 point would be little, 2 points or more a lot). A true day total with the naive shape gains
+\res{ex-tot-naive-min}--\res{ex-tot-naive-max} points over the static naive plan, and with the TFT shape \res{ex-tot-tft-min}--\res{ex-tot-tft-max} over
+the static TFT plan. True remaining demand then adds \res{ex-or-replan-rho0.3}, \res{ex-or-replan-rho0.5} and \res{ex-or-replan-rho0.7} points
+by also knowing the hourly path.
+
+\textbf{An edge at matched spend (exploratory).} Scaling changes how much is spent, so we also compare each method with the
+curve that the 25 scales trace in (spend, clicks) space, at the method's own spend. TFT lies \res{fr-tft-rho0.3}
+(\res{fr-tft-ci-rho0.3}), \res{fr-tft-rho0.5} (\res{fr-tft-ci-rho0.5}) and \res{fr-tft-rho0.7} (\res{fr-tft-ci-rho0.7}) points above the curve at the
+tight, medium and loose budgets, and NHITS \res{fr-nhits-rho0.3} (\res{fr-nhits-ci-rho0.3}), \res{fr-nhits-rho0.5}
+(\res{fr-nhits-ci-rho0.5}) and \res{fr-nhits-rho0.7} (\res{fr-nhits-ci-rho0.7}). LightGBM lies on it at the medium and loose budgets
+(\res{fr-lgb-rho0.5}, \res{fr-lgb-ci-rho0.5}; \res{fr-lgb-rho0.7}, \res{fr-lgb-ci-rho0.7}) and above it at the tight one (\res{fr-lgb-rho0.3},
+\res{fr-lgb-ci-rho0.3}); PID lies below it. This comparison had no reading rule and is descriptive; its intervals, like all others
+here, ignore training-seed variation.
+
+\subsection{Hedging}\label{sec:hedge}
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\linewidth]{fig_tradeoff_rho0.5.pdf}
+  \Description{Scatter plot of budget utilization against early-depletion rate on a log scale.
+  Each forecaster forms a line from the 0.5 quantile at high utilization to the 0.9 quantile at low
+  utilization. No pacing and tuned PID lie far above the forecast policies on the depletion axis.}
   \caption{Delivery trade-off at $\rho=0.5$: budget utilization against the early-depletion rate
   (log scale). Lines connect $q=0.5, 0.7, 0.9$ of each forecaster.}
   \label{fig:tradeoff}
 \end{figure}
 
-\subsection{Pacing outcomes}
-Table~\ref{tab:pacing} and Figure~\ref{fig:hedging} summarize pacing. Throttling on the median
-forecast of a neural model is the best policy at every budget level. It captures
-\res{gain-even-min}--\res{gain-even-max} points more clicks than even pacing and
-\res{gain-pid-min}--\res{gain-pid-max} points more than tuned PID. All
-\res{cmp-nn-baselines-sig} of \res{cmp-nn-baselines-total} paired comparisons against these two
-baselines are significant after Holm correction (largest adjusted $p$ = \res{cmp-nn-baselines-pmax}).
-It is also far smoother: its PVI of \res{fc-pvi-min}--\res{fc-pvi-max} compares with
-\res{pid-pvi-min}--\res{pid-pvi-max} for PID, and it depletes early in only
-\res{fc-early-min}--\res{fc-early-max}\% of episodes, against
-\res{pid-early-min}--\res{pid-early-max}\% for PID.
+\textbf{Hedging costs a lot.} Clicks fall monotonically as $q$ rises from 0.5 to 0.9 in \res{hedge-mono} of
+\res{hedge-mono-total} forecaster and budget combinations, and moving to $q{=}0.9$ costs
+\res{hedge-cost-min}--\res{hedge-cost-max} points. All \res{cmp-q09-baselines-neg} of
+\res{cmp-q09-baselines-total} comparisons of $q{=}0.9$ policies against even pacing and PID favor the baselines
+(\res{cmp-q09-baselines-sig} are significant). This environment barely penalizes early depletion: no pacing is within
+\res{np-gap-rho0.7} points of tuned PID at the loose budget (Table~\ref{tab:pacing}), so part of the hedging cost is a
+property of the simulator. Figure~\ref{fig:tradeoff} shows what it buys: early depletion
+almost disappears (\res{hedge-early-min}--\res{hedge-early-max}\% of episodes), but budget utilization falls
+to \res{hedge-bur-min}--\res{hedge-bur-max}\%. Relative to even pacing, a TFT plan at $q{=}0.9$ changes spend by
+\res{se-q09-spend-min} to \res{se-q09-spend-max}\% and clicks per unit of spend by \res{se-q09-eff-min} to
+\res{se-q09-eff-max}\%, so the cost of hedging is under-delivery.
 
-\textbf{The forecaster matters little.} TFT and NHITS differ by at most \res{tft-nhits-diff-max}
-points of clicks; only \res{cmp-tft-nhits-sig} of \res{cmp-tft-nhits-total} of their paired
-comparisons is significant. The neural models beat LightGBM by \res{nn-lgb-min}--\res{nn-lgb-max}
-points (significant in \res{cmp-nn-lgb-sig} of \res{cmp-nn-lgb-total} comparisons) and seasonal
-naive by \res{nn-naive-min}--\res{nn-naive-max} points. Even seasonal naive at $q{=}0.5$ is
-competitive with tuned PID.
+\textbf{Summing hourly quantiles over-covers.} Eq.~\eqref{eq:throttle} divides by the sum of hourly
+quantiles. That a sum of quantiles is not the quantile of a sum is textbook; what we report is how large the gap is here. For single hours the 90th-percentile forecast is well calibrated (TFT: \res{hc-hourly90-tft}\% of hours
+at or below it), but the realised remaining-day spend was at or below the summed plan in
+\res{hc-cov90-min}--\res{hc-cov90-max}\% of cases (\res{hc-cov90-nn-min}--\res{hc-cov90-nn-max}\% for the three
+learned forecasters), and at the 70\% level in \res{hc-cov70-min}--\res{hc-cov70-max}\%. The 90\% plan is
+\res{hc-fac-sum-min}--\res{hc-fac-sum-max} times the median plan, where \res{hc-fac-cal-min}--\res{hc-fac-cal-max}
+would give 90\%. The spread of the daily total is almost the same for all four forecasters.
 
-\textbf{The hedging quantile matters a lot.} Moving from $q{=}0.5$ to $q{=}0.9$ costs
-\res{hedge-cost-min}--\res{hedge-cost-max} points of clicks, for every forecaster and budget level.
-All \res{cmp-q09-baselines-sig} comparisons of $q{=}0.9$ policies against even pacing and PID
-favor the baselines. Upper-quantile planning overstates the remaining demand, so the policy
-throttles too hard and leaves budget unspent.
+\textbf{A calibrated daily-total hedge recovers only part of the loss.} Replacing the sum by the median plan
+times a factor learned on earlier test days improves TFT at $q{=}0.9$ by \res{ch-gain-rho0.3}
+(\res{ch-gain-ci-rho0.3}), \res{ch-gain-rho0.5} (\res{ch-gain-ci-rho0.5}) and \res{ch-gain-rho0.7}
+(\res{ch-gain-ci-rho0.7}) points, but this recovers only \res{ch-rec-rho0.3}\%, \res{ch-rec-rho0.5}\% and
+\res{ch-rec-rho0.7}\% of the loss that the summed plan suffers
+against the median plan (days 26 to 29 only). Most of the
+cost of hedging at 0.9 therefore remains after calibration. At $q{=}0.7$ the calibrated plan recovers
+\res{ch70-rec-rho0.3}\%, \res{ch70-rec-rho0.5}\% and \res{ch70-rec-rho0.7}\% of the loss, and at the tight budget costs
+only \res{ch70-resid-rho0.3} points (\res{ch70-resid-ci-rho0.3}) against the median plan. For seasonal naive the
+calibrated 90\% plan is worse than the summed one (\res{ch-naive-min} to \res{ch-naive-max} points). A cross-fitted variant that
+borrows the factor from a random half of the other campaigns did no better for TFT at 0.9 (\res{ch-xfit-min} to
+\res{ch-xfit-max} points); in this simulator any factor above 1 only lowers clicks, so better coverage does not mean
+more clicks.
+No pacing sits at the opposite corner of Figure~\ref{fig:tradeoff}: it depletes early in
+\res{nopacing-early-min}--\res{nopacing-early-max}\% of episodes, and it captures
+\res{nopacing-conv-min}--\res{nopacing-conv-max} points more attributed conversions than the reference while
+capturing fewer clicks, so an operator who optimizes for conversions should not assume that click-optimal
+pacing is also conversion-optimal.
 
+\subsection{Adding feedback}\label{sec:fb}
+Adding the PID correction of Section~\ref{sec:setup} to the forecast throttle helps every forecast at the tight budget:
+seasonal naive by \res{fb-naive-rho0.3} (\res{fb-naive-ci-rho0.3}) points, scaled naive by \res{fb-scaled-rho0.3}
+(\res{fb-scaled-ci-rho0.3}), TFT by \res{fb-tft-rho0.3} (\res{fb-tft-ci-rho0.3}) and NHITS by
+\res{fb-nhits-rho0.3} (\res{fb-nhits-ci-rho0.3}). By the pre-registered rule, feedback does not help TFT: it helps at the tight budget and hurts at the medium and
+loose ones (\res{fb-tft-rho0.5}, \res{fb-tft-ci-rho0.5}; \res{fb-tft-rho0.7}, \res{fb-tft-ci-rho0.7}), and the neural
+edge does not survive feedback. TFT with feedback minus scaled naive with feedback is \res{fb-tft-vs-scaled-rho0.3}
+(\res{fb-tft-vs-scaled-ci-rho0.3}), \res{fb-tft-vs-scaled-rho0.5} (\res{fb-tft-vs-scaled-ci-rho0.5}) and
+\res{fb-tft-vs-scaled-rho0.7} (\res{fb-tft-vs-scaled-ci-rho0.7}) points at the tight, medium and loose budgets: the
+intervals include zero at the first two and lie below it at the third. A further caution is that the PID term tracks the
+plan issued at hour 0, while the throttle re-plans every hour, so the two may work against each other.
+Two cautions apply. The neural models use the gains tuned for seasonal naive (proportional gain
+\res{fb-kp-rho0.3}, \res{fb-kp-rho0.5} and \res{fb-kp-rho0.7}; the grid edge was reached at $\rho=$ \res{fb-edge-rho}), so
+part of the loss may be a mismatch. And gains tuned on four validation days are unstable: for seasonal naive at the
+loose budget feedback added \res{fb-val-gain-loose} points on the validation days and changed the test result by
+\res{fb-naive-rho0.7} (\res{fb-naive-ci-rho0.7}).
 
-
-\subsection{The hedging trade-off}
-Figure~\ref{fig:tradeoff} shows what hedging buys. At $q{=}0.9$, early depletion almost
-disappears (\res{hedge-early-min}--\res{hedge-early-max}\% of episodes), but budget utilization
-falls to \res{hedge-bur-min}--\res{hedge-bur-max}\%. No pacing sits at the opposite corner: it
-depletes early in \res{nopacing-early-min}--\res{nopacing-early-max}\% of episodes. The median
-forecast with a neural model gives the best combination of the two.
-
-\textbf{Conversions behave differently from clicks.} No pacing captures
-\res{nopacing-conv-min}--\res{nopacing-conv-max} points \emph{more} attributed conversions than
-the reference, while capturing fewer clicks. One possible explanation, which we have not tested,
-is that traffic early in the (dataset-relative) day converts better than it clicks. Either way, an
-operator who optimizes for conversions should not assume that click-optimal pacing is also
-conversion-optimal.
+\subsection{A second environment: a synthetic audience world}\label{sec:world}
+To see whether the pattern depends on the logging policy and the transformed costs of one dataset, we asked the same
+question in a world builder developed for this study. It generates a population of \wres{users} users with latent
+interests and churn (mean lifetime \wres{lifetime} days), \wres{camps} campaigns and \wres{days} days with daily and weekly rhythms,
+several cost models, and replays the opportunity stream against a Lagrangian hindsight upper bound (UB). The pacers
+use the true click probabilities, so the world isolates pacing from click prediction. At the realistic setting, over
+\wres{worlds} worlds and \wres{costs} cost models, a reactive controller captures \wres{react-C1}\% of UB for flat prices. A plain
+replay of the previous seven days' opportunities gains \wres{replay-gain-min}--\wres{replay-gain-max} points over it, and rescaling that
+replay to the true expected traffic adds only \wres{total-min}--\wres{total-max} points more: the best forecast-driven pacer is
+\wres{ahead-min}--\wres{ahead-max} points ahead of the reactive one, and only with time-of-day prices is that interval clear of zero
+(\wres{ahead-clear} of \wres{costs} cost models). The ordering matches the Criteo result, in which looking ahead beats reacting and the
+total carries most of the gain. The world is a controlled check, not evidence about real traffic: its rhythms are planted, and
+its daily totals vary far less than those of real campaigns.
 
 % ------------------------------------------------------------------
 \section{Discussion}
 
-\textbf{Practical guidance.} (i) Forecast-driven throttling is worth deploying over even pacing
-and over a tuned PID. (ii) Plan against the median: the extra protection from upper quantiles is
-small and expensive. If early depletion must be avoided, $q{=}0.7$ is a more balanced choice than
-$q{=}0.9$. (iii) Forecast accuracy gains shrink when they reach pacing. A plausible reason, not tested here,
-is that the throttle in Eq.~\eqref{eq:throttle} depends only on the \emph{sum} of the remaining
-forecasts, where hourly errors can partly cancel. A cheaper model such as NHITS (\res{time-nhits}\,s versus \res{time-tft}\,s
-for TFT) loses nothing here.
+\textbf{What the forecast adds.} Forecast-driven throttling beat even pacing and a tuned PID here. Relative to a seasonal
+profile, the learned forecaster's contribution is mostly that it delivers more of the budget without losing efficiency: one scale on
+the naive total recovers \res{sn-share-rho0.3}\% to \res{sn-share-rho0.7}\% of the gain, more as the budget loosens, and in a total/shape
+swap the forecast total supplies \res{ex-tshare-min}--\res{ex-tshare-max}\% of it. A smaller edge remains beyond one scale, and an oracle
+forecast would add \res{ex-head-min}--\res{ex-head-max} points over TFT, so better forecasts still have room to help in this simulator. A
+cheaper model such as NHITS (\res{time-nhits}\,s versus \res{time-tft}\,s for TFT) was indistinguishable from TFT.
 
-\textbf{Limitations.} The costs in the dataset are transformed by Criteo. The throttling model
-ignores competitive responses and price effects. The test period covers five days of one
-dataset. The day boundary is relative to the dataset start, not local midnight. The tuned PID
-gains lie on the edge of the search grid (for example \res{pid-gains-rho0.5} at $\rho{=}0.5$),
-although the validation objective is flat near the optimum. With hundreds of campaigns, small
-differences become statistically significant, so we emphasize effect sizes.
+\textbf{Practical guidance in this setting.} (i) If a deep model is not available, scale the seasonal-naive total with
+a factor chosen on validation days; it recovers much of the neural gain. (ii) Plan against the median rather than the summed upper quantile; at 0.9 the loss is
+mostly under-delivery that calibration does not remove, and the calibrated 70\% plan also costs clicks against the median
+(\res{ch70-resid-rho0.3} to \res{ch70-resid-rho0.7} points). (iii) Add feedback only at tight budgets, and do not tune its gains on a few
+days. (iv) Forecast accuracy gains shrink when they reach pacing, plausibly because the throttle depends only on the sum of the
+remaining forecasts, where hourly errors partly cancel; we did not test this.
+
+\textbf{Limitations.} The log contains only impressions that the logging bidder won under its own bidding and
+pacing, so the replayed demand is conditional on that policy. The costs are transformed by Criteo. The throttling
+model ignores competitive responses and price effects, and, as the comparison of no pacing with tuned PID shows, barely penalizes
+early depletion. The test period covers \res{cfg-test-days} days of one real dataset, and the causal calibration is evaluated on the
+last \res{ph-test-days-causal} of them. The day boundary is relative to the dataset start, not local midnight. The tests condition on the trained
+models, and LightGBM and seasonal naive were run once. The scale, the feedback gains and the PID gains were chosen on four
+validation days; the PID gains lie on the edge of the search grid (for example \res{pid-gains-rho0.5} at $\rho{=}0.5$) and its high PVI suggests
+an under-damped controller, so a better-designed feedback controller, such as a dual-gradient pacer, may narrow the gap. The feedback term tracks the
+plan of hour 0 while the throttle re-plans every hour. The decomposition, hedging, feedback, oracle and group analyses are post hoc, the
+matched-spend comparison had no reading rule, and the efficiency change between TFT and the scaled plan has no interval. The hindsight reference
+is not a ceiling, and the oracle uses logged demand. A second real dataset is not yet included; the synthetic world supports the ordering, not the sizes.
+With hundreds of campaigns, small differences become statistically significant, so we emphasize effect sizes.
 
 % ------------------------------------------------------------------
 \section{Conclusion}
 
-On real campaign logs, forecast-driven throttling improves daily budget pacing over even pacing
-and tuned PID. The main lever is the hedging quantile, not the forecasting architecture: the
-median forecast works best, and upper-quantile hedging is costly. Modern neural forecasters are
-the most accurate and give the best pacing, but their advantage over each other is negligible.
-Future work should test these findings with bid-landscape-aware simulators and with
-conversion-oriented objectives.
+On real campaign logs and within the throttling model studied, forecast-driven throttling improved daily budget
+pacing over even pacing and tuned PID. Over a seasonal profile, what a learned forecaster adds is mostly a better daily total,
+delivered as extra spend without losing efficiency: a single validated scale on the naive total recovers \res{sn-share-rho0.3}\% to
+\res{sn-share-rho0.7}\% of the gain, the forecast total supplies \res{ex-tshare-min}--\res{ex-tshare-max}\% of it in a total/shape swap, and a smaller edge
+(\res{fr-tft-min}--\res{fr-tft-max} points for TFT at matched spend, exploratory) remains for TFT and NHITS. An oracle forecast would add
+\res{ex-head-min}--\res{ex-head-max} points. Hedging at the 90th percentile costs the most; summing hourly quantiles over-covers the day, but a
+calibrated daily-total hedge recovers only part of the loss, and part of the cost is a property of a simulator that barely penalizes early
+depletion. Feedback on top of the forecast helps at the tight budget only. A synthetic world gives the same ordering. TFT and NHITS were
+indistinguishable. Future work should add a tuned dual-gradient baseline, feedback that follows the hourly re-plan, seed-aware inference, a
+second real dataset and bid-landscape-aware simulators.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}

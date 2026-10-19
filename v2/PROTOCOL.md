@@ -390,6 +390,37 @@ All entries below were logged on 2026-10-16, before any test-split pacing result
       accuracy has little left to buy in this simulator, 2 points or more that it matters. The oracle total with a
       forecast shape separates the value of the total from the value of the shape.
       Output: `scripts/15_extended.py`, `results/extended.json`.
+    - *Results (logged 2026-10-19).* Extended grid: chosen scales 0.85, 0.825 and 0.775 at the tight, medium and
+      loose budgets, none at the grid edge; on the test days the curve peaks at 0.75 to 0.775 at all three. The
+      tuned scale gains 0.73 [0.55, 0.93], 1.03 [0.82, 1.25] and 1.24 [0.96, 1.53] points over the plain naive plan,
+      that is 36%, 60% and 94% of the TFT gain (2.03, 1.73 and 1.32). TFT minus tuned naive is 1.30 [0.93, 1.77],
+      0.69 [0.39, 1.03] and 0.08 [-0.19, 0.37]. By the rule: 0.8 g is reached only at the loose budget, so not
+      "the total explains almost all"; the interval is above zero at two of three levels, so the finding is "an
+      edge beyond one scale remains".
+      Swap, with G the gain of (TFT total, TFT shape) over (naive total, naive shape): G is 1.52, 1.35 and 1.07;
+      T, the gain of (TFT total, naive shape), is 1.25 [0.82, 1.83], 1.02 [0.71, 1.38] and 0.72 [0.50, 0.95]; S, the
+      gain of (naive total, TFT shape), is 0.16 [-0.02, 0.31], 0.17 [0.05, 0.29] and 0.25 [0.14, 0.37]. By the rule:
+      at the tight budget T is above twice S and the interval of S includes zero, so the total is the source; at the
+      medium and loose budgets the interval of S is above zero but S is below half of T, so partial (the total
+      supplies 82%, 76% and 68% of G, the shape a small positive amount). Re-planning adds 0.51, 0.37 and 0.25 points
+      to TFT (static minus re-planned: -0.51 [-0.66, -0.37], -0.37 [-0.52, -0.24], -0.25 [-0.36, -0.15]) and nothing
+      to seasonal naive, as expected since its forecast does not depend on the origin hour.
+      Oracle: true remaining demand minus TFT is 1.03 [0.73, 1.35], 1.50 [1.23, 1.78] and 1.54 [1.27, 1.81] points,
+      between the two thresholds of the rule (under 1 point, 2 points or more), so reported as moderate headroom.
+      True remaining demand minus seasonal naive is 3.06, 3.22 and 2.86. The true day total with the naive shape
+      gains 1.81, 1.84 and 1.44 over the static naive plan; the true total with the TFT shape gains 0.63, 0.86 and
+      0.75 over the static TFT plan; true remaining demand beats the true total with the TFT shape by 0.91, 1.00 and
+      1.04.
+    - *Frontier recomputed (not pre-registered).* `scripts/11_frontier.py` now reads the 25-scale episodes, whose curve
+      covers TFT's spend at the tight budget (the 13-scale curve did not). TFT lies above the curve by 1.20 [0.91,
+      1.56], 0.74 [0.51, 1.01] and 0.47 [0.30, 0.66] points at the tight, medium and loose budgets; NHITS by 1.31,
+      0.83 and 0.44; LightGBM by 0.45 [0.13, 0.77], 0.01 and 0.05; PID lies below. This supersedes the 13-scale
+      output of entry 18.
+    - *Corrections to entry 18.* (a) The cross-fitted calibrated hedge is not an upper bound on clicks. Its factors
+      are larger than the causal ones and it spends less, and in this simulator any factor above 1 lowers clicks; the
+      label "upper bound" is withdrawn. (b) Two metrics listed in Section 7 are not reported in the paper: the hourly
+      spend deviation from the oracle profile (computed, in `pacing_summary.csv`) and the forecast metrics on the
+      validation split.
 
 ## Why v2
 

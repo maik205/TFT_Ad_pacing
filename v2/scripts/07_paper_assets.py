@@ -30,6 +30,7 @@ K = pd.read_csv(f"{R}/pacing_comparisons.csv")
 FM = json.load(open(f"{R}/forecast_metrics.json"))
 DS = json.load(open(f"{R}/data_summary.json"))
 PID = json.load(open(f"{R}/pid_tuned.json"))
+G = json.load(open(f"{R}/pacing_groups.json"))  # exploratory group analysis (08_groups.py, PROTOCOL 10.17)
 
 FORECASTERS = ["naive", "lightgbm", "NHITS", "TFT"]
 LABEL = {"naive": "Seasonal naive", "lightgbm": "LightGBM", "NHITS": "NHITS", "TFT": "TFT"}
@@ -126,6 +127,7 @@ span("fc-early", [get(f"{m}-q0.5", r, "early_depletion") for m in nn for r in C.
 def sig_count(pairs, name):
     sub = K[[(a, b) in pairs for a, b in zip(K.a, K.b)]]
     V[f"{name}-sig"] = str(int((sub.p_holm < 0.05).sum()))
+    V[f"{name}-neg"] = str(int((sub.mean_diff < 0).sum()))
     V[f"{name}-total"] = str(len(sub))
     V[f"{name}-pmax"] = f"{sub.p_holm.max():.2g}"
 
@@ -139,9 +141,278 @@ V["n-comparisons"] = str(len(K))
 V["n-significant"] = str(int((K.p_holm < 0.05).sum()))
 V["n-campaigns-paired"] = str(int(K.n_campaigns.min()))
 
+# Revision round 1 (PROTOCOL 10.15): macros that only re-express existing results files or config
+# constants. They add no analysis beyond descriptive aggregation of saved per-campaign metrics.
+def pts2(x):
+    return f"{100 * x:.2f}"
+
+
+# design constants: read from config.py, never typed in the prose
+V["cfg-n-hours"] = str(C.N_HOURS)
+V["cfg-use-days"] = str(C.TEST_END // 24)
+V["cfg-discard-hours"] = str(C.N_HOURS - C.TEST_END)
+V["cfg-train-days"] = str(C.TRAIN_END // 24)
+V["cfg-val-days"] = str((C.VAL_END - C.TRAIN_END) // 24)
+V["cfg-test-days"] = str((C.TEST_END - C.VAL_END) // 24)
+V["cfg-lookback"] = str(C.LOOKBACK)
+V["cfg-min-active"] = str(int(round(100 * C.MIN_ACTIVE_FRAC)))
+V["cfg-early-hour"] = str(C.EARLY_DEPLETION_HOUR)
+
+# how much of the gain over even pacing a plain seasonal profile already delivers
+span("gain-naive-even", [get("naive-q0.5", r, "click_ratio") - get("even", r, "click_ratio") for r in C.RHOS], pts)
+
+# training-seed variability of the pacing outcome (clicks / reference, in points)
+V["nhits-seed-sd-max"] = pts2(max(get("nhits-q0.5", r, "click_ratio_seed_sd") for r in C.RHOS))
+V["tft-seed-sd-max"] = pts2(max(get("tft-q0.5", r, "click_ratio_seed_sd") for r in C.RHOS))
+V["hedge-seed-sd-max"] = pts2(max(get(f"{m}-q0.9", r, "click_ratio_seed_sd") for m in nn for r in C.RHOS))
+V["nhits-seed-sd-min"] = pts2(min(get("nhits-q0.5", r, "click_ratio_seed_sd") for r in C.RHOS))
+
+# monotone decline of clicks with the hedging quantile
+mono = sum(all(get(f"{m.lower()}-q{a}", r, "click_ratio") > get(f"{m.lower()}-q{b}", r, "click_ratio")
+               for a, b in (("0.5", "0.7"), ("0.7", "0.9"))) for m in FORECASTERS for r in C.RHOS)
+V["hedge-mono"] = str(mono)
+V["hedge-mono-total"] = str(len(FORECASTERS) * len(C.RHOS))
+
+# per-campaign view of forecast accuracy (descriptive; from forecast_metrics_per_campaign.parquet)
+E = pd.read_parquet(f"{R}/forecast_metrics_per_campaign.parquet")
+per_campaign_mase = E.groupby(["model", "campaign"]).mase.mean().unstack(0)
+for a, b in (("TFT", "lightgbm"), ("NHITS", "lightgbm"), ("TFT", "naive"), ("NHITS", "naive"), ("TFT", "NHITS")):
+    V[f"win-{a.lower()}-{b.lower()}"] = pct((per_campaign_mase[a] < per_campaign_mase[b]).mean())
+
 for rho, v in PID.items():
     kp, ki, kd = v["gains"]
     V[f"pid-gains-rho{float(rho)}"] = f"$K_p{{=}}{kp:g}, K_i{{=}}{ki:g}, K_d{{=}}{kd:g}$"
+
+# ---------------------------------------------------------------- exploratory groups (PROTOCOL 10.17)
+def grp(group, value, rho):
+    return next(r for r in G["rows"] if r["group"] == group and r["value"] == value and r["rho"] == rho)
+
+
+def signed(x, digits=1):
+    return f"{100 * x:.{digits}f}".replace("-", "$-$")
+
+
+GAIN = "diff_TFT_minus_Seasonal naive"
+CI = "ci_TFT_minus_Seasonal naive"
+cells = [r for r in G["rows"] if r["group"] != "all"]
+V["grp-per-group"] = str(G["campaigns"] // 3)
+V["grp-spearman"] = f"{G['spearman_size_vol']:.2f}".replace("-", "$-$")
+V["grp-n-cells"] = str(len(cells))
+V["grp-gain-min"] = signed(min(r[GAIN] for r in cells))
+V["grp-gain-max"] = signed(max(r[GAIN] for r in cells))
+V["grp-ci-lo-min"] = signed(min(r[CI][0] for r in cells))
+V["grp-ci-above-zero"] = str(sum(r[CI][0] > 0 for r in cells))
+for rho in C.RHOS:
+    V[f"grp-all-rho{rho}"] = signed(grp("all", "all", rho)[GAIN])
+    V[f"grp-vol-high-rho{rho}"] = signed(grp("volatility", "high", rho)[GAIN])
+    V[f"grp-vol-low-rho{rho}"] = signed(grp("volatility", "low", rho)[GAIN])
+    sizes = [grp("size", v, rho)[GAIN] for v in ("low", "mid", "high")]
+    V[f"grp-size-min-rho{rho}"], V[f"grp-size-max-rho{rho}"] = signed(min(sizes)), signed(max(sizes))
+TN = "diff_TFT_minus_NHITS"
+CTN = "ci_TFT_minus_NHITS"
+V["grp-tft-nhits-max"] = signed(max(abs(r[TN]) for r in G["rows"]), 2)
+V["grp-tft-nhits-excl"] = str(sum((r[CTN][0] > 0 or r[CTN][1] < 0) for r in G["rows"]))
+V["grp-tft-nhits-total"] = str(len(G["rows"]))
+V["grp-tft-nhits-pos"] = str(sum(r[CTN][0] > 0 for r in G["rows"]))
+V["grp-tft-nhits-neg"] = str(sum(r[CTN][1] < 0 for r in G["rows"]))
+V["grp-tft-nhits-hv-min"] = signed(min(grp("volatility", "high", rho)[TN] for rho in C.RHOS), 2)
+V["grp-tft-nhits-hv-max"] = signed(max(grp("volatility", "high", rho)[TN] for rho in C.RHOS), 2)
+
+labels = [(("all", "all"), "All campaigns"), (("size", "low"), "Small"), (("size", "mid"), "Medium-size"),
+          (("size", "high"), "Large"), (("volatility", "low"), "Least volatile"),
+          (("volatility", "mid"), "Middle volatility"), (("volatility", "high"), "Most volatile")]
+rows = [r"\begin{tabular}{llccc}", r"\toprule",
+        r"Group & Campaigns & $\rho{=}0.3$ & $\rho{=}0.5$ & $\rho{=}0.7$ \\", r"\midrule"]
+for key, lab in labels:
+    if key in (("size", "low"), ("volatility", "low")):
+        rows.append(r"\addlinespace[2pt]")
+    cs = []
+    for rho in C.RHOS:
+        r = grp(key[0], key[1], rho)
+        cs.append(f"{signed(r[GAIN])} [{signed(r[CI][0])}, {signed(r[CI][1])}]")
+    rows.append(f"{lab} & {grp(key[0], key[1], 0.3)['campaigns']} & " + " & ".join(cs) + r" \\")
+rows += [r"\bottomrule", r"\end{tabular}"]
+with open(f"{R}/tables/groups.tex", "w") as f:
+    f.write("\n".join(rows) + "\n")
+
+# ---------------------------------------------------------------- post-hoc analyses (PROTOCOL 10.18)
+SE = json.load(open(f"{R}/spend_efficiency.json"))   # 09_spend_efficiency.py
+SN = json.load(open(f"{R}/scaled_naive.json"))       # 10_scaled_naive.py (13 scales; only the 7-day-mean pair is used)
+EX = json.load(open(f"{R}/extended.json"))           # 15_extended.py (25 scales, swap, oracle; PROTOCOL 10.19)
+FR = json.load(open(f"{R}/frontier.json"))           # 11_frontier.py
+FB = json.load(open(f"{R}/feedback.json"))           # 12_feedback.py
+HC = json.load(open(f"{R}/hedge_coverage.json"))     # 13_hedge_coverage.py
+CH = json.load(open(f"{R}/calibrated_hedge.json"))   # 14_calibrated_hedge.py
+
+
+def sg(x, d=1):
+    """Format a value that is already in points or percent."""
+    return f"{x:.{d}f}".replace("-", "$-$")
+
+
+def ci2(c, d=1):
+    return f"[{sg(c[0], d)}, {sg(c[1], d)}]"
+
+
+def rng2(name, values, d=1):
+    V[f"{name}-min"], V[f"{name}-max"] = sg(min(values), d), sg(max(values), d)
+
+
+V["cmp-n-campaigns"] = str(int(K.n_campaigns.max()))
+V["ph-test-days-causal"] = str((C.TEST_END - C.VAL_END) // 24 - 1)
+
+# spend versus efficiency, median plans
+def sep(rho, a, b, q="0.5"):
+    return next(r for r in SE if "a" in r and r["q"] == q and r["rho"] == rho and r["a"] == a and r["b"] == b)
+
+
+for a in ("TFT", "NHITS"):
+    rows_ = [sep(r, a, "Seasonal naive") for r in C.RHOS]
+    k = a.lower()
+    rng2(f"se-{k}-naive-clicks", [r["clicks_pct"] for r in rows_])
+    rng2(f"se-{k}-naive-spend", [r["spend_pct"] for r in rows_])
+    rng2(f"se-{k}-naive-eff", [r["eff_pct"] for r in rows_], 2)
+V["se-tft-naive-eff-ci0"] = str(sum(sep(r, "TFT", "Seasonal naive")["eff_ci"][0] <= 0 <= sep(r, "TFT", "Seasonal naive")["eff_ci"][1] for r in C.RHOS))
+rng2("se-tft-pid-spend", [sep(r, "TFT", "PID")["spend_pct"] for r in C.RHOS])
+rng2("se-tft-pid-eff", [sep(r, "TFT", "PID")["eff_pct"] for r in C.RHOS])
+V["se-tft-pid-eff-ci-pos"] = str(sum(sep(r, "TFT", "PID")["eff_ci"][0] > 0 for r in C.RHOS))
+rng2("se-tft-even-spend", [sep(r, "TFT", "Even pacing")["spend_pct"] for r in C.RHOS])
+rng2("se-tft-even-eff", [sep(r, "TFT", "Even pacing")["eff_pct"] for r in C.RHOS])
+rng2("se-q09-spend", [sep(r, "TFT", "Even pacing", "0.9")["spend_pct"] for r in C.RHOS])
+rng2("se-q09-eff", [sep(r, "TFT", "Even pacing", "0.9")["eff_pct"] for r in C.RHOS])
+
+# scaling the seasonal-naive total
+def snp(rho, a, b):
+    """Pair from the 25-scale run when it has it, else from the 13-scale run (7-day mean; scaled naive vs PID, whose scale is the same)."""
+    r = next((r for r in EX["pairs"] if r["rho"] == rho and r["a"] == a and r["b"] == b), None)
+    if r is not None:
+        return {**r, "points_vs_hindsight": r["points"]}
+    return next(r for r in SN["pairs"] if r["rho"] == rho and r["a"] == a and r["b"] == b)
+
+
+for rho in C.RHOS:
+    s = EX["chosen"][str(rho)]
+    V[f"sn-scale-rho{rho}"] = f"{s['scale']:g}"
+    tuned, tft = snp(rho, "Naive tuned", "Naive"), snp(rho, "TFT", "Naive")
+    gap = snp(rho, "TFT", "Naive tuned")
+    V[f"sn-gain-rho{rho}"] = sg(tuned["points_vs_hindsight"], 2)
+    V[f"sn-gain-ci-rho{rho}"] = ci2(tuned["ci"], 2)
+    V[f"sn-tft-rho{rho}"] = sg(tft["points_vs_hindsight"], 2)
+    V[f"sn-share-rho{rho}"] = f"{100 * tuned['points_vs_hindsight'] / tft['points_vs_hindsight']:.0f}"
+    V[f"sn-gap-rho{rho}"] = sg(gap["points_vs_hindsight"], 2)
+    V[f"sn-gap-ci-rho{rho}"] = ci2(gap["ci"], 2)
+    V[f"sn-spend-rho{rho}"] = sg(tuned["spend_pct"])
+    V[f"sn-eff-rho{rho}"] = sg(tuned["eff_pct"], 2)
+rng2("sn-mean7", [snp(r, "naive mean7", "Naive")["points_vs_hindsight"] for r in C.RHOS], 2)
+V["sn-edge"] = ", ".join(f"{rho}" for rho in C.RHOS if EX["chosen"][str(rho)]["at_edge"]) or "none"
+V["sn-pid-medium"] = sg(snp(0.5, "Naive tuned", "PID")["points_vs_hindsight"], 2)
+V["sn-pid-medium-ci"] = ci2(snp(0.5, "Naive tuned", "PID")["ci"], 2)
+
+# spend-matched comparison
+def frr(rho, method):
+    return next(r for r in FR if r.get("method") == method and r["rho"] == rho)
+
+
+for m, k in (("TFT", "tft"), ("NHITS", "nhits"), ("LightGBM", "lgb"), ("PID", "pid")):
+    for rho in C.RHOS:
+        r = frr(rho, m)
+        V[f"fr-{k}-rho{rho}"] = sg(r["points_above_curve"], 2)
+        V[f"fr-{k}-ci-rho{rho}"] = ci2(r["ci"], 2)
+rng2("fr-tft", [frr(r, "TFT")["points_above_curve"] for r in C.RHOS], 2)
+rng2("fr-nhits", [frr(r, "NHITS")["points_above_curve"] for r in C.RHOS], 2)
+V["np-gap-rho0.7"] = pts(abs(get("pid", 0.7, "click_ratio") - get("nopacing", 0.7, "click_ratio")))
+V["fr-tft-spend-tight"] =sg(100 * (frr(0.3, "TFT")["spend_share_vs_naive_x1"] - 1))
+V["fr-valid-tight"] = f"{100 * frr(0.3, 'TFT')['boot_valid']:.0f}"
+
+# forecast plus feedback
+def fbp(rho, a, b):
+    return next(r for r in FB["pairs"] if r["rho"] == rho and r["a"] == a and r["b"] == b)
+
+
+for rho in C.RHOS:
+    for a, b, k in (("FB TFT", "TFT", "tft"), ("FB NHITS", "NHITS", "nhits"), ("FB naive", "Naive", "naive"),
+                    ("FB naive-scaled", "naive scaled", "scaled"), ("FB TFT", "FB naive-scaled", "tft-vs-scaled")):
+        r = fbp(rho, a, b)
+        V[f"fb-{k}-rho{rho}"] = sg(r["points_vs_hindsight"], 2)
+        V[f"fb-{k}-ci-rho{rho}"] = ci2(r["ci"], 2)
+    V[f"fb-kp-rho{rho}"] = f"{FB['chosen'][f'A@{rho}']['gains'][0]:g}"
+V["fb-val-gain-loose"] = sg(100 * (FB["chosen"]["A@0.7"]["val_ratio"] - FB["chosen"]["A@0.7"]["val_ratio_no_feedback"]), 1)
+V["fb-edge-rho"] = ", ".join(str(rho) for rho in C.RHOS if FB["chosen"][f"A@{rho}"]["at_edge"][0]) or "none"
+
+# coverage of the summed hedge plans
+fams = ["TFT", "NHITS", "LightGBM", "Seasonal naive"]
+rng2("hc-cov90", [100 * HC[f]["q0.9"]["summed_plan_coverage"] for f in fams])
+rng2("hc-cov90-nn", [100 * HC[f]["q0.9"]["summed_plan_coverage"] for f in ("TFT", "NHITS", "LightGBM")])
+rng2("hc-cov70", [100 * HC[f]["q0.7"]["summed_plan_coverage"] for f in fams])
+rng2("hc-fac-sum", [HC[f]["q0.9"]["median_plan_factor"] for f in fams], 2)
+rng2("hc-fac-cal", [HC[f]["q0.9"]["calibrated_factor"] for f in fams], 2)
+V["hc-hourly90-tft"] = sg(100 * HC["TFT"]["q0.9"]["hourly_coverage"])
+V["hc-cov90-naive"] = sg(100 * HC["Seasonal naive"]["q0.9"]["summed_plan_coverage"])
+V["hc-cov90-nhits"] = sg(100 * HC["NHITS"]["q0.9"]["summed_plan_coverage"])
+
+# calibrated-total hedge (causal variant, days 26-29)
+def chp(rho, fam_, q, contrast, variant="b", set_="days 26-29"):
+    return next(r for r in CH["pairs"] if r["set"] == set_ and r["variant"] == variant and r["rho"] == rho
+                and r["forecaster"] == fam_ and r["q"] == q and r["contrast"] == contrast)
+
+
+for rho in C.RHOS:
+    for q, k in ((0.9, "ch"), (0.7, "ch70")):
+        g = chp(rho, "TFT", q, "calibrated - summed")
+        loss = chp(rho, "TFT", q, "summed - median plan")["points"]
+        res_ = chp(rho, "TFT", q, "calibrated - median plan")
+        V[f"{k}-gain-rho{rho}"] = sg(g["points"], 2)
+        V[f"{k}-gain-ci-rho{rho}"] = ci2(g["ci"], 2)
+        V[f"{k}-loss-rho{rho}"] = sg(-loss, 1)
+        V[f"{k}-rec-rho{rho}"] = f"{100 * g['points'] / -loss:.0f}"
+        V[f"{k}-resid-rho{rho}"] = sg(res_["points"], 2)
+        V[f"{k}-resid-ci-rho{rho}"] = ci2(res_["ci"], 2)
+rng2("ch-naive", [chp(r, "Seasonal naive", 0.9, "calibrated - summed")["points"] for r in C.RHOS])
+rng2("ch-xfit", [chp(r, "TFT", 0.9, "calibrated - summed", "a")["points"] for r in C.RHOS], 2)
+
+# total/shape swap and oracle headroom (15_extended.py, PROTOCOL 10.19)
+def exp_(rho, a, b):
+    return next(r for r in EX["pairs"] if r["rho"] == rho and r["a"] == a and r["b"] == b)
+
+
+for rho in C.RHOS:
+    g = exp_(rho, "ST TFT-TFT", "ST naive-naive")
+    tt = exp_(rho, "ST TFT-naive", "ST naive-naive")
+    ss = exp_(rho, "ST naive-TFT", "ST naive-naive")
+    V[f"ex-g-rho{rho}"] = sg(g["points"], 2)
+    V[f"ex-t-rho{rho}"], V[f"ex-t-ci-rho{rho}"] = sg(tt["points"], 2), ci2(tt["ci"], 2)
+    V[f"ex-s-rho{rho}"], V[f"ex-s-ci-rho{rho}"] = sg(ss["points"], 2), ci2(ss["ci"], 2)
+    V[f"ex-tshare-rho{rho}"] = f"{100 * tt['points'] / g['points']:.0f}"
+    rp = exp_(rho, "ST TFT-TFT", "TFT")
+    V[f"ex-replan-rho{rho}"] = sg(-rp["points"], 2)
+    V[f"ex-replan-ci-rho{rho}"] = ci2([-rp["ci"][1], -rp["ci"][0]], 2)
+    hd = exp_(rho, "OR remaining", "TFT")
+    V[f"ex-head-rho{rho}"], V[f"ex-head-ci-rho{rho}"] = sg(hd["points"], 2), ci2(hd["ci"], 2)
+    V[f"ex-head-naive-rho{rho}"] = sg(exp_(rho, "OR remaining", "Naive")["points"], 2)
+    V[f"ex-tot-naive-rho{rho}"] = sg(exp_(rho, "OR total-naive", "ST naive-naive")["points"], 2)
+    V[f"ex-tot-tft-rho{rho}"] = sg(exp_(rho, "OR total-TFT", "ST TFT-TFT")["points"], 2)
+    V[f"ex-or-replan-rho{rho}"] = sg(exp_(rho, "OR remaining", "OR total-TFT")["points"], 2)
+rng2("ex-head", [exp_(r, "OR remaining", "TFT")["points"] for r in C.RHOS], 2)
+rng2("ex-tot-naive", [exp_(r, "OR total-naive", "ST naive-naive")["points"] for r in C.RHOS], 2)
+rng2("ex-tot-tft", [exp_(r, "OR total-TFT", "ST TFT-TFT")["points"] for r in C.RHOS], 2)
+rng2("ex-replan", [-exp_(r, "ST TFT-TFT", "TFT")["points"] for r in C.RHOS], 2)
+rng2("ex-tshare", [100 * exp_(r, "ST TFT-naive", "ST naive-naive")["points"] / exp_(r, "ST TFT-TFT", "ST naive-naive")["points"] for r in C.RHOS], 0)
+
+# table: where the click gain comes from (median plans)
+dec = [("TFT", "Naive", "TFT $-$ seasonal naive"), ("Naive tuned", "Naive", "Scaled naive $-$ seasonal naive"),
+       ("TFT", "Naive tuned", "TFT $-$ scaled naive")]
+rows = [r"\begin{tabular}{llccc}", r"\toprule",
+        r"Comparison & $\rho$ & Clicks (points) & Spend (\%) & Clicks per spend (\%) \\", r"\midrule"]
+for a, b, lab in dec:
+    for j, rho in enumerate(C.RHOS):
+        r = snp(rho, a, b)
+        rows.append(f"{lab if j == 0 else ''} & {rho} & {sg(r['points_vs_hindsight'], 2)} {ci2(r['ci'], 2)} & "
+                    f"{sg(r['spend_pct'], 1)} & {sg(r['eff_pct'], 2)} " + r"\\")
+    if a != dec[-1][0] or b != dec[-1][1]:
+        rows.append(r"\addlinespace[2pt]")
+rows += [r"\bottomrule", r"\end{tabular}"]
+with open(f"{R}/tables/decomp.tex", "w") as f:
+    f.write("\n".join(rows) + "\n")
 
 # ---------------------------------------------------------------- compute cost
 times = {}

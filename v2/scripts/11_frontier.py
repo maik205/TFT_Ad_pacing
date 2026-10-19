@@ -3,6 +3,7 @@ spend. Is a forecaster above that curve at its own spend? Reads pacing_test_epis
 scaled_naive_episodes.parquet; writes frontier.json."""
 
 import json
+import os
 
 import numpy as np
 import pandas as pd
@@ -12,7 +13,9 @@ from pacing.data import p
 
 R = p("results")
 old = pd.read_parquet(f"{R}/pacing_test_episodes.parquet")
-new = pd.read_parquet(f"{R}/scaled_naive_episodes.parquet")
+# the 25-scale episodes of 15_extended.py (PROTOCOL 10.19) when they exist, otherwise the 13-scale ones of 10_scaled_naive.py
+_ext = f"{R}/extended_episodes.parquet"
+new = pd.read_parquet(_ext if os.path.exists(_ext) else f"{R}/scaled_naive_episodes.parquet")
 FAM = {"TFT": "TFT_seed", "NHITS": "NHITS_seed", "LightGBM": "lightgbm_seed", "Naive": "naive_seed"}
 
 

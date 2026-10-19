@@ -1,7 +1,7 @@
 {
   "name": "paper_assets",
-  "utc": "2026-10-16T16:51:22.125978+00:00",
-  "code_version": "3494895ada580827",
+  "utc": "2026-10-16T17:00:29.741668+00:00",
+  "code_version": "56c13c4d7993054e",
   "argv": [
     "scripts/07_paper_assets.py"
   ],
@@ -43,5 +43,5 @@
     "TRAIN_END": 504,
     "VAL_END": 600
   },
-  "n_macros": 438
+  "n_macros": 464
 }
