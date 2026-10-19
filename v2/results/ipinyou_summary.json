@@ -1,0 +1,31 @@
+{
+ "rows": 12237087,
+ "hours": 168,
+ "advertisers": {
+  "1458": {
+   "impressions": 3083056.0,
+   "spend": 212400.241,
+   "clicks": 2454.0
+  },
+  "3358": {
+   "impressions": 1742104.0,
+   "spend": 160943.087,
+   "clicks": 1358.0
+  },
+  "3386": {
+   "impressions": 2847802.0,
+   "spend": 219066.895,
+   "clicks": 2076.0
+  },
+  "3427": {
+   "impressions": 2593765.0,
+   "spend": 210239.915,
+   "clicks": 1926.0
+  },
+  "3476": {
+   "impressions": 1970360.0,
+   "spend": 156088.484,
+   "clicks": 1027.0
+  }
+ }
+}

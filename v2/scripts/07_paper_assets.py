@@ -239,6 +239,10 @@ with open(f"{R}/tables/groups.tex", "w") as f:
 SE = json.load(open(f"{R}/spend_efficiency.json"))   # 09_spend_efficiency.py
 SN = json.load(open(f"{R}/scaled_naive.json"))       # 10_scaled_naive.py (13 scales; only the 7-day-mean pair is used)
 EX = json.load(open(f"{R}/extended.json"))           # 15_extended.py (25 scales, swap, oracle; PROTOCOL 10.19)
+BL = json.load(open(f"{R}/baselines.json"))          # 16_baselines.py (dual gradient, feedback on the hourly re-plan; PROTOCOL 10.20)
+DF = json.load(open(f"{R}/dual_gradient_fixed.json"))  # 19_dual_gradient_fixed.py
+IP = json.load(open(f"{R}/ipinyou.json"))            # 18_ipinyou.py
+IPS = json.load(open(f"{R}/ipinyou_summary.json"))   # 17_ipinyou_build.py
 FR = json.load(open(f"{R}/frontier.json"))           # 11_frontier.py
 FB = json.load(open(f"{R}/feedback.json"))           # 12_feedback.py
 HC = json.load(open(f"{R}/hedge_coverage.json"))     # 13_hedge_coverage.py
@@ -397,6 +401,47 @@ rng2("ex-tot-naive", [exp_(r, "OR total-naive", "ST naive-naive")["points"] for 
 rng2("ex-tot-tft", [exp_(r, "OR total-TFT", "ST TFT-TFT")["points"] for r in C.RHOS], 2)
 rng2("ex-replan", [-exp_(r, "ST TFT-TFT", "TFT")["points"] for r in C.RHOS], 2)
 rng2("ex-tshare", [100 * exp_(r, "ST TFT-naive", "ST naive-naive")["points"] / exp_(r, "ST TFT-TFT", "ST naive-naive")["points"] for r in C.RHOS], 0)
+
+# dual-gradient reactive pacer and feedback on the hourly re-plan (16_baselines.py, 19_dual_gradient_fixed.py; PROTOCOL 10.20)
+def blp(src, rho, a, b):
+    return next(r for r in src["pairs"] if r["rho"] == rho and r["a"] == a and r["b"] == b)
+
+
+for rho in C.RHOS:
+    for a, b, k in (("DG flat", "PID", "flat-pid"), ("DG prof", "PID", "prof-pid"), ("TFT", "DG flat", "tft-flat"),
+                    ("Naive tuned", "DG flat", "tuned-flat"), ("FB2 TFT", "TFT", "fb2-tft"), ("FB2 NHITS", "NHITS", "fb2-nhits"),
+                    ("FB2 naive", "Naive", "fb2-naive"), ("FB2 naive-scaled", "Naive tuned", "fb2-scaled"),
+                    ("FB2 TFT", "FB2 naive-scaled", "fb2-tft-vs-scaled")):
+        r = blp(BL, rho, a, b)
+        V[f"{'' if k.startswith('fb2') else 'dg-'}{k}-rho{rho}"] = sg(r["points"], 2)
+        V[f"{'' if k.startswith('fb2') else 'dg-'}{k}-ci-rho{rho}"] = ci2(r["ci"], 2)
+    for a, b, k in (("DG prof N", "PID", "profn-pid"), ("TFT", "DG prof N", "tft-profn"), ("Naive tuned", "DG prof N", "tuned-profn")):
+        r = blp(DF, rho, a, b)
+        V[f"dg-{k}-rho{rho}"], V[f"dg-{k}-ci-rho{rho}"] = sg(r["points"], 2), ci2(r["ci"], 2)
+    V[f"dg-eta-flat-rho{rho}"] = f"{BL['chosen'][f'DGflat@{rho}']['eta']:g}"
+    V[f"fb2-kp-rho{rho}"] = f"{BL['chosen'][f'FB2A@{rho}']['gains'][0]:g}"
+rng2("dg-flat-pid", [blp(BL, r, "DG flat", "PID")["points"] for r in C.RHOS])
+rng2("dg-prof-pid", [blp(BL, r, "DG prof", "PID")["points"] for r in C.RHOS])
+rng2("dg-profn-pid", [blp(DF, r, "DG prof N", "PID")["points"] for r in C.RHOS])
+rng2("dg-tft-flat", [blp(BL, r, "TFT", "DG flat")["points"] for r in C.RHOS])
+rng2("dg-tft-profn", [blp(DF, r, "TFT", "DG prof N")["points"] for r in C.RHOS])
+
+# iPinYou replication (17_ipinyou_build.py, 18_ipinyou.py; PROTOCOL 10.20)
+V["ipy-impressions"] = f"{IPS['rows'] / 1e6:.1f}"
+V["ipy-advertisers"] = str(len(IPS["advertisers"]))
+V["ipy-episodes"] = str(IP["episodes"])
+V["ipy-consistent"] = str(IP["consistent_levels"])
+V["ipy-verdict"] = IP["verdict"]
+for rho in C.RHOS:
+    L = IP["levels"][str(rho)]
+    for k, name in (("none", "No pacing"), ("even", "Even pacing"), ("pid", "PID"), ("dgflat", "DG flat"), ("naive", "Naive"),
+                    ("scaled", "Naive scaled"), ("oracle", "Oracle remaining")):
+        V[f"ipy-{k}-rho{rho}"] = ratio(L[name]["click_ratio"])
+    V[f"ipy-scale-rho{rho}"] = f"{IP['chosen'][str(rho)]['scale']:g}"
+    for a, b, k in (("Naive scaled", "Naive", "scaled-naive"), ("Naive", "Even pacing", "naive-even"), ("Naive", "PID", "naive-pid"),
+                    ("Oracle remaining", "Naive", "oracle-naive")):
+        r = next(r for r in IP["pairs"] if r["rho"] == rho and r["a"] == a and r["b"] == b)
+        V[f"ipy-{k}-rho{rho}"], V[f"ipy-{k}-ci-rho{rho}"] = sg(r["points"], 1), ci2(r["ci"], 1)
 
 # table: where the click gain comes from (median plans)
 dec = [("TFT", "Naive", "TFT $-$ seasonal naive"), ("Naive tuned", "Naive", "Scaled naive $-$ seasonal naive"),

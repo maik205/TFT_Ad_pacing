@@ -1,0 +1,96 @@
+{
+  "name": "baselines",
+  "utc": "2026-10-19T05:01:38.048890+00:00",
+  "code_version": "c5a548d75f18c7eb",
+  "argv": [
+    "scripts\\16_baselines.py"
+  ],
+  "python": "3.12.10",
+  "host": "MaiksPC",
+  "config": {
+    "DEPLETION_TOL": 0.99,
+    "EARLY_DEPLETION_HOUR": 20,
+    "HEDGE_QUANTILES": [
+      0.5,
+      0.7,
+      0.9
+    ],
+    "HORIZON": 24,
+    "LOOKBACK": 168,
+    "MAX_CAMPAIGNS": 0,
+    "MIN_ACTIVE_FRAC": 0.9,
+    "N_BOOTSTRAP": 2000,
+    "N_HOURS": 742,
+    "N_NN_SEEDS": 3,
+    "N_REPLAY_SEEDS": 10,
+    "PATHS": {
+      "raw": "~/datasets/criteo_attribution/criteo_attribution_dataset.tsv.gz",
+      "work": "~/pacing_v2/work",
+      "results": "C:\\Users\\maik\\pacing_v2\\repro"
+    },
+    "QUANTILES": [
+      0.1,
+      0.5,
+      0.7,
+      0.9
+    ],
+    "RHOS": [
+      0.3,
+      0.5,
+      0.7
+    ],
+    "TEST_END": 720,
+    "TRAIN_END": 504,
+    "VAL_END": 600
+  },
+  "etas": [
+    0.05,
+    0.1,
+    0.2,
+    0.5,
+    1.0,
+    2.0,
+    4.0
+  ],
+  "grid": {
+    "kp": [
+      0,
+      2,
+      8,
+      32
+    ],
+    "ki": [
+      0,
+      0.5
+    ],
+    "kd": [
+      0,
+      4
+    ]
+  },
+  "val_days": [
+    21,
+    22,
+    23,
+    24
+  ],
+  "test_days": [
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

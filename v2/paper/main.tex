@@ -47,9 +47,12 @@ alone reaches. An oracle forecast shows \res{ex-head-min}--\res{ex-head-max} poi
 90th percentile costs \res{hedge-cost-min}--\res{hedge-cost-max} points. Summing hourly quantiles over-covers the day
 (\res{hc-cov90-min}--\res{hc-cov90-max}\% against a nominal 90\%), but a calibrated daily-total hedge recovers only
 \res{ch-rec-rho0.7}--\res{ch-rec-rho0.3}\% of that loss for TFT, and PID feedback on top of the forecast helps at the tight budget only.
-This simulator barely penalizes early depletion, so part of the hedging cost is a property of the environment. A synthetic world
-of our own shows the same ordering of the pieces. The results come from \res{cfg-test-days} test days of one real dataset and a
-throttling-only simulator. We will release the code, protocol and results files.
+This simulator barely penalizes early depletion, so part of the hedging cost is a property of the environment. Forecast throttling stays
+\res{dg-tft-flat-min}--\res{dg-tft-flat-max} points ahead of a tuned dual-gradient pacer. A synthetic world of our own shows the same
+ordering of the pieces, but a small replication on a second real dataset (iPinYou, \res{ipy-advertisers} advertisers,
+\res{ipy-episodes} test episodes) is descriptive and does not reproduce it: a 3-day replay forecast is no better than even pacing, while an
+oracle is \res{ipy-oracle-naive-rho0.7}--\res{ipy-oracle-naive-rho0.3} points ahead. The main results come from \res{cfg-test-days} test days
+of one dataset and a throttling-only simulator. We will release the code, protocol and results files.
 \end{abstract}
 
 \keywords{budget pacing, throttling, real-time bidding, probabilistic forecasting,
@@ -89,8 +92,9 @@ forecasters and the throttling model are established methods, used as tools. Our
   \item An analysis of hedging: the summed hourly quantiles over-cover the remaining day, a calibrated
         daily-total hedge recovers only part of the loss, and PID feedback on top of the forecast
                 helps only at the tight budget.
-  \item A second, synthetic environment from a world builder we developed for this study, in which
-        the same ordering of the pieces appears (Section~\ref{sec:world}).
+  \item Two further environments: a synthetic world from a world builder we developed for this study,
+        in which the same ordering of the pieces appears (Section~\ref{sec:world}), and a small replication
+        on iPinYou that does not reproduce it (Section~\ref{sec:ipinyou}).
 \end{enumerate}
 The design and the main metrics were fixed in a written protocol before the test split was evaluated.
 The decomposition, hedging and feedback analyses were added after the main results were seen;
@@ -111,7 +115,11 @@ this kind are a natural forecast-free reference, and ours adjusts the participat
 the bid. Balseiro et al.~\cite{balseiro2017budget} compare throttling with other budget-management
 strategies in equilibrium. Optimal bidding under budgets in real-time bidding is studied by Zhang et
 al.~\cite{zhang2014optimal}. A recent preprint~\cite{shekhar2026decision} calibrates forecast
-uncertainty by its effect on pacing decisions with split conformal prediction. These works design pacing
+uncertainty by its effect on pacing decisions with split conformal prediction, over a catalog of 12 policies and
+replays calibrated to Criteo Uplift and KuaiRand; among its findings, the forecaster with the lowest error is not the one with the
+smallest decision radius. A practical guide~\cite{chen2025practical} surveys throttling, PID, model-predictive and dual
+online-gradient pacing; it notes that a PID controller tracking a target built from a supply forecast cannot by itself correct a
+misspecified target, and suggests re-forecasting the remaining supply, which is what the forecast throttle here does. It reports no empirical comparison. These works design pacing
 mechanisms or uncertainty sets. We instead hold the mechanism fixed and ask what the forecast inside it
 contributes, and where that contribution comes from.
 
@@ -180,7 +188,10 @@ with the seasonal-naive forecast, because the neural forecasts exist only for te
 (iv) \emph{Static plans}: the planned remaining demand at hour $h$ is a day total times the share of the day-start
 forecast that lies in hours $h$ to 23, with no re-planning; the total and the shape can come from different
 forecasters. (v) \emph{Oracle}: the true remaining demand of the day, or the true day total with a forecast shape, in
-place of the forecast.
+place of the forecast. (vi) \emph{Dual-gradient pacer}: a reactive throttle $\alpha_h=\min(1,1/(1+\mu_h))$ whose multiplier $\mu_h$ moves
+each hour by a step size times the relative gap between the last hour's spend and its target, either flat ($B/24$) or the campaign's
+training-day profile; the step size is chosen on the validation days. (vii) \emph{Feedback on the hourly re-plan}: the feedback of (iii) applied to the
+gap between each hour's realised spend and what the previous plan expected.
 
 % ------------------------------------------------------------------
 \begin{table*}[t]
@@ -275,10 +286,12 @@ which includes the test hours; and before the final runs we inspected the test-o
 seasonal-naive and LightGBM forecasts and of a short smoke-test TFT run, and ran a pacing smoke test on ten
 campaigns' test days. No hyperparameter was changed as a result. The log also records two widenings of the
 PID grid (on validation data) and intermittent GPU faults during neural training (crashed runs produced no
-output and were re-run). Everything in Sections~\ref{sec:where} to~\ref{sec:world} was added after the main
+output and were re-run). Everything in Sections~\ref{sec:where} to~\ref{sec:ipinyou} was added after the main
 results were seen: the split of gains into spend and efficiency, the scaled, calibrated, static and oracle plans, the
 feedback variant, and an exploratory split of campaigns by size and volatility. A model-written review of an earlier
-version led to the 25-scale grid, the swap and the oracle runs. Each new simulation was entered in the
+version led to the 25-scale grid, the swap and the oracle runs, and to the dual-gradient baseline, the feedback on the hourly re-plan and the
+iPinYou replication. The profile-target dual-gradient variant, as specified in advance, under-spends, and a corrected variant was added after
+seeing that. Each new simulation was entered in the
 log, with a reading rule where a verdict was drawn, before it ran; the two analyses that only re-read saved
 episodes (the spend split and the group split) were logged after they ran. None changes a number in the main
 tables. The matched-spend comparison had no reading rule. Two metrics of the protocol are not reported here: the hourly
@@ -352,6 +365,14 @@ interval above zero at \res{se-tft-pid-eff-ci-pos} of 3 levels. A forecast there
 and against a seasonal profile through delivery: the seasonal-naive plan under-spends, and the learned forecast corrects that
 without paying for it in efficiency.
 
+\textbf{A tuned dual-gradient pacer does not close the gap.} Tuned PID may not be the strongest reactive reference, so we also tuned
+a dual-gradient throttle on the validation days. With a flat hourly target it differs from tuned PID by \res{dg-flat-pid-min} to
+\res{dg-flat-pid-max} points; TFT is ahead of it by \res{dg-tft-flat-min}--\res{dg-tft-flat-max} points and the scaled naive plan by
+\res{dg-tuned-flat-rho0.7}--\res{dg-tuned-flat-rho0.3}, with every interval above zero, so by the pre-registered rule the forecast advantage
+survives. The profile-target variant, as specified, under-spends (\res{dg-prof-pid-min} to \res{dg-prof-pid-max} points against PID). A corrected
+variant that divides the gap by $B/24$, added after seeing this, is still \res{dg-profn-pid-min} to \res{dg-profn-pid-max} points from tuned PID, and
+TFT is ahead of it by \res{dg-tft-profn-min}--\res{dg-tft-profn-max} points. Tuned PID remains the strongest reactive pacer we tried.
+
 \textbf{One scale recovers much of it.} If the gain over the profile is mostly delivery, one scale on the naive total
 should capture much of it. The scales chosen on validation days are \res{sn-scale-rho0.3}, \res{sn-scale-rho0.5} and
 \res{sn-scale-rho0.7} for the tight, medium and loose budgets, none at the edge of the grid. The scaled plan gains
@@ -408,8 +429,8 @@ here, ignore training-seed variation.
 \res{hedge-mono-total} forecaster and budget combinations, and moving to $q{=}0.9$ costs
 \res{hedge-cost-min}--\res{hedge-cost-max} points. All \res{cmp-q09-baselines-neg} of
 \res{cmp-q09-baselines-total} comparisons of $q{=}0.9$ policies against even pacing and PID favor the baselines
-(\res{cmp-q09-baselines-sig} are significant). This environment barely penalizes early depletion: no pacing is within
-\res{np-gap-rho0.7} points of tuned PID at the loose budget (Table~\ref{tab:pacing}), so part of the hedging cost is a
+(\res{cmp-q09-baselines-sig} are significant). This environment barely penalizes early depletion: no pacing (click ratio \res{nopacing-rho0.7-click})
+ties tuned PID (\res{pid-rho0.7-click}) at the loose budget (Table~\ref{tab:pacing}), so part of the hedging cost is a
 property of the simulator. Figure~\ref{fig:tradeoff} shows what it buys: early depletion
 almost disappears (\res{hedge-early-min}--\res{hedge-early-max}\% of episodes), but budget utilization falls
 to \res{hedge-bur-min}--\res{hedge-bur-max}\%. Relative to even pacing, a TFT plan at $q{=}0.9$ changes spend by
@@ -452,8 +473,11 @@ loose ones (\res{fb-tft-rho0.5}, \res{fb-tft-ci-rho0.5}; \res{fb-tft-rho0.7}, \r
 edge does not survive feedback. TFT with feedback minus scaled naive with feedback is \res{fb-tft-vs-scaled-rho0.3}
 (\res{fb-tft-vs-scaled-ci-rho0.3}), \res{fb-tft-vs-scaled-rho0.5} (\res{fb-tft-vs-scaled-ci-rho0.5}) and
 \res{fb-tft-vs-scaled-rho0.7} (\res{fb-tft-vs-scaled-ci-rho0.7}) points at the tight, medium and loose budgets: the
-intervals include zero at the first two and lie below it at the third. A further caution is that the PID term tracks the
-plan issued at hour 0, while the throttle re-plans every hour, so the two may work against each other.
+intervals include zero at the first two and lie below it at the third. A variant that tracks the previous hour's plan
+instead of the plan of hour 0, since the throttle re-plans every hour, gives the same verdicts: feedback minus no feedback for TFT is
+\res{fb2-tft-rho0.3} (\res{fb2-tft-ci-rho0.3}), \res{fb2-tft-rho0.5} (\res{fb2-tft-ci-rho0.5}) and \res{fb2-tft-rho0.7} (\res{fb2-tft-ci-rho0.7}) points,
+and TFT with that feedback minus scaled naive with it is \res{fb2-tft-vs-scaled-rho0.3}, \res{fb2-tft-vs-scaled-rho0.5} and
+\res{fb2-tft-vs-scaled-rho0.7}; for seasonal naive at the tight budget it adds \res{fb2-naive-rho0.3} (\res{fb2-naive-ci-rho0.3}) points.
 Two cautions apply. The neural models use the gains tuned for seasonal naive (proportional gain
 \res{fb-kp-rho0.3}, \res{fb-kp-rho0.5} and \res{fb-kp-rho0.7}; the grid edge was reached at $\rho=$ \res{fb-edge-rho}), so
 part of the loss may be a mismatch. And gains tuned on four validation days are unstable: for seasonal naive at the
@@ -473,6 +497,22 @@ replay to the true expected traffic adds only \wres{total-min}--\wres{total-max}
 (\wres{ahead-clear} of \wres{costs} cost models). The ordering matches the Criteo result, in which looking ahead beats reacting and the
 total carries most of the gain. The world is a controlled check, not evidence about real traffic: its rhythms are planted, and
 its daily totals vary far less than those of real campaigns.
+
+\subsection{A second real dataset: iPinYou}\label{sec:ipinyou}
+We repeated the comparison on the iPinYou season-2 training logs: \res{ipy-impressions} million won impressions of \res{ipy-advertisers}
+advertisers over 7 days, with paying prices and clicks joined from the click logs. A campaign is an advertiser, days 1 to 4 are training,
+day 5 validation and days 6 and 7 test, so there are \res{ipy-episodes} test episodes; the forecast is seasonal naive over the previous 3
+days and no neural model is trained. The result is descriptive, and by the rule fixed beforehand it is inconsistent with Criteo: the ordering
+(scaled naive at least the naive throttle, and the naive throttle at least even pacing and PID) holds at \res{ipy-consistent} of 3 budget levels.
+The 3-day naive throttle is no better than even pacing (\res{ipy-naive-even-rho0.3}, \res{ipy-naive-even-rho0.5} and \res{ipy-naive-even-rho0.7} points;
+every interval includes zero), and no pacing is the best realistic policy at the tight budget (click ratio \res{ipy-none-rho0.3} against
+\res{ipy-scaled-rho0.3} for the scaled plan). A scale on the naive total gains at least as much as on Criteo (\res{ipy-scaled-naive-rho0.3},
+\res{ipy-scaled-naive-rho0.5} and \res{ipy-scaled-naive-rho0.7} points), but the intervals include zero. The only clear difference is the oracle, which is
+\res{ipy-oracle-naive-rho0.3}, \res{ipy-oracle-naive-rho0.5} and \res{ipy-oracle-naive-rho0.7} points ahead of the naive throttle
+(\res{ipy-oracle-naive-ci-rho0.3}; \res{ipy-oracle-naive-ci-rho0.5}; \res{ipy-oracle-naive-ci-rho0.7}). So on this dataset a replay of the previous days
+is a poor forecast and a good forecast would be worth a lot, but we cannot say which forecaster would deliver it: with 5 advertisers, 10 episodes, one
+validation day for tuning and a scale at the grid edge at the loose budget, the replication supports neither the Criteo ordering nor a
+contradiction of it by more than a point estimate.
 
 % ------------------------------------------------------------------
 \section{Discussion}
@@ -498,10 +538,10 @@ early depletion. The test period covers \res{cfg-test-days} days of one real dat
 last \res{ph-test-days-causal} of them. The day boundary is relative to the dataset start, not local midnight. The tests condition on the trained
 models, and LightGBM and seasonal naive were run once. The scale, the feedback gains and the PID gains were chosen on four
 validation days; the PID gains lie on the edge of the search grid (for example \res{pid-gains-rho0.5} at $\rho{=}0.5$) and its high PVI suggests
-an under-damped controller, so a better-designed feedback controller, such as a dual-gradient pacer, may narrow the gap. The feedback term tracks the
-plan of hour 0 while the throttle re-plans every hour. The decomposition, hedging, feedback, oracle and group analyses are post hoc, the
+an under-damped controller, so a better-designed feedback controller, such as a dual-gradient pacer, may narrow the gap. A variant that tracks the hourly re-plan gives the same feedback verdicts. The decomposition, hedging, feedback, oracle and group analyses are post hoc, the
 matched-spend comparison had no reading rule, and the efficiency change between TFT and the scaled plan has no interval. The hindsight reference
-is not a ceiling, and the oracle uses logged demand. A second real dataset is not yet included; the synthetic world supports the ordering, not the sizes.
+is not a ceiling, and the oracle uses logged demand. The second real dataset (iPinYou) is small (\res{ipy-advertisers} advertisers, \res{ipy-episodes} test episodes, a 3-day forecast, one validation day
+for tuning) and does not reproduce the Criteo ordering; the synthetic world supports the ordering, not the sizes.
 With hundreds of campaigns, small differences become statistically significant, so we emphasize effect sizes.
 
 % ------------------------------------------------------------------
@@ -515,8 +555,9 @@ delivered as extra spend without losing efficiency: a single validated scale on 
 \res{ex-head-min}--\res{ex-head-max} points. Hedging at the 90th percentile costs the most; summing hourly quantiles over-covers the day, but a
 calibrated daily-total hedge recovers only part of the loss, and part of the cost is a property of a simulator that barely penalizes early
 depletion. Feedback on top of the forecast helps at the tight budget only. A synthetic world gives the same ordering. TFT and NHITS were
-indistinguishable. Future work should add a tuned dual-gradient baseline, feedback that follows the hourly re-plan, seed-aware inference, a
-second real dataset and bid-landscape-aware simulators.
+indistinguishable. A tuned dual-gradient pacer trails tuned PID and forecast throttling stays ahead of it, but a small replication on iPinYou does not reproduce
+the ordering. Future work should add seed-aware inference, a second real dataset long enough to train deep forecasters, and
+bid-landscape-aware simulators.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}

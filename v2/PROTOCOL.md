@@ -421,6 +421,70 @@ All entries below were logged on 2026-10-16, before any test-split pacing result
       label "upper bound" is withdrawn. (b) Two metrics listed in Section 7 are not reported in the paper: the hourly
       spend deviation from the oracle profile (computed, in `pacing_summary.csv`) and the forecast metrics on the
       validation split.
+20. **Third batch: stronger reactive baseline, feedback on the hourly re-plan, and a second real dataset (logged
+    2026-10-19, rules written before the runs).** The review of entry 19 asked for a dual-gradient baseline, for
+    feedback that follows the hourly re-plan, and for a second dataset. No existing number changes.
+    - *Dual-gradient reactive pacer* (`scripts/16_baselines.py`, Criteo). A multiplier mu starts at 1/alpha0 - 1
+      with alpha0 = min(1, B / mean daily training spend), moves each hour by eta times the relative gap between the
+      last hour's spend and its target, is floored at 0, and sets alpha = min(1, 1/(1 + mu)). Two targets: flat
+      (B/24 per hour) and the campaign's mean hourly profile over the training days (B times its share). eta is
+      chosen per budget level on the validation days from {0.05, 0.1, 0.2, 0.5, 1, 2, 4} (3 replay seeds). Reading
+      rule, per budget level, on the click ratio with campaign-bootstrap intervals, taking the better of the two
+      targets as the reactive reference: the finding "the forecast advantage survives a tuned dual-gradient pacer"
+      holds if the interval of (TFT minus that reference) is above zero at two of three levels; "the scaled naive plan
+      also beats it" is read the same way. If the interval of (TFT minus the reference) includes zero at two of three
+      levels, the finding is "a tuned dual-gradient pacer closes the gap".
+    - *Feedback on the hourly re-plan* (same script). The PID term of entry 18 compares spend so far with the plan of
+      hour 0. The variant compares each hour's realised spend with what the previous plan expected: alpha of the
+      previous hour times the first-step forecast of that hour (times the scale for the scaled base). Its gap e is the
+      shortfall as a share of the budget; the correction is kp e + ki sum e + kd (e - e_prev) on top of the throttle.
+      Gains from kp in {0, 2, 8, 32}, ki in {0, 0.5}, kd in {0, 4}, chosen per budget level on the validation days for
+      the plain and the scaled seasonal-naive base, then applied unchanged to TFT and NHITS (as in entry 18). The two
+      rules of entry 18 apply: feedback helps TFT if the interval of (with minus without) is above zero at two of three
+      levels, and does not if it includes zero or is negative at two of three; the neural edge survives if the
+      interval of (TFT with feedback minus scaled naive with feedback) is above zero at two of three levels.
+    - *iPinYou replication* (`scripts/17_ipinyou_build.py`, `scripts/18_ipinyou.py`). Season 2 training logs (7 days,
+      5 advertisers): impressions with paying price and a click flag joined from the click logs. A campaign is an
+      advertiser; hours 0 to 95 are training, day 4 validation, days 5 and 6 test (10 test episodes). Forecasts are
+      seasonal naive with the previous 3 days (7 days are not available), and no neural model is trained. Policies:
+      no pacing, even pacing, tuned PID, tuned dual-gradient, the naive throttle, the scaled naive throttle (scale
+      from 0.50 to 1.10 chosen on the validation day), and the oracle remaining demand. Intervals resample the 10
+      episodes. With so few episodes the replication is descriptive: it is read as consistent with the Criteo
+      ordering (scaled naive at least the naive throttle, and the naive throttle at least even pacing and PID, by point
+      estimate) at two of three budget levels, and inconsistent otherwise; no significance claim is made.
+    - *Results (logged 2026-10-19).* Dual gradient, as pre-registered: eta 0.5, 0.2 and 0.1 (flat target) and 0.5, 0.5
+      and 0.2 (profile target) at the tight, medium and loose budgets, none at the grid edge. The profile variant
+      under-spends and is far below tuned PID (-11.6, -11.0 and -9.7 points), so the better of the two targets is
+      the flat one, itself below tuned PID by 4.8, 4.0 and 3.0 points. TFT minus the flat dual-gradient pacer is
+      +6.69 [5.62, 7.88], +5.73 [4.73, 6.85] and +3.89 [3.36, 4.45], and the scaled naive plan minus it +5.39 [4.33,
+      6.58], +5.04 [3.96, 6.28] and +3.81 [3.18, 4.46]: above zero at all three levels, so by the rule "the forecast
+      advantage survives a tuned dual-gradient pacer" and the scaled naive plan also beats it.
+      *Addition after seeing this (not used for the verdict; `scripts/19_dual_gradient_fixed.py`).* The profile
+      variant divides the hourly gap by that hour's own target, which is tiny in low-traffic hours; mu then jumps and
+      the pacer under-spends in the busy hours that follow. Dividing by B/24 for both targets fixes this: the
+      profile variant then lies 1.09 [0.43, 1.75], 1.89 [0.80, 2.81] and 2.60 [1.86, 3.34] points below tuned PID
+      (still below it), TFT is ahead of it by 2.94 [2.45, 3.45], 3.58 [3.09, 4.09] and 3.46 [3.06, 3.87] points and the
+      scaled naive plan by 1.64 [1.11, 2.18], 2.89 [2.26, 3.52] and 3.38 [2.81, 3.92]. Tuned PID remains the
+      strongest reactive pacer.
+      Feedback on the hourly re-plan: the plain base chose gains (kp, ki, kd) of (2, 0.5, 0), (8, 0, 0) and (8, 0.5, 0)
+      and the scaled base (8, 0, 0), (8, 0, 0) and (2, 0, 0) at the three budgets (ki at the grid edge in two cases).
+      Feedback minus no feedback is +0.14 [-0.02, 0.29], -0.12 [-0.34, 0.10] and -1.64 [-2.04, -1.29] points for TFT
+      and +0.04, -0.40 and -1.83 for NHITS; by rule 1, feedback does not help TFT (the interval includes zero or lies
+      below it at all three levels). TFT with feedback minus scaled naive with feedback is -0.19 [-0.43, 0.05],
+      +0.27 [0.10, 0.46] and -1.39 [-1.75, -1.03]: above zero at one of three levels, so by rule 2 the neural edge does
+      not survive feedback. For seasonal naive feedback gains +1.78 [1.30, 2.37], +1.19 [0.76, 1.63] and -0.62 [-1.44,
+      -0.02]; for the scaled naive plan +1.63 [1.13, 2.19], +0.30 [-0.11, 0.71] and -0.17 [-0.34, 0.00].
+      iPinYou (5 advertisers, 12,237,087 impressions, 10 test episodes; scales 0.75, 0.725 and 0.5, the last at the grid
+      edge, each chosen on one validation day): the click ratios against the hindsight reference at the three budgets
+      were, for no pacing, 0.973, 0.967 and 0.955; even pacing 0.949, 0.958 and 0.960; PID 0.943, 0.927 and 0.951;
+      flat dual gradient 0.937, 0.959 and 0.968; naive throttle 0.938, 0.946 and 0.952; scaled naive 0.951, 0.966 and
+      0.965; oracle remaining demand 1.002, 1.001 and 1.001. The ordering (scaled naive at least the naive throttle, and
+      the naive throttle at least even pacing and PID) holds at 0 of 3 levels, so by the rule the replication is
+      "inconsistent". In detail: the scaled naive plan is ahead of the naive throttle at all three levels (+1.28, +1.99
+      and +1.26 points, every interval includes zero), the naive throttle is behind even pacing at all three (-1.14,
+      -1.13 and -0.76, every interval includes zero), and only the oracle differs clearly from the realistic policies
+      (+6.43 [1.6, 15.1], +5.47 [1.8, 10.8] and +4.85 [1.3, 10.5] points over the naive throttle). No pacing is the
+      best realistic policy at the tight budget.
 
 ## Why v2
 
