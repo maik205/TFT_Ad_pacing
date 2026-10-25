@@ -136,7 +136,8 @@ fixed throttling rule.
 TFT~\cite{lim2021temporal} combines recurrent encoding, variable selection and
 attention. NHITS~\cite{challu2023nhits} uses multi-rate sampling and hierarchical
 interpolation. We use their \texttt{neuralforecast} implementations, along with
-the library's PatchTST, LSTM and TiDE models~\cite{olivares2022neuralforecast}.
+the library's PatchTST~\cite{nie2023patchtst}, LSTM~\cite{hochreiter1997lstm} and
+TiDE~\cite{das2023tide} models~\cite{olivares2022neuralforecast}.
 LightGBM~\cite{ke2017lightgbm} provides a non-neural learned baseline. This study
 evaluates these models as forecasting tools; it does not propose changes to
 their architectures.
@@ -223,7 +224,8 @@ their same-day data; it is not a deployable causal forecast.
 forecast rate, first using a spending schedule from the day-start forecast,
 then using the previous hour's updated plan. Feedback gains are tuned with
 seasonal naive and transferred unchanged to TFT and NHITS. We also test a
-reactive dual-gradient rule, $\alpha_h=\min(1,1/(1+\mu_h))$. Each hour its
+reactive dual-gradient rule, a throttling version of dual-gradient bid
+pacing~\cite{balseiro2019learning}, $\alpha_h=\min(1,1/(1+\mu_h))$. Each hour its
 nonnegative multiplier increases when spend exceeds an hourly target and
 decreases when spend falls short. Targets are either flat ($B/24$) or based on
 the campaign's training-hour profile. Step sizes are chosen on validation days.
