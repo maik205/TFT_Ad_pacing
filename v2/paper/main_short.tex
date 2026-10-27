@@ -1,0 +1,368 @@
+% Short (5-page) version of main.tex for ICIIT 2027 (ACM proceedings, 4-5 two-column pages).
+% Same numbers and protocol as main.tex; the follow-up experiments are summarised briefly
+% and reported in full in main.tex and ../PROTOCOL.md.
+\documentclass[sigconf]{acmart}
+
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{amsmath}
+
+\input{../results/tables/numbers.tex}
+\input{../../v3/results/numbers_v3.tex}
+\graphicspath{{../results/figures/}}
+
+% ACM venue block: placeholders from the ACM sigconf template. Replace them with the
+% values the venue sends on acceptance.
+\setcopyright{acmlicensed}
+\copyrightyear{2027}
+\acmYear{2027}
+\acmDOI{XXXXXXX.XXXXXXX}
+\acmConference[ICIIT 2027]{2027 12th International Conference on Intelligent
+  Information Technology}{March 04--07, 2027}{Ho Chi Minh City, Vietnam}
+\acmISBN{978-1-4503-XXXX-X/2027/XX}
+
+\settopmatter{printacmref=true, printfolios=true}
+
+\begin{document}
+
+\title{What Do Neural Predictors Add to Budget Pacing?}
+\subtitle{Spend Forecasts, Budget Delivery and Hedging on Criteo Campaign Logs}
+
+\author{Mai Minh Duc}
+\affiliation{%
+  \institution{FPT University}
+  \city{Ho Chi Minh City}
+  \country{Vietnam}}
+\email{ducmmse196484@fpt.edu.vn}
+
+\begin{abstract}
+A platform can pace a daily advertising budget by forecasting the cost of the
+remaining impressions and choosing what share to keep. Does a neural forecast
+improve this decision? On \res{data-campaigns} Criteo campaigns and a fixed
+impression-replay throttle, we compare five neural predictors (TFT, NHITS,
+PatchTST, LSTM, TiDE) with seasonal-naive and LightGBM forecasts at three
+budget levels. All five capture \res{nn-gain-min}--\res{nn-gain-max} more
+percentage points of the hindsight-reference click count than the naive plan,
+mostly by spending \res{nn-spend-min}--\res{nn-spend-max}\% more of the budget.
+A validation-chosen scale on the naive forecast recovers
+\res{sn-share-rho0.3}--\res{sn-share-rho0.7}\% of TFT's gain, and a
+total--profile swap attributes \res{ex-tshare-min}--\res{ex-tshare-max}\% of
+it to the forecast daily total. Planning with 90th-percentile hourly forecasts
+costs \res{hedge-cost-min}--\res{hedge-cost-max} points; calibration recovers
+only part of that loss. The evidence covers \res{cfg-test-days} test days of
+one dataset, and a small iPinYou check does not reproduce the policy ordering.
+\end{abstract}
+
+\begin{CCSXML}
+<ccs2012>
+   <concept>
+       <concept_id>10002951.10003260.10003272</concept_id>
+       <concept_desc>Information systems~Online advertising</concept_desc>
+       <concept_significance>500</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10010147.10010257.10010293.10010294</concept_id>
+       <concept_desc>Computing methodologies~Neural networks</concept_desc>
+       <concept_significance>300</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10002950.10003648.10003688.10003693</concept_id>
+       <concept_desc>Mathematics of computing~Time series analysis</concept_desc>
+       <concept_significance>300</concept_significance>
+   </concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Information systems~Online advertising}
+\ccsdesc[300]{Computing methodologies~Neural networks}
+\ccsdesc[300]{Mathematics of computing~Time series analysis}
+
+\keywords{budget pacing, throttling, real-time bidding, probabilistic forecasting,
+neural predictors}
+
+\maketitle
+
+% ------------------------------------------------------------------
+\section{Introduction}
+
+An advertiser's daily budget may run out before the day ends, or remain partly
+unspent. Budget pacing controls how quickly the platform spends it
+\cite{lee2013real,agarwal2014budget}. In \emph{probabilistic throttling}, the
+platform joins each eligible auction with a probability $\alpha_t$ that it
+updates during the day \cite{agarwal2014budget,xu2015smart}. A reactive
+controller, such as a proportional-integral-derivative (PID) controller,
+adjusts this probability from past spend. A forecast-based rule instead
+divides the remaining budget by the forecast cost of the remaining
+impressions. Forecasting too much spend lowers participation and may leave
+budget unused.
+
+We ask whether neural predictors improve this rule, and what they add. A spend
+forecast supplies a daily total and an hourly profile; a better total could
+help even if the profile adds little. We also test whether planning with an
+upper quantile protects against early exhaustion at an acceptable cost.
+
+Using the public Criteo Attribution dataset \cite{diemert2017attribution}, we
+compare five neural predictors with seasonal naive and LightGBM under one
+fixed throttling rule. We separate extra clicks from extra spend, test a
+scaled naive baseline, swap totals and profiles, and measure the cost of
+hedging. This is an empirical comparison of established models, not a new
+architecture. Follow-up experiments were designed after the main results
+were known; their decision rules are logged in the accompanying protocol,
+which reports every analysis in full.
+
+\textbf{Related work.} Smart pacing \cite{xu2015smart} learns participation
+rates per segment; Dai et al.~\cite{dai2023percentile} control throttling with
+dual multipliers; Balseiro and Gur \cite{balseiro2019learning} adjust bids by
+dual gradients; and Zhang et al.~\cite{zhang2016feedback} use feedback toward
+spend targets. Chen's guide \cite{chen2025practical} notes that a PID
+controller cannot repair a misspecified target by tracking it. Shekhar and
+Howard \cite{shekhar2026decision} calibrate forecast uncertainty for pacing
+decisions and find that the lowest forecast error need not give the best
+decision. We instead measure how much changing the forecast changes clicks
+under a fixed rule.
+
+% ------------------------------------------------------------------
+\section{Setup}\label{sec:setup}
+
+\textbf{Data and episodes.} The Criteo dataset has \res{data-impressions}
+impressions from \res{data-campaigns-total} campaigns. We use
+\res{cfg-train-days} training, \res{cfg-val-days} validation and
+\res{cfg-test-days} test days, and keep \res{data-campaigns} campaigns with
+spend in at least \res{cfg-min-active}\% of training hours
+(\res{data-spend-share}\% of dataset spend). The forecast target is
+\emph{spend demand}: the logged cost of all impressions in a campaign-hour,
+in Criteo's transformed cost units. An episode is a campaign-day with budget
+$B=\rho\bar D_c$, where $\bar D_c$ is the campaign's mean daily training spend
+and $\rho\in\{0.3,0.5,0.7\}$ gives tight, medium and loose budgets.
+
+\textbf{Replay.} At the start of hour $h$, a policy sets $\alpha_h\in[0,1]$;
+each logged impression is kept independently with that probability and adds
+its logged cost and click, in order, until the budget is spent. All policies
+share the same random draws (\res{n-replay-seeds} seeds per episode). This
+replays \emph{won} impressions: we assume that keeping fewer of them does not
+change their prices, and we model no competitor response.
+
+\textbf{Policies.} With $S_h$ the spend so far and $R_h=B-S_h$:
+\emph{no pacing} keeps everything; \emph{even pacing} steers toward
+$R_h/(24-h)$ per hour; \emph{PID} tracks the gap to a linear spending
+schedule, with gains tuned on validation days per budget. The
+\emph{forecast throttle} sets
+\begin{equation}
+  \alpha_h = \min\Bigl(1,\; R_h \big/ \textstyle\sum_{j=h}^{23} \hat{y}^{(q)}_j\Bigr),
+  \qquad q \in \{0.5, 0.7, 0.9\},
+  \label{eq:throttle}
+\end{equation}
+re-planned every hour from hourly quantile forecasts $\hat y^{(q)}_j$. A
+higher $q$ hedges against early exhaustion. The \emph{hindsight constant}
+$\alpha=\min(1,B/D)$, with $D$ the day's logged spend demand, defines the
+reference click count; it is not an upper bound.
+
+\textbf{Forecasters.} Each model forecasts the next 24 hourly spends at
+quantiles $\{0.1,0.5,0.7,0.9\}$ from data before the issue hour.
+\emph{Seasonal naive} takes quantiles of the same hour on the previous seven
+days. \emph{LightGBM} \cite{ke2017lightgbm} fits one quantile model per level
+on lags, rolling statistics and calendar features. TFT \cite{lim2021temporal},
+NHITS \cite{challu2023nhits}, PatchTST \cite{nie2023patchtst}, LSTM
+\cite{hochreiter1997lstm} and TiDE \cite{das2023tide} use their
+\texttt{neuralforecast} implementations \cite{olivares2022neuralforecast},
+\res{cfg-lookback} hours of input and multi-quantile loss, with
+\res{n-nn-seeds} training seeds each. PatchTST uses only past spend; the
+others also use impressions, clicks, calendar phase and campaign statistics.
+Models are early-stopped on validation days and not refitted during testing.
+
+\textbf{Metrics.} The primary metric is total clicks divided by the hindsight
+reference's clicks. A \emph{point} is one percentage point of this ratio. We
+also report budget utilization (BUR), early depletion before hour
+\res{cfg-early-hour}, and relative changes in spend and in clicks per unit of
+spend. Intervals are 95\% campaign-bootstrap CIs (\res{n-bootstrap}
+resamples) on paired differences; they condition on the trained models and
+exclude training-seed uncertainty. Forecast accuracy is MASE
+\cite{hyndman2006another} scaled by each campaign's training lag-24 error.
+
+% ------------------------------------------------------------------
+\begin{table*}[t]
+  \caption{Click ratios of the original four-forecaster study, pooled over episodes and seeds; bold marks the best non-reference value. Operational metrics at $\rho=0.5$.}
+  \label{tab:pacing}
+  \small
+  \input{../results/tables/pacing_main.tex}
+\end{table*}
+
+\section{Results}
+
+\begin{table}[tb]
+  \caption{Original four forecasters: mean test accuracy ($\pm$ training-seed SD). MASE$_h$ is MASE at step $h$; sPL$_{0.9}$ is scaled pinball loss; Cov.\ is 80\% interval coverage; time includes fitting and forecasting.}
+  \label{tab:forecast}
+  \small\setlength{\tabcolsep}{3pt}
+  \resizebox{\linewidth}{!}{\input{../results/tables/forecast_main.tex}}
+\end{table}
+
+\subsection{Forecast accuracy}
+Mean MASE is lowest for TFT (\res{fc-tft-mase}), then NHITS
+(\res{fc-nhits-mase}), LightGBM (\res{fc-lightgbm-mase}) and seasonal naive
+(\res{fc-naive-mase}) (Table~\ref{tab:forecast}). The ranking does not hold
+for every campaign: TFT beats LightGBM in \res{win-tft-lightgbm}\% of
+campaigns. All prediction intervals under-cover; the nominal 80\% interval
+covers \res{fc-tft-cov80}\% of outcomes for TFT and \res{fc-naive-cov80}\% for
+seasonal naive. Neural times use one RTX 3070 Ti and LightGBM a CPU, so they
+are not hardware-matched.
+
+\subsection{Neural forecasts beat the naive plan}
+Median-plan TFT and NHITS capture \res{gain-even-min}--\res{gain-even-max}
+points more clicks than even pacing and \res{gain-pid-min}--\res{gain-pid-max}
+more than tuned PID (Table~\ref{tab:pacing}); all
+\res{cmp-nn-baselines-sig} of \res{cmp-nn-baselines-total} such comparisons
+are significant under Wilcoxon tests with Holm correction
+\cite{wilcoxon1945individual,holm1979simple}. They also change their rates
+less sharply than PID and deplete early less often
+(\res{fc-early-min}--\res{fc-early-max}\% versus
+\res{pid-early-min}--\res{pid-early-max}\% of episodes).
+
+\begin{table}[tb]
+  \caption{Five neural predictors. MASE averages campaigns and seeds (naive \res{nn-mase-naive}, LightGBM \res{nn-mase-lightgbm}). Gains and distances above the spend-matched naive scaling curve are in points.}
+  \label{tab:neural}
+  \small\setlength{\tabcolsep}{3pt}
+  \resizebox{\linewidth}{!}{\input{../results/tables/neural.tex}}
+\end{table}
+
+Table~\ref{tab:neural} extends the comparison to all five neural models. Each
+gains \res{nn-gain-min}--\res{nn-gain-max} points over seasonal naive at every
+budget, with every CI above zero, meeting the protocol's pre-set rule (four of
+five models at two of three budgets). Ranking the models by MASE gives the
+reverse of their ranking by mean click gain (Spearman \res{nn-spearman}),
+though five models cannot establish a general relationship. PatchTST is
+competitive without covariates. TFT and NHITS differ by at most
+\res{tft-nhits-diff-max} points, within NHITS's seed SD of up to
+\res{nhits-seed-sd-max}.
+
+\subsection{Where the gain comes from}
+\begin{table}[tb]
+  \caption{Median-plan comparisons. Click gains in points with 95\% CIs; spend and clicks per spend are relative changes.}
+  \label{tab:decomp}
+  \small\setlength{\tabcolsep}{3pt}
+  \resizebox{\linewidth}{!}{\input{../results/tables/decomp.tex}}
+\end{table}
+
+\textbf{More spend, similar efficiency.} The neural models spend
+\res{nn-spend-min}--\res{nn-spend-max}\% more than seasonal naive, while clicks
+per unit of spend change by \res{nn-eff-min}\% to \res{nn-eff-max}\%. For TFT,
+the efficiency CI includes zero at \res{se-tft-naive-eff-ci0} of 3 budget levels
+(Table~\ref{tab:decomp}). Against PID, by contrast, TFT's clicks per spend rise
+by \res{se-tft-pid-eff-min}--\res{se-tft-pid-eff-max}\%.
+
+\textbf{A scaled naive baseline.} Multiplying the naive denominator by a
+scale chosen on validation days (\res{sn-scale-rho0.3}, \res{sn-scale-rho0.5},
+\res{sn-scale-rho0.7}) recovers \res{sn-share-rho0.3}\%, \res{sn-share-rho0.5}\%
+and \res{sn-share-rho0.7}\% of TFT's gain at the tight, medium and loose
+budgets. TFT keeps a clear edge at the two tighter budgets; at the loose
+budget the difference is \res{sn-gap-rho0.7} points (CI \res{sn-gap-ci-rho0.7}).
+Neural models should therefore be compared with a scaled baseline, not only
+an unscaled one.
+
+\begin{table}[tb]
+  \caption{Day-start plan swaps and the oracle, in points (95\% CIs).}
+  \label{tab:swaps}
+  \small\setlength{\tabcolsep}{3pt}
+  \resizebox{\linewidth}{!}{%
+  \begin{tabular}{lccc}
+    \toprule
+    Comparison & $\rho=0.3$ & $\rho=0.5$ & $\rho=0.7$ \\
+    \midrule
+    \multicolumn{4}{l}{Fixed plan $-$ fixed naive plan} \\
+    TFT total + TFT profile & \res{ex-g-rho0.3} & \res{ex-g-rho0.5} & \res{ex-g-rho0.7} \\
+    TFT total + naive profile & \res{ex-t-rho0.3} \res{ex-t-ci-rho0.3} & \res{ex-t-rho0.5} \res{ex-t-ci-rho0.5} & \res{ex-t-rho0.7} \res{ex-t-ci-rho0.7} \\
+    Naive total + TFT profile & \res{ex-s-rho0.3} \res{ex-s-ci-rho0.3} & \res{ex-s-rho0.5} \res{ex-s-ci-rho0.5} & \res{ex-s-rho0.7} \res{ex-s-ci-rho0.7} \\
+    \midrule
+    Oracle remaining $-$ TFT & \res{ex-head-rho0.3} \res{ex-head-ci-rho0.3} & \res{ex-head-rho0.5} \res{ex-head-ci-rho0.5} & \res{ex-head-rho0.7} \res{ex-head-ci-rho0.7} \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\textbf{Total versus profile.} We build fixed plans from day-start forecasts
+and replace either the naive daily total or its hourly shares with TFT's
+(Table~\ref{tab:swaps}). The total alone captures
+\res{ex-tshare-min}--\res{ex-tshare-max}\% of the combined gain; the profile
+adds less, though its CI is above zero at the medium and loose budgets. Hourly
+re-planning adds \res{ex-replan-min}--\res{ex-replan-max} points over the
+fixed plan. Replacing TFT's forecast with the actual remaining spend demand
+adds \res{ex-head-min}--\res{ex-head-max} points: moderate headroom for this
+rule, not an upper bound on clicks.
+
+\textbf{Matched spend (exploratory).} Interpolating the 25-scale naive curve
+at each model's total spend leaves all five neural models
+\res{nn-above-min}--\res{nn-above-max} points above it
+(Table~\ref{tab:neural}). One global rescaling thus does not reproduce them,
+but this analysis cannot say whether the remainder comes from
+campaign-specific totals, profiles or re-planning.
+
+\subsection{Hedging}
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig_hedging.pdf}
+  \Description{Three budget panels show declining click ratios as the planning
+  quantile rises. Horizontal lines mark the forecast-free policies.}
+  \caption{Click ratio versus planning quantile (95\% campaign-bootstrap CIs). Horizontal lines are forecast-free policies.}
+  \label{fig:hedging}
+\end{figure*}
+Clicks fall as $q$ rises from 0.5 to 0.9 in all \res{hedge-mono} of
+\res{hedge-mono-total} forecaster-and-budget combinations, costing
+\res{hedge-cost-min}--\res{hedge-cost-max} points (Figure~\ref{fig:hedging}).
+Upper plans cut early depletion to \res{hedge-early-min}--\res{hedge-early-max}\%
+of episodes, but budget utilization falls to
+\res{hedge-bur-min}--\res{hedge-bur-max}\%. Summed hourly 90\% quantiles
+over-cover the remaining-day total (\res{hc-cov90-min}--\res{hc-cov90-max}\%
+coverage). Rescaling the median plan by factors calibrated on earlier test
+days recovers \res{ch-rec-rho0.3}\%, \res{ch-rec-rho0.5}\% and
+\res{ch-rec-rho0.7}\% of TFT's $q=0.9$ loss, which falls short of the protocol's
+one-third threshold. The replay rewards clicks and barely penalizes early
+exhaustion, so this cost partly reflects the objective.
+
+\subsection{Robustness checks}
+\textbf{Other reactive rules.} A tuned dual-gradient throttle
+\cite{balseiro2019learning} does not beat PID, and TFT leads its corrected
+variant by \res{dg-tft-profn-min}--\res{dg-tft-profn-max} points.
+\textbf{Feedback.} Adding PID feedback to the forecast rate, with gains tuned
+on seasonal naive, does not improve TFT at two of three budgets, and TFT then
+no longer clearly beats scaled naive with feedback. \textbf{A synthetic
+world.} In generated worlds with planted rhythms, replaying the previous week
+gains \wres{replay-gain-min}--\wres{replay-gain-max} points over reactive
+control, and a perfect daily total adds only \wres{total-min}--\wres{total-max}.
+\textbf{iPinYou.} On \res{ipy-advertisers} advertisers and
+\res{ipy-episodes} test episodes, the naive-over-even differences have CIs
+that include zero, and the Criteo ordering holds at \res{ipy-consistent} of 3 budget
+levels. No neural models were tested there.
+
+% ------------------------------------------------------------------
+\section{Discussion and Conclusion}
+
+On Criteo, all five tested neural predictors capture more clicks than seasonal
+naive under the same throttle, mainly by spending more of the budget with
+similar clicks per unit of spend. In TFT's swap experiment most of the gain
+comes from the daily total. A single validation-chosen scale recovers much of
+it at the loose budget but less than half at the tight one, and a gain
+remains at matched aggregate spend whose cause is unresolved. Upper-quantile
+plans leave budget unspent in this click-focused replay, and calibration
+recovers only part of that loss.
+
+\textbf{Limitations.} The test period is \res{cfg-test-days} days of one
+dataset. Intervals condition on saved models and exclude seed uncertainty. The
+replay uses won impressions and transformed prices, without price responses or
+an explicit cost of early exhaustion. Day boundaries are relative to the
+dataset start. The main design was informed by a full-data profile, and the
+follow-up analyses reused the same test days after the main results were
+known. Tuning used only \res{cfg-val-days} validation days. The iPinYou check
+is small and tests no neural models. Next steps are seed-aware inference,
+longer out-of-time evaluation on other real logs, and a simulator with price
+responses and delivery constraints. Code, protocol and results will be
+released.
+
+\section*{Use of Generative AI Tools}
+Claude (Anthropic) and an OpenAI assistant helped with code, experiments,
+writing and draft review. Numerical results come from the accompanying code.
+Model feedback is not human peer review. The author is responsible for the
+content.
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\end{document}
