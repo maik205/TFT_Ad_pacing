@@ -1,7 +1,7 @@
-% Short (5-page) version of main.tex for ICIIT 2027 (ACM proceedings, 4-5 two-column pages).
+% Short (4-page) version of main.tex.
 % Same numbers and protocol as main.tex; the follow-up experiments are summarised briefly
 % and reported in full in main.tex and ../PROTOCOL.md.
-\documentclass[sigconf]{acmart}
+\documentclass[sigconf,nonacm]{acmart}
 
 \usepackage{booktabs}
 \usepackage{graphicx}
@@ -12,17 +12,10 @@
 \input{../../v3/results/numbers_v3.tex}
 \graphicspath{{../results/figures/}}
 
-% ACM venue block: placeholders from the ACM sigconf template. Replace them with the
-% values the venue sends on acceptance.
-\setcopyright{acmlicensed}
-\copyrightyear{2027}
-\acmYear{2027}
-\acmDOI{XXXXXXX.XXXXXXX}
-\acmConference[ICIIT 2027]{2027 12th International Conference on Intelligent
-  Information Technology}{March 04--07, 2027}{Ho Chi Minh City, Vietnam}
-\acmISBN{978-1-4503-XXXX-X/2027/XX}
+% No venue is named: the nonacm option drops the ACM reference block, copyright footer and
+% conference header. For camera-ready, remove nonacm and add the venue's ACM block.
 
-\settopmatter{printacmref=true, printfolios=true}
+\settopmatter{printacmref=false, printfolios=true}
 
 \begin{document}
 
@@ -35,6 +28,30 @@
   \city{Ho Chi Minh City}
   \country{Vietnam}}
 \email{ducmmse196484@fpt.edu.vn}
+
+\author{Ha Nguyen Dac Binh}
+\affiliation{%
+  \institution{FPT University}
+  \city{Ho Chi Minh City}
+  \country{Vietnam}}
+
+\author{Ly Trung Quan}
+\affiliation{%
+  \institution{FPT University}
+  \city{Ho Chi Minh City}
+  \country{Vietnam}}
+
+\author{Nguyen Tran Phuong Tuan}
+\affiliation{%
+  \institution{FPT University}
+  \city{Ho Chi Minh City}
+  \country{Vietnam}}
+
+\author{Nguyen Tuan Anh}
+\affiliation{%
+  \institution{FPT University}
+  \city{Ho Chi Minh City}
+  \country{Vietnam}}
 
 \begin{abstract}
 A platform can pace a daily advertising budget by forecasting the cost of the
@@ -359,7 +376,7 @@ released.
 \section*{Use of Generative AI Tools}
 Claude (Anthropic) and an OpenAI assistant helped with code, experiments,
 writing and draft review. Numerical results come from the accompanying code.
-Model feedback is not human peer review. The author is responsible for the
+Model feedback is not human peer review. The authors are responsible for the
 content.
 
 \bibliographystyle{ACM-Reference-Format}
