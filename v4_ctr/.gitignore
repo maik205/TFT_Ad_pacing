@@ -1,0 +1,7 @@
+worlds/
+data/
+runs/
+export/
+.pytest_tmp/
+__pycache__/
+pipeline*.log

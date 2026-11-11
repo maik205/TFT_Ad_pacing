@@ -1,0 +1,74 @@
+{
+ "note": "Carried over from v3/synthetic/calibration.json. gamma_real is unaffected by the fork: page context does not depend on the slot format. The in-feed fit is dropped with the in-feed slot (FORK_SPEC.md F4).",
+ "date": "2026-10-17",
+ "base_spec_sha256": "4445b00d14be1dea7c0197ada0434b508e84009037b0d871b16076692239da99",
+ "gamma_real": 1.01116943359375,
+ "gamma_real_fit": {
+  "target_bits": 0.0255,
+  "achieved_bits": 0.02549880439165708,
+  "gamma_1_bits": 0.02488348279646807,
+  "gamma_0_bits": -4.0793192128796285e-05,
+  "bisection": [
+   [
+    1.0,
+    0.02488348279646807
+   ],
+   [
+    1.5,
+    0.05978003047455138
+   ],
+   [
+    1.25,
+    0.04060632838945838
+   ],
+   [
+    1.125,
+    0.0322791696913165
+   ],
+   [
+    1.0625,
+    0.02853777115046882
+   ],
+   [
+    1.03125,
+    0.026654855185952397
+   ],
+   [
+    1.015625,
+    0.025771234908613827
+   ],
+   [
+    1.0078125,
+    0.025299395954154563
+   ],
+   [
+    1.01171875,
+    0.02553963815725474
+   ],
+   [
+    1.009765625,
+    0.025421723223598147
+   ],
+   [
+    1.0107421875,
+    0.0254648825568716
+   ],
+   [
+    1.01123046875,
+    0.02550024590903613
+   ],
+   [
+    1.010986328125,
+    0.025483148250987325
+   ],
+   [
+    1.0111083984375,
+    0.0254974855901568
+   ]
+  ]
+ },
+ "sources": {
+  "mi": "KuaiRand-1K standard log 2022-04-08..21, first-level category, 5 local blocks",
+  "infeed": "KuaiRand-Pure AD views, all three logs"
+ }
+}
